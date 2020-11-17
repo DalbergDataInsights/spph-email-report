@@ -1,0 +1,21 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+python-dotenv = "*"
+sqlalchemy = "*"
+pandas = "*"
+numpy = "*"
+dash-core-components = "*"
+dash = "*"
+plotly = "*"
+dash-html-components = "*"
+rich = "*"
+kaleido = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
