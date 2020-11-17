@@ -1,0 +1,6 @@
+*.png
+*.sqlite
+*.pyc
+*__pycache__
+.DStore
+.env
