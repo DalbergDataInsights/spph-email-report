@@ -59,33 +59,10 @@ def tree_map_district_dated_data(
 
     df_district_dated = filter.by_district(df_district_dated, district)
 
-    
-
-    #### Data format
-
-    ### [DISTRICT DATE FACILITY] INDICATOR
-    
-
-    #df_district_dated = df_district_dated.reset_index()
-
     df_district_dated=df_district_dated.sort_values(indicator, ascending = False).reset_index()
     df_district_dated.loc[df_district_dated.index >= 12, 'facility_name'] = 'Others'
     df_district_dated.drop('index', axis=1, inplace=True)
-    
-    #df_district_dated = df_district_dated.set_index()
-
-
-    # 1. Aggregate by facility id
-    # 2. Create rank
-    # 3. For each observation (facility id):
-    # if rank > 12, set facility_name = "Other"
-    # 4. Aggregate by facility id
-
-    
-   
-    
-    # TODO
-    # Set back the index (DISTRITCT FACILITY)
+    df_district_dated = df_district_dated.set_index(['date','id', 'facility_name', indicator])
 
     title = f'"Contribution of individual facilities to {db.get_indicator_view(indicator)} in {district} district'
 
