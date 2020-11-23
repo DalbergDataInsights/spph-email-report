@@ -6,7 +6,7 @@ from . import helper
 def get():
     return {
         "district": scatter_district_data,
-        "district_dated": tree_map_district_dated_data,
+        "district_dated": bar_district_dated_data,
         "reporting_district": scatter_reporting_district_data,
     }
 
@@ -30,7 +30,7 @@ def scatter_district_data(db, *, indicator, district, **kwargs):
     return df
 
 
-def tree_map_district_dated_data(
+def bar_district_dated_data(
     db,
     *,
     indicator,
@@ -59,14 +59,10 @@ def tree_map_district_dated_data(
 
     df_district_dated = filter.by_district(df_district_dated, district)
 
-    df_district_dated=df_district_dated.sort_values(indicator, ascending = False).reset_index()
-    df_district_dated.loc[df_district_dated.index >= 12, 'facility_name'] = 'Others'
-    df_district_dated.drop('index', axis=1, inplace=True)
-    df_district_dated = df_district_dated.set_index(['date','id', 'facility_name', indicator])
-
     title = f'"Contribution of individual facilities to {db.get_indicator_view(indicator)} in {district} district'
 
     df_district_dated = df_district_dated.rename(columns={indicator: title})
+    
 
     return df_district_dated
     

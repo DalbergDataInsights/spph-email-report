@@ -40,13 +40,9 @@ class FigureFactory:
             )
             if bar_mode == "overlay":
                 fig.update_traces(
-                    marker={
-                        "color": "rgb(211, 41, 61)"
-                        # "color": df[df.columns[0]],
-                        # "colorscale": figure_colors.get(name),
-                    },
-                    textposition="inside",
-                    texttemplate="%{x:%}",
+                    textposition="outside",
+                    #customdata = 
+                    texttemplate="%{x:}",
                     orientation="h",
                     y=df.index,
                     x=df[df.columns[0]],
