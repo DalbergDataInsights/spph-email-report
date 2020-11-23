@@ -1,6 +1,6 @@
 from ..data.transform import (
     scatter_district_plot,
-    tree_map_district_plot,
+    bar_district_plot,
     scatter_reporting_district_plot,
 )
 
@@ -15,9 +15,11 @@ pipeline = [
         },
     },
     {
-        "type": "treemap",
-        "transform": tree_map_district_plot,
-        "color": ["#e2d5d1", "#96c0e0", "#3c6792"],
+        "type": "bar",
+        "transform": bar_district_plot,
+        "color": {'district': "rgb(42, 87, 131)"},
+        "args": {"bar_mode": "overlay"}
+        
     },
     {
         "type": "bar",
