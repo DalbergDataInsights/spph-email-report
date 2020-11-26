@@ -179,14 +179,15 @@ class FigureFactory:
         for agg in aggs:
             if agg == "date":
                 format_aggs.append(
-                    data.reset_index().date.max().dt.strftime("%B %Y") 
-                )  # 20201001 -> Oct 2020
+                    data.reset_index().date.max()
+                )  
+                data.date.strftime("%B %Y")  # 20201001 -> Oct 2020
                 print(format_aggs)
             elif agg == "district":
                 format_aggs.append(data.reset_index().id[0])
             elif agg == "ratio":
-                format_aggs.append(helper.get_time_diff_perc(data))
+                format_aggs.append(self.get_time_diff_perc(data))
            # elif agg == "sum_positive": 
                 #format_aggs.append(data.get("reported_positive")) 
-            print(format_aggs)
+            
         return title.format(*format_aggs)

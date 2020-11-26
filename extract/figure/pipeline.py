@@ -1,8 +1,12 @@
+from extract import data
+from extract.data.pipeline import get_scatter_district_title, get_title_district_bar, get_title_scatter_reporting_country
 from ..data.transform import (
     scatter_district_plot,
     bar_district_plot,
     scatter_reporting_district_plot,
 )
+
+
 
 pipeline = [
     {
@@ -21,7 +25,8 @@ pipeline = [
         "transform": bar_district_plot,
         "color": {"district": "rgb(42, 87, 131)"},
         "args": {"bar_mode": "overlay"},
-        "title": "The number of women attending their first ANC visit in {} in {} decreased by {} from the month before",
+        "title": get_title_district_bar, 
+       # "Together, {} and {} contribute to {} of all women attending their first ANC visit in September 2020 in {}",
         "title_data": "district",
     },
     {
@@ -33,7 +38,7 @@ pipeline = [
             "Did not report on their 105:1 form": "rgb(211, 41, 61)",
         },
         "args": {"bar_mode": "stack"},
-        "title": "The number of women attending their first ANC visit in {} in {} decreased by {} from the month before",
+        "title": get_title_scatter_reporting_country, #"Of the {} health facilities in {}, {} health facilities reported with a number different from zero for the number of women attending their first ANC visit in {}",
         "title_data": "district",
     },
 ]

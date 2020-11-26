@@ -1,7 +1,9 @@
 from extract.data import transform
+from extract.data.helper import get_time_diff_perc 
 import config
 import json
 import calendar
+
 
 from email import encoders
 from email.mime.base import MIMEBase
@@ -57,14 +59,16 @@ class EmailTemplateParser:
 
         elif "%district%" in item:
             item = self.__parse_district(item, filters, mime_type)
-        elif "%title" in item:
+        elif "%title%" in item:
             item = self.__parse_image_title(item, filters, mime_type)
+        elif "%ratio%" in item:
+            item = self.__parse_ratio(item, filters, mime_type)  
         else:
             item = MIMEText(item)
 
         return item
 
-    def __parse_date(self, item, filters, mime_type=True):
+    def __parse_date(self, item, mime_type=True):
 
         date = self.config.get("date")
         year = date[:4]
@@ -107,7 +111,7 @@ class EmailTemplateParser:
         # filename is based on district
         district = filters.get("district")
         fname = f"{self.folder}/{district}/{self.config.get('date')}/{indicator}/titles.json"
-        with open(fname, "r") as f:
+        with open(fname, "r+") as f:
             title = json.load(f).get(figure)
         item = item.replace(f"%title.{indicator}.{figure}%", title)
         if mime_type:
@@ -119,6 +123,15 @@ class EmailTemplateParser:
         if mime_type:
             item = MIMEText(item)
         return item
+
+    def __parse_ratio(self, item, filters, mime_type=True):
+        ratio= self.get_time_diff_perc(data)
+        item = item.replace("%ratio%", ratio)
+        if mime_type:
+            item = MIMEText(item)
+        return item
+
+
 
 
 class Email:
@@ -136,14 +149,4 @@ class Email:
         # self.smtp.sendmail(self.send_from, self.send_to, self.message)
 
 
-# parser = EmailTemplateParser(template, data_folder)
-# smtp_server = smtplib.SMTP("smtp-mail.outlook.com", 587)
-# smtp_server.starttls()
-# smtp_server.login('email', ' pass')
-# smtp_server.quit()
 
-# from district in districts:
-#     email = Email(smtp, to, from)
-#     email.set_subject(config.get("date"))
-#     email.attach_message(parser.get_parsed_message(district)
-#     email.send()
