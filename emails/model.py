@@ -69,7 +69,7 @@ class EmailTemplateParser:
         date = self.config.get("date")
         year = date[:4]
         month = date[-2:]
-        month = calendar.month_abbr[int(month)]
+        month = calendar.month_name[int(month)]
         date = f"{month} {year}"
 
         item = item.replace("%date%", date)

@@ -1,5 +1,7 @@
+from extract.data import helper
 import plotly.graph_objects as go
 import pandas as pd
+from datetime import datetime
 
 
 class FigureFactory:
@@ -172,15 +174,19 @@ class FigureFactory:
 
     def get_figure_title(self, title, data, aggs):
         format_aggs = []
-        # datetime.strftime("%b %Y") -> Oct 2020 
+        datetime.strftime("%B %Y") 
         # TODO
         for agg in aggs:
             if agg == "date":
                 format_aggs.append(
-                    data.reset_index().date.max()
+                    data.reset_index().date.max().dt.strftime("%B %Y") 
                 )  # 20201001 -> Oct 2020
+                print(format_aggs)
             elif agg == "district":
                 format_aggs.append(data.reset_index().id[0])
             elif agg == "ratio":
-                format_aggs.append("0.1")
+                format_aggs.append(helper.get_time_diff_perc(data))
+           # elif agg == "sum_positive": 
+                #format_aggs.append(data.get("reported_positive")) 
+            print(format_aggs)
         return title.format(*format_aggs)

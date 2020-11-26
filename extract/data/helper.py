@@ -87,3 +87,49 @@ def get_num(df, value=3):
     new_df = pd.concat(df_count_all)
     return new_df
     return traces
+
+
+def get_perc_description(perc):
+    perc_abs = abs(perc)
+    if perc >= 0.1:
+        descrip = f"increased by {perc_abs}%"
+    elif perc_abs < 0.1:
+        descrip = "remained stable"
+    elif perc <= 0.1:
+        descrip = f"decreased by {perc_abs}%"
+    return descrip
+    
+def get_time_diff_perc(data, **controls):
+    """
+    Returns a string describing the percentage change difference between two dates 
+
+    """
+
+    target_year = controls.get("target_year")
+    target_month = controls.get("target_month")
+    reference_year = controls.get("reference_year")
+    reference_month = controls.get("reference_month")
+
+    try:
+
+        data_reference = data.get(int(reference_year))
+        data_target = data.get(int(target_year))
+        perc_first = round(
+            (
+                (
+                    data_target.loc[target_month][0]
+                    - data_reference.loc[reference_month][0]
+                )
+                / data_reference.loc[reference_month][0]
+            )
+            * 100
+        )
+        descrip = get_perc_description(perc_first)
+
+    except Exception as e:
+        print(e)
+        descrip = "changed by an unknown percentage"
+
+    return descrip    
+
+

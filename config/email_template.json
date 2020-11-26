@@ -42,17 +42,17 @@
         "4. METHODOLOGY",
         "5. DATA DASHBOARD",
         "6. NEXT STEPS",
-        "1. TRENDS UNTIL %d",
+        "1. TRENDS UNTIL %date%",
         "1.1. MNCH",
         "1.1.1. Total number of women attending their first ANC visit in %district%",
         "%image.1st ANC Visits.figure_1%",
         "%title.1st ANC Visits.figure_1%",
-        "%image.figure_2%",
-        "Together, %facility_name% and %facility_name% contribute to %ratio% of all women attending their first ANC visit in %date% in %district%",
+        "%image.1st ANC Visits.figure_2%",
+        "%figure_2%",
         "1.1.2. %title.figure_1%",
         "%image.figure_1%",
         "The number of women attending their fourth ANC visit in %district in %date decreased by %ratio% from the month before",
         "indicator %image.figure_2% acacaca",
-        "Together, %facility_name and %facility_name contribute to %ratio of all women attending their fourth ANC visit in %date in %district"
+        "Together, %facility_name and %facility_name contribute to %sum% of all women attending their fourth ANC visit in %date in %district"
     ]
 }

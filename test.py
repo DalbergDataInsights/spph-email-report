@@ -1,8 +1,6 @@
-# json = "asdasdasd %date%"
-
-# json.replace("%date%", config.get("date"))
 
 
+import smtplib
 from config import get_config
 from emails.model import EmailTemplateParser, Email
 
@@ -15,9 +13,11 @@ parser = EmailTemplateParser("data/viz", email_template, config)
 recipients = get_config("email_recipients")
 engine = get_config("email_engine")
 
-# Create SMTP
-# Open SMTP
-# Login SMTP
+# server = smtplib.SMTP_SSL(host='smtp-mail.outlook.com', 587)
+# server.starttls()
+# server.ehlo()
+# server.login("from_email", "password")
+
 smtp = ""
 
 # TODO
@@ -37,6 +37,6 @@ for recipient in recipients:  # main loop
     email.set_subject(parser.get_parsed_subject(recipient.get("filters")))
     email.send()
     # create EMAIL
-    # send EMAIL
+    # server.sendmail("from_email"", "target@example.com", msg)
 
-# Close SMTP
+# server.quit()
