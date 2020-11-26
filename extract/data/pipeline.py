@@ -3,6 +3,7 @@ from . import helper
 
 
 
+
 def get():
     return {
         "district": scatter_district_data,

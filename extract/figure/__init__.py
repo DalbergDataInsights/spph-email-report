@@ -5,10 +5,17 @@ from ..model import FigureFactory
 def get(data):
     ff = FigureFactory()
     figures = []
+    figure_titles = []
     for figure in pipeline:
+        d = figure.get("transform")(data)
         figures.append(
             ff.get_figure(
-                figure.get("type"), figure.get("transform")(data), figure.get("color"), **figure.get("args", {})
+                figure.get("type"), d, figure.get("color"), **figure.get("args", {})
             )
         )
-    return figures
+        figure_titles.append(
+            ff.get_figure_title(
+                figure.get("title"), data.get(figure.get("title_data")), ["district", "date", "ratio"]
+            )
+        )
+    return figures, figure_titles

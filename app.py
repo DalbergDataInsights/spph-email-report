@@ -12,7 +12,7 @@ load_dotenv(find_dotenv())
 
 def run():
 
-    config = get_config()
+    config = get_config("config")
 
     # init databast
     DATABASE_URI = os.environ["HEROKU_POSTGRESQL_CYAN_URL"]
@@ -39,7 +39,7 @@ def run():
                 "target_year": str(target_date.year),
                 "target_month": calendar.month_abbr[target_date.month],
                 "reference_year": str(reference_date.year),
-                "reference_month": calendar.month_abbr[reference_date.month]
+                "reference_month": calendar.month_abbr[reference_date.month],
             }
             extract.run(db, controls)
 

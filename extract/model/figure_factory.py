@@ -21,7 +21,9 @@ class FigureFactory:
         elif figure_type == "treemap":
             return self.get_treemap("Treemap", data, colors, **kwargs)
 
-    def get_bar_or_scatter(self, figure_object, data, figure_colors, bar_mode=None, **kwargs):
+    def get_bar_or_scatter(
+        self, figure_object, data, figure_colors, bar_mode=None, **kwargs
+    ):
         fig = go.Figure()
 
         FigType = getattr(go, figure_object)
@@ -41,7 +43,7 @@ class FigureFactory:
             if bar_mode == "overlay":
                 fig.update_traces(
                     textposition="outside",
-                    #customdata = 
+                    # customdata =
                     texttemplate="%{x:}",
                     orientation="h",
                     y=df.index,
@@ -99,7 +101,9 @@ class FigureFactory:
             )
             fig.update_layout(
                 margin=dict(t=20, b=20, r=20, l=20),
-                width=900, height=400, autosize=False,
+                width=900,
+                height=400,
+                autosize=False,
             )
 
         return fig
@@ -149,11 +153,10 @@ class FigureFactory:
             legend=dict(
                 orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1
             ),
-            margin=dict(l=50,r=50,b=50,t=50, pad=2
-            ),
+            margin=dict(l=50, r=50, b=50, t=50, pad=2),
             autosize=False,
             width=900,
-            height=500
+            height=500,
         )
 
         fig.update_layout(
@@ -166,3 +169,18 @@ class FigureFactory:
                 showgrid=True, zeroline=False, rangemode="tozero", gridcolor="LightGray"
             ),
         )
+
+    def get_figure_title(self, title, data, aggs):
+        format_aggs = []
+        # datetime.strftime("%b %Y") -> Oct 2020 
+        # TODO
+        for agg in aggs:
+            if agg == "date":
+                format_aggs.append(
+                    data.reset_index().date.max()
+                )  # 20201001 -> Oct 2020
+            elif agg == "district":
+                format_aggs.append(data.reset_index().id[0])
+            elif agg == "ratio":
+                format_aggs.append("0.1")
+        return title.format(*format_aggs)

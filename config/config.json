@@ -1,5 +1,9 @@
 {
-    "districts": [ "AMURU", "BUHWEJU"],
+    "districts": [
+        "AMURU"
+    ],
     "date": "202010",
-    "indicators": ["1st ANC Visits"]
+    "indicators": [
+        "1st ANC Visits"
+    ]
 }
