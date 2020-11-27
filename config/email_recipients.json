@@ -1,6 +1,6 @@
 [
     {
-        "recipients": ["valeriya.cherepova@dalberg.com"],
+        "recipients": "denys.sementsov@dalberg.com",
         "filters": {
             "district": "AMURU"
         }

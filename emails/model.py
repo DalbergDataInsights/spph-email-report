@@ -1,5 +1,3 @@
-from extract.data import transform
-from extract.data.helper import get_time_diff_perc 
 import config
 import json
 import calendar
@@ -34,7 +32,7 @@ class EmailTemplateParser:
         self.config = config
 
     def get_parsed_message(self, filters):
-        parsed_message = MIMEMultipart()
+        parsed_message = MIMEMultipart("alternative")
         for item in self.template.get("body"):
             msg = self.parse_item(item, filters)
             if msg:
@@ -52,20 +50,15 @@ class EmailTemplateParser:
 
     def parse_item(self, item, filters, mime_type=True):
         if "%date%" in item:
-            item = self.__parse_date(item, filters, mime_type)
-
+            item = self.__parse_date(item, mime_type)
         elif "%image" in item:
-            item = self.__parse_image(item, filters, True)
-
+            item = self.__parse_image(item, filters, mime_type=True)
         elif "%district%" in item:
             item = self.__parse_district(item, filters, mime_type)
-        elif "%title%" in item:
+        elif "%title" in item:
             item = self.__parse_image_title(item, filters, mime_type)
-        elif "%ratio%" in item:
-            item = self.__parse_ratio(item, filters, mime_type)  
         else:
-            item = MIMEText(item)
-
+            item = MIMEText(item, "html")
         return item
 
     def __parse_date(self, item, mime_type=True):
@@ -78,7 +71,7 @@ class EmailTemplateParser:
 
         item = item.replace("%date%", date)
         if mime_type:
-            item = MIMEText(item)
+            item = MIMEText(item, "html")
         return item
 
     def __parse_image(self, item, filters, mime_type=True):
@@ -87,7 +80,7 @@ class EmailTemplateParser:
         except ValueError as e:
             print(e)
             print(
-                "Image tag in email template does not contain engought parameters! Please use %image.<indicator>.<figure_number>%"
+                f"Image tag {item} in email template does not contain engought parameters! Please use %image.<indicator>.<figure_number>%"
             )
             return None
         # filename is based on district
@@ -97,6 +90,7 @@ class EmailTemplateParser:
             item = f.read()
         if mime_type:
             item = MIMEImage(item)
+            # item.add_header(f"{item.__str__()}-id", "<image>")
         return item
 
     def __parse_image_title(self, item, filters, mime_type=True):
@@ -105,34 +99,24 @@ class EmailTemplateParser:
         except ValueError as e:
             print(e)
             print(
-                "Image tag in email template does not contain engought parameters! Please use %image.<indicator>.<figure_number>%"
+                f"Image tag {item} in email template does not contain engought parameters! Please use %image.<indicator>.<figure_number>%"
             )
             return None
         # filename is based on district
         district = filters.get("district")
         fname = f"{self.folder}/{district}/{self.config.get('date')}/{indicator}/titles.json"
-        with open(fname, "r+") as f:
+        with open(fname, "r") as f:
             title = json.load(f).get(figure)
         item = item.replace(f"%title.{indicator}.{figure}%", title)
         if mime_type:
-            item = MIMEText(item)
+            item = MIMEText(item, "html")
         return item
 
     def __parse_district(self, item, filters, mime_type=True):
         item = item.replace("%district%", filters.get("district"))
         if mime_type:
-            item = MIMEText(item)
+            item = MIMEText(item, "html")
         return item
-
-    def __parse_ratio(self, item, filters, mime_type=True):
-        ratio= self.get_time_diff_perc(data)
-        item = item.replace("%ratio%", ratio)
-        if mime_type:
-            item = MIMEText(item)
-        return item
-
-
-
 
 class Email:
     def __init__(self, smtp, send_to, send_from, message):
@@ -140,13 +124,16 @@ class Email:
         self.send_to = send_to
         self.send_from = send_from
         self.message = message
+        # self.message = MIMEMultipart("related")
+        # self.message.attach(message)
 
     def set_subject(self, subject):
         self.message["Subject"] = subject
 
     def send(self):
-        print(self.message)
-        # self.smtp.sendmail(self.send_from, self.send_to, self.message)
+        # self.message["From"] = self.send_from
+        # self.message["To"] = self.send_to
+        self.smtp.sendmail(self.send_from, self.send_to, self.message.as_string())
 
 
 

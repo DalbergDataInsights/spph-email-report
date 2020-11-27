@@ -12,7 +12,7 @@ def scatter_district_plot(df):
     df_district = helper.get_year_and_month_cols(df_district)
 
     df_district = helper.get_sub_dfs(df_district, "year", [2018, 2019, 2020], "month")
-    
+
     return df_district
 
 
@@ -37,12 +37,6 @@ def scatter_reporting_district_plot(data):
     }
 
     return data
-    
-
-    
-
-
-
 
 
 def bar_district_plot(data):
@@ -52,14 +46,11 @@ def bar_district_plot(data):
     data_in = data_in.reset_index()
     data_in = data_in[data_in.date == data_in.date.max()]
 
-    data_in = data_in[["facility_name", val_col]].groupby(by=["facility_name"]).sum() 
+    data_in = data_in[["facility_name", val_col]].groupby(by=["facility_name"]).sum()
     data_in = data_in[data_in[val_col] > 0]
-   
     data_in = data_in.sort_values(val_col, ascending = False).reset_index()
     data_in.loc[data_in.index >= 12, 'facility_name']='Others'
     data_in=data_in.groupby('facility_name').sum().sort_values(val_col)
-    
-    
 
-    
     return {"district": data_in}
+ 

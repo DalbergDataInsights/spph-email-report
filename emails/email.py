@@ -8,4 +8,4 @@ class Email:
         self.smtp = smtp
         self.send_to = send_to
         self.send_from = send_from
-        self.message = 
+        self.message = message

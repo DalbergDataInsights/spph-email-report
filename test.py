@@ -1,6 +1,7 @@
 
 
 import smtplib
+import ssl
 from config import get_config
 from emails.model import EmailTemplateParser, Email
 
@@ -13,16 +14,16 @@ parser = EmailTemplateParser("data/viz", email_template, config)
 recipients = get_config("email_recipients")
 engine = get_config("email_engine")
 
-# server = smtplib.SMTP_SSL(host='smtp-mail.outlook.com', 587)
-# server.starttls()
-# server.ehlo()
-# server.login("from_email", "password")
 
-smtp = ""
+# smtp = ''
+smtp = smtplib.SMTP(host=engine.get("smtp"), port=587)
+smtp.starttls(context=ssl.create_default_context())
+
+
+
 
 # TODO
-# 1. Finish all parsers
-# 1.1 Finish title parses (ratio! etc)
+
 # 2. Figure out smtp
 # 3. Translate to HTML
 
@@ -36,7 +37,7 @@ for recipient in recipients:  # main loop
     )
     email.set_subject(parser.get_parsed_subject(recipient.get("filters")))
     email.send()
-    # create EMAIL
-    # server.sendmail("from_email"", "target@example.com", msg)
+    # create email msg
+    # smtp.sendmail("from_email"", "target@example.com", msg)
 
-# server.quit()
+smtp.quit()

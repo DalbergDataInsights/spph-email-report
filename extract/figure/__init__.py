@@ -2,7 +2,9 @@ from .pipeline import pipeline
 from ..model import FigureFactory
 
 
-def get(data):
+
+def get(db):
+    data = db.datasets
     ff = FigureFactory()
     figures = []
     figure_titles = []
@@ -15,7 +17,7 @@ def get(data):
         )
         figure_titles.append(
             ff.get_figure_title(
-                figure.get("title"), data.get(figure.get("title_data")), ["district", "date", "ratio"]
+                figure.get("title", ""), db, figure.get("title_args", [])
             )
         )
     return figures, figure_titles

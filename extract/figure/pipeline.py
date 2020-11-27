@@ -1,6 +1,5 @@
-from extract import data
-from extract.data.pipeline import get_scatter_district_title, get_title_district_bar, get_title_scatter_reporting_country
-from ..data.transform import (
+from extract import dataset
+from ..dataset.transform import (
     scatter_district_plot,
     bar_district_plot,
     scatter_reporting_district_plot,
@@ -17,17 +16,16 @@ pipeline = [
             2019: "rgb(106, 155, 195)",
             2020: "rgb(200, 19, 60)",
         },
-        "title": "The number of women attending their first ANC visit in {} in {} decreased by {} from the month before",
-        "title_data": "district",
+        "title": "The number of {} in {} in {} {} from the month before",
+        "title_args": ["indicator_view", "district", "date", "ratio"]
     },
     {
         "type": "bar",
         "transform": bar_district_plot,
         "color": {"district": "rgb(42, 87, 131)"},
         "args": {"bar_mode": "overlay"},
-        "title": get_title_district_bar, 
-       # "Together, {} and {} contribute to {} of all women attending their first ANC visit in September 2020 in {}",
-        "title_data": "district",
+        "title": "{} contribute {} of {} in {} in {}",
+        "title_args": ["top_facility", "top_facility_contribution", "indicator_view", "date", "district"]
     },
     {
         "type": "bar",
@@ -38,7 +36,8 @@ pipeline = [
             "Did not report on their 105:1 form": "rgb(211, 41, 61)",
         },
         "args": {"bar_mode": "stack"},
-        "title": get_title_scatter_reporting_country, #"Of the {} health facilities in {}, {} health facilities reported with a number different from zero for the number of women attending their first ANC visit in {}",
-        "title_data": "district",
-    },
+        # Of the 36 health facilities in Amuru, 16 health facilities reported with a number different from zero for the number of women attending their first ANC visit in September 2020
+        "title": "Of the {} health facilities in {}, {} health facilities reported with a number different from zero for the {} in {}",
+        "title_args": ["facility_count", "district", "facility_count_reported", "indicator_view", "date"]
+    }
 ]

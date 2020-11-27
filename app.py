@@ -15,6 +15,7 @@ def run():
     config = get_config("config")
 
     # init databast
+    # Linter - black !TODO
     DATABASE_URI = os.environ["HEROKU_POSTGRESQL_CYAN_URL"]
     db = Database(DATABASE_URI)
 

@@ -1,7 +1,7 @@
-from extract.data import helper
+from extract.dataset import helper
 import plotly.graph_objects as go
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class FigureFactory:
@@ -172,22 +172,79 @@ class FigureFactory:
             ),
         )
 
-    def get_figure_title(self, title, data, aggs):
+    def get_figure_title(self, title, db, aggs):
         format_aggs = []
-        datetime.strftime("%B %Y") 
-        # TODO
+        # datetime.strftime("%B %Y")
+        print(f"Parsing title {title} with aggs {aggs}")
+        indicator = db.datasets.get("district_dated").columns[-1]
         for agg in aggs:
+            parsed = ""
             if agg == "date":
-                format_aggs.append(
-                    data.reset_index().date.max()
-                )  
-                data.date.strftime("%B %Y")  # 20201001 -> Oct 2020
-                print(format_aggs)
+                data = db.datasets.get("district_dated")
+                parsed = data.reset_index().date.max().strftime("%B %Y")
             elif agg == "district":
-                format_aggs.append(data.reset_index().id[0])
+                data = db.datasets.get("district_dated")
+                parsed = data.reset_index().id[0]
+            elif agg == "indicator_view":
+                parsed = db.get_indicator_view(indicator)
             elif agg == "ratio":
-                format_aggs.append(self.get_time_diff_perc(data))
-           # elif agg == "sum_positive": 
-                #format_aggs.append(data.get("reported_positive")) 
-            
+                parsed = self.__get_percentage_difference_between_time(db.datasets.get("district"))
+            elif agg == "facility_count_reported":
+                parsed = str(self.__get_positive_reporting(db.datasets.get("reporting_district")))
+            elif agg == "facility_count":
+                parsed = str(db.datasets.get("district_dated").reset_index().facility_name.count())
+            elif agg == "top_facility":
+                from ..dataset.transform import bar_district_plot
+                data = bar_district_plot(db.datasets).get("district")
+                parsed = data.sort_values(by=indicator, ascending=False).reset_index().facility_name.iloc[0]
+            elif agg == "top_facility_contribution":
+                from ..dataset.transform import bar_district_plot
+                data = bar_district_plot(db.datasets).get("district").reset_index()
+                facility_name = data.sort_values(by=indicator, ascending=False).reset_index().facility_name.iloc[0]
+                facility_value = data.loc[data.facility_name == facility_name, indicator].item()
+                parsed = str(round( facility_value/data[indicator].sum(), 2) * 100) + "%"
+            format_aggs.append(parsed)
         return title.format(*format_aggs)
+
+
+    def __get_percentage_description(self, value):
+        absolute_value = abs(value)
+        if value >= 0.1:
+            description = f"increased by {absolute_value}%"
+        elif absolute_value < 0.1:
+            description = "remained stable"
+        elif value <= 0.1:
+            description = f"decreased by {absolute_value}%"
+        return description
+
+
+    def __get_percentage_difference_between_time(self, data):
+        indicator = data.columns[-1]
+        data = data.reset_index()
+        max_date = data.date.max()
+        previous_month = (max_date - timedelta(days=1)).replace(day=1)
+
+        # (value_today - value_yest) / value_yest
+
+        ratio_value = round(
+            (
+                (data.loc[data.date == max_date, indicator].item() -
+                data.loc[data.date == previous_month, indicator].item()) /
+                data.loc[data.date == previous_month, indicator].item()
+            )
+            * 100
+        )
+        description = self.__get_percentage_description(ratio_value)
+
+        return description
+
+
+    def __get_positive_reporting(self, data):
+
+        indicator = data.columns[-1]
+        data = data.reset_index()
+        max_date = data.date.max()
+        data = data[data[indicator]==3].reset_index(drop=True)
+        reported_positive = str(data[data.date == max_date][indicator].count())
+
+        return reported_positive
