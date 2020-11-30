@@ -2,16 +2,11 @@ import config
 import json
 import calendar
 
-
-from email import encoders
-from email.mime.base import MIMEBase
-from email.mime.image import MIMEImage
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
 import os
-import smtplib
 
 from email.message import EmailMessage
+from email.utils import make_msgid
+import mimetypes
 
 # email_message = EmailMessage()
 
@@ -30,38 +25,55 @@ class EmailTemplateParser:
         self.folder = data_folder
         self.template = email_template
         self.config = config
+        self.payload = {}
 
     def get_parsed_message(self, filters):
-        parsed_message = MIMEMultipart("alternative")
+        message = EmailMessage()
+        parsed_message = []
+        payloads = []
         for item in self.template.get("body"):
             msg = self.parse_item(item, filters)
             if msg:
-                parsed_message.attach(msg)
+                parsed_message.append(msg)
+        message.add_alternative(f"<html><body>{''.join(parsed_message)}<body><html>", subtype="html")
+        # add images to payload
+        message = self.set_payload(message)
+        return message
 
-            # !TODO all parsing cases
-        return parsed_message
+    def set_payload(self, message):
+        i = 0
+        for cid, fname in self.payload.items():
+            with open(fname, "rb") as f:
+                print("\n\n\n\n\n\n")
+                print(message.get_payload())
+                message.get_payload()[i].add_related(f.read(),
+                                                     maintype="image",
+                                                     subtype="png",
+                                                     cid=cid)
+            #i = i + 1
+        return message
 
     def get_parsed_subject(self, filters):
-        return self.parse_item(self.template.get("subject"), filters, mime_type=False)
+        return self.parse_item(self.template.get("subject"), filters)
 
     ###########
     # PARSERS #
     ###########
 
-    def parse_item(self, item, filters, mime_type=True):
+    def parse_item(self, item, filters):
         if "%date%" in item:
-            item = self.__parse_date(item, mime_type)
+            item = self.__parse_date(item)
         elif "%image" in item:
-            item = self.__parse_image(item, filters, mime_type=True)
+            item = self.__parse_image(item, filters)
         elif "%district%" in item:
-            item = self.__parse_district(item, filters, mime_type)
+            item = self.__parse_district(item, filters)
         elif "%title" in item:
-            item = self.__parse_image_title(item, filters, mime_type)
+            item = self.__parse_image_title(item, filters)
         else:
-            item = MIMEText(item, "html")
+            item = item
         return item
 
-    def __parse_date(self, item, mime_type=True):
+    def __parse_date(self, item):
 
         date = self.config.get("date")
         year = date[:4]
@@ -70,9 +82,8 @@ class EmailTemplateParser:
         date = f"{month} {year}"
 
         item = item.replace("%date%", date)
-        if mime_type:
-            item = MIMEText(item, "html")
-        return item
+
+        return item + "<br>"
 
     def __parse_image(self, item, filters, mime_type=True):
         try:
@@ -83,17 +94,16 @@ class EmailTemplateParser:
                 f"Image tag {item} in email template does not contain engought parameters! Please use %image.<indicator>.<figure_number>%"
             )
             return None
+
+        image_cid = make_msgid()
+        item = f'<img src="cid:{image_cid[1:-1]}">'
         # filename is based on district
         district = filters.get("district")
         fname = f"{self.folder}/{district}/{self.config.get('date')}/{indicator}/{image_file_name}.png"
-        with open(fname, "rb") as f:
-            item = f.read()
-        if mime_type:
-            item = MIMEImage(item)
-            # item.add_header(f"{item.__str__()}-id", "<image>")
-        return item
+        self.payload[image_cid] = fname
+        return item + "<br>"
 
-    def __parse_image_title(self, item, filters, mime_type=True):
+    def __parse_image_title(self, item, filters):
         try:
             _, indicator, figure = item.split("%")[1].split(".")
         except ValueError as e:
@@ -108,15 +118,12 @@ class EmailTemplateParser:
         with open(fname, "r") as f:
             title = json.load(f).get(figure)
         item = item.replace(f"%title.{indicator}.{figure}%", title)
-        if mime_type:
-            item = MIMEText(item, "html")
-        return item
 
-    def __parse_district(self, item, filters, mime_type=True):
+        return item + "<br>"
+
+    def __parse_district(self, item, filters):
         item = item.replace("%district%", filters.get("district"))
-        if mime_type:
-            item = MIMEText(item, "html")
-        return item
+        return item + "<br>"
 
 class Email:
     def __init__(self, smtp, send_to, send_from, message):
