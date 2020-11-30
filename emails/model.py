@@ -41,16 +41,14 @@ class EmailTemplateParser:
         return message
 
     def set_payload(self, message):
-        i = 0
+        
         for cid, fname in self.payload.items():
             with open(fname, "rb") as f:
-                print("\n\n\n\n\n\n")
-                print(message.get_payload())
-                message.get_payload()[i].add_related(f.read(),
+                message.get_payload()[0].add_related(f.read(),
                                                      maintype="image",
                                                      subtype="png",
                                                      cid=cid)
-            #i = i + 1
+            
         return message
 
     def get_parsed_subject(self, filters):
