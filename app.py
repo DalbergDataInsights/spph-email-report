@@ -25,9 +25,12 @@ def run():
 
     # for each district
     # TODO separate district, date and indicator filter
+    # TODO filter by date
     for district in config.get("districts"):
+        # TODO filter by district
         print(f"Running the pipeline of figures for {district}")
         for indicator in config.get("indicators"):
+            # TODO filter by indicator
             print(f"Running the pipeline of figures for {indicator}")
             controls = {
                 "date": target_date.strftime("%Y%m"),

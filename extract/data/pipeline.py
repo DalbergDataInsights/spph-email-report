@@ -58,33 +58,11 @@ def tree_map_district_dated_data(
     )
 
     df_district_dated = filter.by_district(df_district_dated, district)
-    
-    df_district_dated = df_district_dated.nlargest(12, indicator)
 
-    #if len(df_district_dated) >= 12 :
-    
-    #df_district_dated_top = df_district_dated.nlargest(12, indicator)
-    #df_district_dated.loc[len(df_district_dated_top)] = ['Others', df_district_dated.loc[~df_district_dated_top.facility_name.isin(df_district_dated.facility_name), indicator].sum()]
-    
-    #df_district_dated = (df_district_dated.groupby(indicator).sum()
-                #.sort_values(indicator, ascending=False)
-                
-   #df_district_dated.loc[df_district_dated.index >= 12, indicator]= "Others"
-
-    #df_district_dated = df_district_dated.sort_values(indicator, ascending=False).index[12:].sum()
-    
-
-
-    #not_top = df_district_dated.sum().sort_values(indicator, ascending=False).index[12:]
-    #df_district_dated = df_district_dated.replace(not_top, 'Other')
-
-
-    
-    #df_district_dated_large = df_district_dated.nlargest(12, indicator)
-    #df_district_dated_other = df.sort_values(indicator, ascending=False).indicator[12:].sum()
-    #df_district_dated.loc[len(df_district_dated_large)] = ["others", df_district_dated_other]
-   
-    
+    df_district_dated=df_district_dated.sort_values(indicator, ascending = False).reset_index()
+    df_district_dated.loc[df_district_dated.index >= 12, 'facility_name'] = 'Others'
+    df_district_dated.drop('index', axis=1, inplace=True)
+    df_district_dated = df_district_dated.set_index(['date','id', 'facility_name', indicator])
 
     title = f'"Contribution of individual facilities to {db.get_indicator_view(indicator)} in {district} district'
 
