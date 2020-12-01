@@ -18,14 +18,8 @@ engine = get_config("email_engine")
 # smtp = ''
 smtp = smtplib.SMTP(host=engine.get("smtp"), port=587)
 smtp.starttls(context=ssl.create_default_context())
+smtp.login("valeriya.cherepova@dalberg.com", "Flowers253311")
 
-
-
-
-# TODO
-
-# 2. Figure out smtp
-# 3. Translate to HTML
 
 for recipient in recipients:  # main loop
     message = parser.get_parsed_message(recipient.get("filters"))
@@ -37,7 +31,6 @@ for recipient in recipients:  # main loop
     )
     email.set_subject(parser.get_parsed_subject(recipient.get("filters")))
     email.send()
-    # create email msg
-    # smtp.sendmail("from_email"", "target@example.com", msg)
+    
 
 smtp.quit()

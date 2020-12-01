@@ -67,6 +67,10 @@ class EmailTemplateParser:
             item = self.__parse_district(item, filters)
         elif "%title" in item:
             item = self.__parse_image_title(item, filters)
+        elif "%recipients_name%" in item:
+            item = self.__parse_recipients_name(item, filters)
+        elif "%biostatistician_name%" in item:
+            item = self.__parse_biostatistician_name(item, filters)
         else:
             item = item
         return item
@@ -81,7 +85,7 @@ class EmailTemplateParser:
 
         item = item.replace("%date%", date)
 
-        return item + "<br>"
+        return item #+ "<br>"
 
     def __parse_image(self, item, filters, mime_type=True):
         try:
@@ -121,7 +125,18 @@ class EmailTemplateParser:
 
     def __parse_district(self, item, filters):
         item = item.replace("%district%", filters.get("district"))
-        return item + "<br>"
+        return item 
+
+    def __parse_recipients_name(self, item, filters):
+        item = item.replace("%recipients_name%", filters.get("recipients_name"))
+        return item  
+
+    def __parse_biostatistician_name(self, item, filters):
+        item = item.replace("%biostatistician_name%", filters.get("biostatistician_name"))
+        return item  
+
+
+
 
 class Email:
     def __init__(self, smtp, send_to, send_from, message):

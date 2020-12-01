@@ -174,8 +174,6 @@ class FigureFactory:
 
     def get_figure_title(self, title, db, aggs):
         format_aggs = []
-        # datetime.strftime("%B %Y")
-        print(f"Parsing title {title} with aggs {aggs}")
         indicator = db.datasets.get("district_dated").columns[-1]
         for agg in aggs:
             parsed = ""
@@ -223,8 +221,6 @@ class FigureFactory:
         data = data.reset_index()
         max_date = data.date.max()
         previous_month = (max_date - timedelta(days=1)).replace(day=1)
-
-        # (value_today - value_yest) / value_yest
 
         ratio_value = round(
             (

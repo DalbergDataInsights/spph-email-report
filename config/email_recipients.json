@@ -1,8 +1,11 @@
 [
     {
-        "recipients": "denys.sementsov@dalberg.com",
+        "recipients": "valeriya.cherepova@dalberg.com",
         "filters": {
-            "district": "AMURU"
+            "district": "AMURU",
+            "recipients_name": "Dr Odong Patrick Olwedo", 
+            "biostatistician_name": "Walter Tobina"
+            
         }
     }
 
