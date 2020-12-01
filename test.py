@@ -18,7 +18,7 @@ engine = get_config("email_engine")
 # smtp = ''
 smtp = smtplib.SMTP(host=engine.get("smtp"), port=587)
 smtp.starttls(context=ssl.create_default_context())
-smtp.login("valeriya.cherepova@dalberg.com", "Flowers253311")
+smtp.login()
 
 
 for recipient in recipients:  # main loop
@@ -31,6 +31,6 @@ for recipient in recipients:  # main loop
     )
     email.set_subject(parser.get_parsed_subject(recipient.get("filters")))
     email.send()
-    
+
 
 smtp.quit()

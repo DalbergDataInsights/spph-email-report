@@ -8,18 +8,6 @@ from email.message import EmailMessage
 from email.utils import make_msgid
 import mimetypes
 
-# email_message = EmailMessage()
-
-# email_message.set_content(get_content("template")) # !IMPORTANT content has to contain images and shit
-# email_message["Subject"] = email_template.get("subject")
-# email_message["From"] = engine.get("from")
-# email_message["To"] = recipients.get("district")
-
-# smtp = smtplib.SMTP(engine.get("smtp"))
-# smtp.send_message(email_message)
-# smtp.quit()
-
-
 class EmailTemplateParser:
     def __init__(self, data_folder, email_template, config):
         self.folder = data_folder
@@ -151,8 +139,6 @@ class Email:
         self.message["Subject"] = subject
 
     def send(self):
-        # self.message["From"] = self.send_from
-        # self.message["To"] = self.send_to
         self.smtp.sendmail(self.send_from, self.send_to, self.message.as_string())
 
 

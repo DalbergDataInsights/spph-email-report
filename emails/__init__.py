@@ -1,10 +1,18 @@
 
-# 1. Full email template (+full indicators)
-# 2. Transfer test to email.run()
-# 3. create .env with emal credentiasls (SMTP, EMAIL, LOGIN, PASSWORD)
 # 5. Load and send full email to yourself
 # 6. celebrate
 
+from config import get_config
+from emails.model import EmailEmailTemplateParser
 
-def run(сonfig,  emplate, credentials):
-    pass
+
+def run(send_from, recipient, parser, smtp):
+
+    message = parser.get_parsed_message(recipient.get("filters"))
+    email = Email(
+        smtp=smtp,
+        send_to=recipient.get("recipients"),
+        send_from=send_from,
+        message=message)
+    email.set_subject(parser.get_parsed_subject(recipient.get("filters")))
+    email.send()
