@@ -73,7 +73,7 @@ class EmailTemplateParser:
 
         item = item.replace("%date%", date)
 
-        return item #+ "<br>"
+        return item 
 
     def __parse_image(self, item, filters, mime_type=True):
         try:
@@ -140,6 +140,15 @@ class Email:
 
     def send(self):
         self.smtp.sendmail(self.send_from, self.send_to, self.message.as_string())
+    
+    def to_html(self, fname):
+        pass
+    
+    def from_html(self, fname):
+        pass
+
+    def to_pdf(self, fname):
+        pass
 
 
 

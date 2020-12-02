@@ -1,4 +1,5 @@
 import calendar
+
 import os
 import smtplib
 import ssl
@@ -53,6 +54,7 @@ def run_emails(config, engine, email_template, recipients):
         emails.run(engine.get("username"), recipient, parser, smtp)
 
     smtp.quit()
+     
 
 
 def run(pipeline):
@@ -76,6 +78,6 @@ def run(pipeline):
 
         elif pipe == "email":
             run_emails(config, engine, email_template, recipients)
-eextract, "
+
 if __name__ == "__main__":
-    run()
+    run(["email"])

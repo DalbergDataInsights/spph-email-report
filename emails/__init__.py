@@ -2,8 +2,7 @@
 # 5. Load and send full email to yourself
 # 6. celebrate
 
-from config import get_config
-from emails.model import EmailEmailTemplateParser
+from emails.model import Email
 
 
 def run(send_from, recipient, parser, smtp):

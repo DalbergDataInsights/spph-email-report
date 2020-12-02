@@ -16,7 +16,7 @@ pipeline = [
             2019: "rgb(106, 155, 195)",
             2020: "rgb(200, 19, 60)",
         },
-        "title": "The number of {} in {} in {} {} from the month before",
+        "title": "The total {} in {} in {} {} from the month before",
         "title_args": ["indicator_view", "district", "date", "ratio"]
     },
     {
