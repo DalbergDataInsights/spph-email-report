@@ -37,7 +37,7 @@ pipeline = [
         },
         "args": {"bar_mode": "stack"},
         # Of the 36 health facilities in Amuru, 16 health facilities reported with a number different from zero for the number of women attending their first ANC visit in September 2020
-        "title": "Of the {} health facilities in {}, {} health facilities reported with a number different from zero for the {} in {}",
+        "title": "Of the {} health facilities expected to report in {}, {} health facilities reported with a number different from zero for the {} in {}",
         "title_args": ["facility_count", "district", "facility_count_reported", "indicator_view", "date"]
     }
 ]
