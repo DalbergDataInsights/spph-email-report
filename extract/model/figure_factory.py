@@ -200,7 +200,7 @@ class FigureFactory:
                 data = bar_district_plot(db.datasets).get("district").reset_index()
                 facility_name = data.sort_values(by=indicator, ascending=False).reset_index().facility_name.iloc[0]
                 facility_value = data.loc[data.facility_name == facility_name, indicator].item()
-                parsed = str(round(facility_value/data[indicator].sum(),2) * 100) + "%"
+                parsed = str(round(facility_value/data[indicator].sum()* 100) ) + "%"
                 print(parsed)
             format_aggs.append(parsed)
         return title.format(*format_aggs)
