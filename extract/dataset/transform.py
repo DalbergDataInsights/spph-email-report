@@ -1,3 +1,4 @@
+from extract.dataset.helper import get_sub_dfs, get_year_and_month_cols
 from . import helper
 import pandas as pd
 import numpy as np
@@ -54,3 +55,17 @@ def bar_district_plot(data):
 
     return {"district": data_in}
  
+
+def scatter_country_plot(df):
+     
+    df_country = df.get("country")
+
+    df_country = df_country[df_country[df_country.columns[-1]] > 0]
+
+    df_country = get_year_and_month_cols(df_country)
+
+    df_country = get_sub_dfs(df_country, "year", [2018, 2019, 2020], "month")
+
+    return df_country
+
+
