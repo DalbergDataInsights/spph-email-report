@@ -3,6 +3,7 @@ from ..dataset.transform import (
     scatter_district_plot,
     bar_district_plot,
     scatter_reporting_district_plot,
+    scatter_country_plot
 )
 
 
@@ -39,5 +40,16 @@ pipeline = [
         # Of the 36 health facilities in Amuru, 16 health facilities reported with a number different from zero for the number of women attending their first ANC visit in September 2020
         "title": "Of the {} health facilities expected to report in {}, {} health facilities reported with a number different from zero for the {} in {}",
         "title_args": ["facility_count", "district", "facility_count_reported", "indicator_view", "date"]
+    },
+    {
+        "type": "scatter",
+        "transform": scatter_country_plot,
+        "color": {
+            2018: "rgb(185, 221, 241)",
+            2019: "rgb(106, 155, 195)",
+            2020: "rgb(200, 19, 60)",
+        },
+        "title": "{} in {} {} compared to {} across the country", 
+        "title_args": ["indicator_view", "date", "ratio", "reference_date"]
     }
 ]
