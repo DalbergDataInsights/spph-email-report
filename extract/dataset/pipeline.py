@@ -11,6 +11,7 @@ def get():
         "district": scatter_district_data,
         "district_dated": bar_district_dated_data,
         "reporting_district": scatter_reporting_district_data,
+        "country": scatter_country_data
     }
 
 
@@ -75,3 +76,18 @@ def scatter_reporting_district_data(db, *, indicator, district, **kwargs):
     return df
 
 
+def scatter_country_data(db, *, indicator, **kwargs):
+
+    # dfs, static,
+
+    df = db.raw_data
+
+    df = db.filter_by_indicator(df, indicator)
+
+    df, index = get_ratio(df, indicator, agg_level='country')
+
+    df = df.set_index(index)
+
+    #title = f'Total {db.get_indicator_view(indicator)} across the country'
+    print(df)
+    return df
