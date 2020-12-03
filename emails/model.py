@@ -84,12 +84,12 @@ class EmailTemplateParser:
             return None
 
         image_cid = make_msgid()
-        item = f'<img src="cid:{image_cid[1:-1]}">'
+        item = f'<center><img src="cid:{image_cid[1:-1]}"></center>'
         # filename is based on district
         district = filters.get("district")
         fname = f"{self.folder}/{district}/{self.config.get('date')}/{indicator}/{image_file_name}.png"
         self.payload[image_cid] = fname
-        return item 
+        return item +"<br style=\"line-height:5px\">"
 
     def __parse_image_title(self, item, filters):
         try:
