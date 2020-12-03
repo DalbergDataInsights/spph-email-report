@@ -1,5 +1,7 @@
+from extract.dataset import helper
 import plotly.graph_objects as go
 import pandas as pd
+from datetime import datetime, timedelta
 
 
 class FigureFactory:
@@ -21,7 +23,9 @@ class FigureFactory:
         elif figure_type == "treemap":
             return self.get_treemap("Treemap", data, colors, **kwargs)
 
-    def get_bar_or_scatter(self, figure_object, data, figure_colors, bar_mode=None, **kwargs):
+    def get_bar_or_scatter(
+        self, figure_object, data, figure_colors, bar_mode=None, **kwargs
+    ):
         fig = go.Figure()
 
         FigType = getattr(go, figure_object)
@@ -40,13 +44,9 @@ class FigureFactory:
             )
             if bar_mode == "overlay":
                 fig.update_traces(
-                    marker={
-                        "color": "rgb(211, 41, 61)"
-                        # "color": df[df.columns[0]],
-                        # "colorscale": figure_colors.get(name),
-                    },
-                    textposition="inside",
-                    texttemplate="%{x:%}",
+                    textposition="outside",
+                    # customdata =
+                    texttemplate="%{x:}",
                     orientation="h",
                     y=df.index,
                     x=df[df.columns[0]],
@@ -103,7 +103,9 @@ class FigureFactory:
             )
             fig.update_layout(
                 margin=dict(t=20, b=20, r=20, l=20),
-                width=900, height=400, autosize=False,
+                width=900,
+                height=400,
+                autosize=False,
             )
 
         return fig
@@ -153,11 +155,10 @@ class FigureFactory:
             legend=dict(
                 orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1
             ),
-            margin=dict(l=50,r=50,b=50,t=50, pad=2
-            ),
+            margin=dict(l=20, r=20, b=20, t=20, pad=2),
             autosize=False,
-            width=900,
-            height=500
+            width=800,
+            height=400,
         )
 
         fig.update_layout(
@@ -170,3 +171,77 @@ class FigureFactory:
                 showgrid=True, zeroline=False, rangemode="tozero", gridcolor="LightGray"
             ),
         )
+
+    def get_figure_title(self, title, db, aggs):
+        format_aggs = []
+        indicator = db.datasets.get("district_dated").columns[-1]
+        for agg in aggs:
+            parsed = ""
+            if agg == "date":
+                data = db.datasets.get("district_dated")
+                parsed = data.reset_index().date.max().strftime("%B %Y")
+            elif agg == "district":
+                data = db.datasets.get("district_dated")
+                parsed = data.reset_index().id[0]
+            elif agg == "indicator_view":
+                parsed = db.get_indicator_view(indicator)
+            elif agg == "ratio":
+                parsed = self.__get_percentage_difference_between_time(db.datasets.get("district"))
+            elif agg == "facility_count_reported":
+                parsed = str(self.__get_positive_reporting(db.datasets.get("reporting_district")))
+            elif agg == "facility_count":
+                parsed = str(db.datasets.get("district_dated").reset_index().facility_name.count())
+            elif agg == "top_facility":
+                from ..dataset.transform import bar_district_plot
+                data = bar_district_plot(db.datasets).get("district")
+                parsed = data.sort_values(by=indicator, ascending=False).reset_index().facility_name.iloc[0]
+            elif agg == "top_facility_contribution":
+                from ..dataset.transform import bar_district_plot
+                data = bar_district_plot(db.datasets).get("district").reset_index()
+                facility_name = data.sort_values(by=indicator, ascending=False).reset_index().facility_name.iloc[0]
+                facility_value = data.loc[data.facility_name == facility_name, indicator].item()
+                parsed = str(round(facility_value/data[indicator].sum(),2) * 100) + "%"
+                print(parsed)
+            format_aggs.append(parsed)
+        return title.format(*format_aggs)
+
+
+    def __get_percentage_description(self, value):
+        absolute_value = abs(value)
+        if value >= 0.1:
+            description = f"increased by {absolute_value}%"
+        elif absolute_value < 0.1:
+            description = "remained stable"
+        elif value <= 0.1:
+            description = f"decreased by {absolute_value}%"
+        return description
+
+
+    def __get_percentage_difference_between_time(self, data):
+        indicator = data.columns[-1]
+        data = data.reset_index()
+        max_date = data.date.max()
+        previous_month = (max_date - timedelta(days=1)).replace(day=1)
+
+        ratio_value = round(
+            (
+                (data.loc[data.date == max_date, indicator].item() -
+                data.loc[data.date == previous_month, indicator].item()) /
+                data.loc[data.date == previous_month, indicator].item()
+            )
+            * 100
+        )
+        description = self.__get_percentage_description(ratio_value)
+
+        return description
+
+
+    def __get_positive_reporting(self, data):
+
+        indicator = data.columns[-1]
+        data = data.reset_index()
+        max_date = data.date.max()
+        data = data[data[indicator]==3].reset_index(drop=True)
+        reported_positive = str(data[data.date == max_date][indicator].count())
+
+        return reported_positive

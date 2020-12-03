@@ -186,7 +186,6 @@ class Database(metaclass=SingletonMeta):
                 "config_denominator"
             ].values[0]
             denominator = f"{denominator}__weight"
-
             try:
                 df = df[list(self.index_columns) + [nominator, denominator]]
             except Exception as e:

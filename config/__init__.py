@@ -1,7 +1,8 @@
 import json
 
 
-def get_config():
-    with open("config/config.json", "r") as f:
+def get_config(config_type):
+    with open(f"config/{config_type}.json", "r") as f:
         config = json.load(f)
     return config
+

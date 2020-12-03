@@ -2,13 +2,22 @@ from .pipeline import pipeline
 from ..model import FigureFactory
 
 
-def get(data):
+
+def get(db):
+    data = db.datasets
     ff = FigureFactory()
     figures = []
+    figure_titles = []
     for figure in pipeline:
+        d = figure.get("transform")(data)
         figures.append(
             ff.get_figure(
-                figure.get("type"), figure.get("transform")(data), figure.get("color"), **figure.get("args", {})
+                figure.get("type"), d, figure.get("color"), **figure.get("args", {})
             )
         )
-    return figures
+        figure_titles.append(
+            ff.get_figure_title(
+                figure.get("title", ""), db, figure.get("title_args", [])
+            )
+        )
+    return figures, figure_titles

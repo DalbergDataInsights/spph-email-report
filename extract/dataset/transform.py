@@ -35,23 +35,22 @@ def scatter_reporting_district_plot(data):
         "Did not report a positive number": df_no_positive,
         "Did not report on their 105:1 form": df_no_form_report,
     }
+
     return data
 
-    data_out = reporting_count_transform(data_in.copy())
 
-    return data_out
-
-
-def tree_map_district_plot(data):
+def bar_district_plot(data):
 
     data_in = data.get("district_dated")
     val_col = data_in.columns[-1]
-    data_in[val_col] = data_in[val_col].apply(lambda x: int(x) if pd.notna(x) else 0)
     data_in = data_in.reset_index()
-    data_in = data_in[data_in.date == data_in.date.max()].reset_index()
-    district_name = data_in.id[0]
-    data_tree = data_in.pivot_table(
-        values=val_col, index=["facility_name"], columns="date", aggfunc=np.sum
-    )
-    data_out = {district_name: data_tree}
-    return data_out
+    data_in = data_in[data_in.date == data_in.date.max()]
+
+    data_in = data_in[["facility_name", val_col]].groupby(by=["facility_name"]).sum()
+    data_in = data_in[data_in[val_col] > 0]
+    data_in = data_in.sort_values(val_col, ascending = False).reset_index()
+    data_in.loc[data_in.index >= 12, 'facility_name']='Others'
+    data_in=data_in.groupby('facility_name').sum().sort_values(val_col)
+
+    return {"district": data_in}
+ 
