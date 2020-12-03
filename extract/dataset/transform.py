@@ -51,6 +51,7 @@ def bar_district_plot(data):
     data_in = data_in.sort_values(val_col, ascending = False).reset_index()
     data_in.loc[data_in.index >= 12, 'facility_name']='Others'
     data_in=data_in.groupby('facility_name').sum().sort_values(val_col)
-
+    custom_dict = {"Others": 99}
+    data_in=data_in.sort_values(by=['facility_name'], key=lambda x: x.map(custom_dict))
     return {"district": data_in}
  
