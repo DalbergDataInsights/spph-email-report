@@ -83,7 +83,7 @@
         "<p align=\"center\", style=\"color:orange;font-size:18px;font-style:normal\" >2.1.3. Total number of in-facility births in %district% </p>",
         "<img src=\"cid:%image.Deliveries in unit.figure_3%\"/>", 
         "<p align=\"center\", style=\"color:rgb(42, 87, 131);font-size:16px;font-weight:normal\"><i> %title.Deliveries in unit.figure_3% <i><br></p>", 
-        "<p align=\"center\", style=\"color:orange;font-size:18px;\" >2.1.4. Total number of low-weight births in %district% </p>",
+        "<p align=\"center\", style=\"color:orange;font-size:18px;font-style:normal\" >2.1.4. Total number of low-weight births in %district% </p>",
         "<img src=\"cid:%image.Low weight births.figure_3%\"/>", 
         "<p align=\"center\", style=\"color:rgb(42, 87, 131);font-size:16px;font-weight:normal\"><i> %title.Low weight births.figure_3% <i><br></p>", 
         "<h4 align=\"center\", style=\"color:rgb(200, 19, 60);font-size:18px;font-style:normal\" ><b> 2.2. Immunization <b></h4>",
