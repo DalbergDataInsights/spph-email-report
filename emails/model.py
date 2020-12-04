@@ -8,6 +8,7 @@ from email.message import EmailMessage
 from email.utils import make_msgid
 import mimetypes
 
+
 class EmailTemplateParser:
     def __init__(self, data_folder, email_template, config):
         self.folder = data_folder
@@ -23,20 +24,21 @@ class EmailTemplateParser:
             msg = self.parse_item(item, filters)
             if msg:
                 parsed_message.append(msg)
-        message.add_alternative(f"<html><body>{''.join(parsed_message)}<body><html>", subtype="html")
+        message.add_alternative(
+            f"<html><body>{''.join(parsed_message)}<body><html>", subtype="html"
+        )
         # add images to payload
         message = self.set_payload(message)
         return message
 
     def set_payload(self, message):
-        
+
         for cid, fname in self.payload.items():
             with open(fname, "rb") as f:
-                message.get_payload()[0].add_related(f.read(),
-                                                     maintype="image",
-                                                     subtype="png",
-                                                     cid=cid)
-            
+                message.get_payload()[0].add_related(
+                    f.read(), maintype="image", subtype="png", cid=cid
+                )
+
         return message
 
     def get_parsed_subject(self, filters):
@@ -71,7 +73,7 @@ class EmailTemplateParser:
 
         item = item.replace("%date%", date)
 
-        return item 
+        return item
 
     def __parse_image(self, item, filters, mime_type=True):
         try:
@@ -89,7 +91,7 @@ class EmailTemplateParser:
         district = filters.get("district")
         fname = f"{self.folder}/{district}/{self.config.get('date')}/{indicator}/{image_file_name}.png"
         self.payload[image_cid] = fname
-        return item 
+        return item
 
     def __parse_image_title(self, item, filters):
         try:
@@ -110,16 +112,14 @@ class EmailTemplateParser:
         return item + "<br>"
 
     def __parse_district(self, item, filters):
-        item = item.replace("%biostat_name%", filters.get("biostatistician_name")).replace("%district%", filters.get("district"))
-        return item 
+        item = item.replace(
+            "%biostat_name%", filters.get("biostatistician_name")
+        ).replace("%district%", filters.get("district"))
+        return item
 
     def __parse_recipients_name(self, item, filters):
         item = item.replace("%recipients_name%", filters.get("recipients_name"))
-        return item  
-
-
-
-
+        return item
 
 
 class Email:
@@ -136,15 +136,12 @@ class Email:
 
     def send(self):
         self.smtp.sendmail(self.send_from, self.send_to, self.message.as_string())
-    
+
     def to_html(self, fname):
         pass
-    
+
     def from_html(self, fname):
         pass
 
     def to_pdf(self, fname):
         pass
-
-
-

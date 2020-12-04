@@ -1,4 +1,3 @@
-from extract.dataset import helper
 import plotly.graph_objects as go
 import pandas as pd
 from datetime import datetime, timedelta
@@ -65,7 +64,6 @@ class FigureFactory:
 
         return fig
 
-
     #########
     # STYLE #
     #########
@@ -107,30 +105,53 @@ class FigureFactory:
             elif agg == "indicator_view":
                 parsed = db.get_indicator_view(indicator)
             elif agg == "ratio":
-                parsed = self.__get_percentage_difference_between_time(db.datasets.get("district"))
+                parsed = self.__get_percentage_difference_between_time(
+                    db.datasets.get("district")
+                )
             elif agg == "facility_count_reported":
-                parsed = str(self.__get_positive_reporting(db.datasets.get("reporting_district")))
+                parsed = str(
+                    self.__get_positive_reporting(db.datasets.get("reporting_district"))
+                )
             elif agg == "facility_count":
-                parsed = str(db.datasets.get("district_dated").reset_index().facility_name.count())
+                parsed = str(
+                    db.datasets.get("district_dated")
+                    .reset_index()
+                    .facility_name.count()
+                )
             elif agg == "top_facility":
-                from ..dataset.transform import bar_district_plot
+                from dataset.transform import bar_district_plot
+
                 data = bar_district_plot(db.datasets).get("district")
-                parsed = data.sort_values(by=indicator, ascending=False).reset_index().facility_name.iloc[0]
+                parsed = (
+                    data.sort_values(by=indicator, ascending=False)
+                    .reset_index()
+                    .facility_name.iloc[0]
+                )
             elif agg == "top_facility_contribution":
-                from ..dataset.transform import bar_district_plot
+                from dataset.transform import bar_district_plot
+
                 data = bar_district_plot(db.datasets).get("district").reset_index()
-                facility_name = data.sort_values(by=indicator, ascending=False).reset_index().facility_name.iloc[0]
-                facility_value = data.loc[data.facility_name == facility_name, indicator].item()
-                parsed = str(round(facility_value/data[indicator].sum(),2) * 100) + "%"
-            elif agg=="ratio_country":
-                parsed = self.__get_percentage_difference_between_time_country(db.datasets.get("country"))
-            elif agg=="reference_date":
+                facility_name = (
+                    data.sort_values(by=indicator, ascending=False)
+                    .reset_index()
+                    .facility_name.iloc[0]
+                )
+                facility_value = data.loc[
+                    data.facility_name == facility_name, indicator
+                ].item()
+                parsed = (
+                    str(round(facility_value / data[indicator].sum(), 2) * 100) + "%"
+                )
+            elif agg == "ratio_country":
+                parsed = self.__get_percentage_difference_between_time_country(
+                    db.datasets.get("country")
+                )
+            elif agg == "reference_date":
                 data = db.datasets.get("country")
-                data_today= data.reset_index().date.max()
+                data_today = data.reset_index().date.max()
                 parsed = (data_today - relativedelta(years=1)).strftime("%B %Y")
             format_aggs.append(parsed)
         return title.format(*format_aggs)
-
 
     def __get_percentage_description(self, value):
         absolute_value = abs(value)
@@ -142,7 +163,6 @@ class FigureFactory:
             description = f"decreased by {absolute_value}%"
         return description
 
-
     def __get_percentage_difference_between_time(self, data):
         indicator = data.columns[-1]
         data = data.reset_index()
@@ -151,9 +171,11 @@ class FigureFactory:
 
         ratio_value = round(
             (
-                (data.loc[data.date == max_date, indicator].item() -
-                data.loc[data.date == previous_month, indicator].item()) /
-                data.loc[data.date == previous_month, indicator].item()
+                (
+                    data.loc[data.date == max_date, indicator].item()
+                    - data.loc[data.date == previous_month, indicator].item()
+                )
+                / data.loc[data.date == previous_month, indicator].item()
             )
             * 100
         )
@@ -161,30 +183,30 @@ class FigureFactory:
 
         return description
 
-
     def __get_positive_reporting(self, data):
 
         indicator = data.columns[-1]
         data = data.reset_index()
         max_date = data.date.max()
-        data = data[data[indicator]==3].reset_index(drop=True)
+        data = data[data[indicator] == 3].reset_index(drop=True)
         reported_positive = str(data[data.date == max_date][indicator].count())
 
         return reported_positive
-
 
     def __get_percentage_difference_between_time_country(self, data):
         indicator = data.columns[-1]
         data = data.reset_index()
         max_date = data.date.max()
-        previous_year = (max_date - relativedelta(years=1))
+        previous_year = max_date - relativedelta(years=1)
         print(previous_year)
 
         ratio_value = round(
             (
-                (data.loc[data.date == max_date, indicator].item() -
-                data.loc[data.date == previous_year, indicator].item()) /
-                data.loc[data.date == previous_year, indicator].item()
+                (
+                    data.loc[data.date == max_date, indicator].item()
+                    - data.loc[data.date == previous_year, indicator].item()
+                )
+                / data.loc[data.date == previous_year, indicator].item()
             )
             * 100
         )
