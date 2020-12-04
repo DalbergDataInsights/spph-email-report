@@ -78,8 +78,6 @@ def scatter_reporting_district_data(db, *, indicator, district, **kwargs):
 
 def scatter_country_data(db, *, indicator, **kwargs):
 
-    # dfs, static,
-
     df = db.raw_data
 
     df = db.filter_by_indicator(df, indicator)

@@ -50,6 +50,6 @@ pipeline = [
             2020: "rgb(200, 19, 60)",
         },
         "title": "{} in {} {} compared to {} across the country", 
-        "title_args": ["indicator_view", "date", "ratio", "reference_date"]
+        "title_args": ["indicator_view", "date", "ratio_country", "reference_date"]
     }
 ]
