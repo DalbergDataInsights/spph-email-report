@@ -24,15 +24,15 @@ pipeline = [
         "transform": bar_district_plot,
         "color": {"district": "rgb(42, 87, 131)"},
         "args": {"bar_mode": "overlay"},
-        "title": "{} contribute {} of {} in {} in {}",
+        "title": "{} contributes {} of {} in {} in {}",
         "title_args": ["top_facility", "top_facility_contribution", "indicator_view", "date", "district"]
     },
     {
         "type": "bar",
         "transform": scatter_reporting_district_plot,
         "color": {
-            "Reported a positive number": "rgb(42, 87, 131)",
-            "Did not report a positive number": "rgb(247, 190, 178)",
+            "Reported one or above for selected indicators": "rgb(42, 87, 131)",
+            "Reported a null or zero for selected indicator": "rgb(247, 190, 178)",
             "Did not report on their 105:1 form": "rgb(211, 41, 61)",
         },
         "args": {"bar_mode": "stack"},
