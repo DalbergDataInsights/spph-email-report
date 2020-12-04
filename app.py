@@ -45,7 +45,7 @@ def run_extract(config, db, figure_pipeline):
             extract.run(db, controls, figure_pipeline)
 
 
-def run_extract_contry(config, db):
+def run_extract_contry(config, db, pipeline):
     # get the date
     target_date = datetime.strptime(config.get("date"), "%Y%m")
     print(f"Launching figure generation for {target_date}")
@@ -106,7 +106,9 @@ def run(pipeline):
 
         elif pipe == "extract_country":
             db = Database(DATABASE_URI)
-            run_extract_contry(config, db)
+            pipeline = dataset.national_pipeline.get()
+            db.init_pipeline(pipeline)
+            run_extract_contry(config, db, figures.national_pipeline)
 
 
 # TODO make sure that email runs
