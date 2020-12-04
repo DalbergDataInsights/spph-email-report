@@ -4,6 +4,7 @@ import os
 import smtplib
 import ssl
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 
 import emails
 import extract
@@ -39,6 +40,25 @@ def run_extract(config, db):
                 "reference_month": calendar.month_abbr[reference_date.month],
             }
             extract.run(db, controls)
+
+def run_extract_contry(config, db):
+    # get the date
+    target_date = datetime.strptime(config.get("date"), "%Y%m")
+    print(f"Launching figure generation for {target_date}")
+    reference_date = target_date - relativedelta(years=1)
+
+    for indicator in config.get("indicators"):
+            # TODO filter by indicator
+        print(f"Running the pipeline of figures for {indicator}")
+        controls = {
+                "date": target_date.strftime("%Y%m"),
+                "indicator": indicator,
+                "target_year": str(target_date.year),
+                "target_month": calendar.month_abbr[target_date.month],
+                "reference_year": str(reference_date.year),
+                "reference_month": calendar.month_abbr[reference_date.month],
+            }
+        extract.run(db, controls)
 
 
 def run_emails(config, engine, email_template, recipients):
@@ -78,6 +98,10 @@ def run(pipeline):
 
         elif pipe == "email":
             run_emails(config, engine, email_template, recipients)
+
+        elif pipe == "extract_country":
+            b = Database(DATABASE_URI)
+            run_extract_contry(config, db)
 
 if __name__ == "__main__":
     run(["email"])
