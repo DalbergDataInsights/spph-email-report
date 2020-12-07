@@ -7,7 +7,7 @@ import pandas as pd
 from . import figure, model
 
 
-def run(db, config, pipeline):
+def run(db, config, pipeline, folder="viz"):
 
     db.run_pipeline(config)
 
@@ -15,7 +15,7 @@ def run(db, config, pipeline):
 
     # 4. Save figures
 
-    path = f"data/viz/{config.get('district')}/{config.get('date')}/{config.get('indicator')}"
+    path = f"data/{folder}/{config.get('district', 'default')}/{config.get('date')}/{config.get('indicator')}"
     if not os.path.exists(path):
         os.makedirs(path)
     with open(f"{path}/titles.json", "w") as f:

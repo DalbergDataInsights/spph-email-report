@@ -180,12 +180,13 @@ class Database(metaclass=SingletonMeta):
 
         else:
 
-            nominator = f"{indicator}__weighted_ratio"
+            nominator = f"{indicator}__wr"
 
             denominator = config[config.config_indicator == indicator][
                 "config_denominator"
             ].values[0]
-            denominator = f"{denominator}__weight"
+            denominator = f"{denominator}__w"
+
             try:
                 df = df[list(self.index_columns) + [nominator, denominator]]
             except Exception as e:
@@ -249,10 +250,4 @@ class Database(metaclass=SingletonMeta):
 
     def run_pipeline(self, controls):
         for dataset_name, function in self.pipeline.items():
-            try:
-                self.include_dataset(dataset_name, function(self, **controls))
-            except Exception as e:
-                print(e)
-                print(
-                    f"{dataset_name} was not included due to an error in {function} with controls {controls}"
-                )
+            self.include_dataset(dataset_name, function(self, **controls))
