@@ -21,7 +21,7 @@ def scatter_district_data(db, *, indicator, district, **kwargs):
 
     df = filter.by_district(df, district)
 
-    df, index = helper.get_ratio(df, indicator, agg_level="district")
+    df, index, _ = helper.get_ratio(df, indicator, agg_level="district")
 
     df = df.set_index(index)
 
@@ -78,7 +78,7 @@ def scatter_country_data(db, *, indicator, **kwargs):
 
     df = db.filter_by_indicator(df, indicator)
 
-    df, index = helper.get_ratio(df, indicator, agg_level="country")
+    df, index, _ = helper.get_ratio(df, indicator, agg_level="country")
 
     df = df.set_index(index)
 
