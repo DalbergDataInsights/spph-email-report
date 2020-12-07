@@ -122,6 +122,8 @@ class EmailTemplateParser:
 
 
 
+
+
 class Email:
     def __init__(self, smtp, send_to, send_from, message):
         self.smtp = smtp
