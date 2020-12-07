@@ -14,8 +14,9 @@ plotly = "*"
 dash-html-components = "*"
 rich = "*"
 kaleido = "*"
-psycopg2-binary = "*"
 psutil = "*"
+shapely = "*"
+gdal = "*"
 
 [dev-packages]
 black = "*"

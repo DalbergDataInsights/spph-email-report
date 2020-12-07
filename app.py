@@ -4,7 +4,10 @@ import os
 import smtplib
 import ssl
 from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
+
+from six import get_function_closure
+
+# from dateutil.relativedelta import relativedelta
 
 import emails
 import extract
@@ -45,11 +48,13 @@ def run_extract(config, db, figure_pipeline):
             extract.run(db, controls, figure_pipeline)
 
 
-def run_extract_contry(config, db, pipeline):
+def run_extract_contry(config, db, figure_pipeline):
     # get the date
     target_date = datetime.strptime(config.get("date"), "%Y%m")
     print(f"Launching figure generation for {target_date}")
-    reference_date = target_date - relativedelta(years=1)
+    reference_date = target_date.replace(year=target_date.year - 1)
+
+    db.filter_by_policy("Correct outliers - using standard deviation")
 
     for indicator in config.get("indicators"):
         # TODO filter by indicator
@@ -61,8 +66,9 @@ def run_extract_contry(config, db, pipeline):
             "target_month": calendar.month_abbr[target_date.month],
             "reference_year": str(reference_date.year),
             "reference_month": calendar.month_abbr[reference_date.month],
+            "trends_map_compare_agg": "Compare month of interest to month of reference",
         }
-        extract.run(db, controls)
+        extract.run(db, controls, figure_pipeline, folder="national")
 
 
 def run_emails(config, engine, email_template, recipients):
@@ -105,6 +111,7 @@ def run(pipeline):
             run_emails(config, engine, email_template, recipients)
 
         elif pipe == "extract_country":
+            config = get_config("config_national")
             db = Database(DATABASE_URI)
             pipeline = dataset.national_pipeline.get()
             db.init_pipeline(pipeline)
@@ -116,4 +123,4 @@ def run(pipeline):
 # TODO email to pdf implementation
 
 if __name__ == "__main__":
-    run(["extract"])
+    run(["extract_country"])

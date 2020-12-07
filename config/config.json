@@ -16,23 +16,5 @@
         "ANC initiated on ART",
         "TB cases registered in treatment unit",
         "OPD attendance"
-    ],
-    "indicators_country": [
-        "1st ANC Visits",
-        "4th ANC Visits",
-        "Deliveries in unit",
-        "Low weight births",
-        "1st & 2nd doses of vitamin A to U5",
-        "SAM cases identified",
-        "TB cases registered in treatment unit",
-        "1st doses Vitamin-A to U5(coverage)",
-        "2nd doses Vitamin-A to U5(coverage)",
-        "SAM cases identified",
-        "ANC tested HIV positive",
-        "ANC initiated on ART",
-        "TB cases registered in treatment unit",
-        "DPT3 doses to U1(coverage)",
-        "MR1 doses to U1(coverage)",
-        "OPD attendance(per 1000)"
     ]
 }
