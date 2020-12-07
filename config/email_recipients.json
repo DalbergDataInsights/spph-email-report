@@ -2,9 +2,9 @@
     {
         "recipients": ["valeriya.cherepova@dalberg.com"],
         "filters": {
-            "district": "AMURU",
-            "recipients_name": "Dr Odong Patrick Olwedo", 
-            "biostatistician_name": "Walter Tobina"
+            "district": ["AMURU","MUKONO", "WAKISO", "BUSIA", "BUVUMA", "BUHWEJU"],
+            "recipients_name": ["Dr Odong Patrick Olwedo", "Dr. Tumushabe Elly", "Dr. Lugoloobi Mathias", "Nanyama Benah", "Kanyike Baker", "Dr. Oyik Bruno"],
+            "biostatistician_name": ["Walter Tobina", "Ivan Mwesigwa","Frank Kakande", "Carolyn Balwanaki", " ", "you" ]
             
         }
     }
