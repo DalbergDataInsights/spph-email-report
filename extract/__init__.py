@@ -1,30 +1,19 @@
+import json
 import os
+
 import numpy as np
 import pandas as pd
-import json
 
-from . import dataset
-from . import model
-from . import figure
+from . import figure, model
 
 
-def run(db, config):
-
-    # 1. Define filters pipeline
-
-    pipeline = dataset.pipeline.get()
-
-    # 2. Run pipeline for current config
-    db.init_pipeline(pipeline)
+def run(db, config, pipeline):
 
     db.run_pipeline(config)
 
-    # 3. Get figures based on the current data
-
-    fig_pipeline, fig_titles = figure.get(db)
+    fig_pipeline, fig_titles = figure.get(db, pipeline)
 
     # 4. Save figures
-        
 
     path = f"data/viz/{config.get('district')}/{config.get('date')}/{config.get('indicator')}"
     if not os.path.exists(path):

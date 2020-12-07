@@ -1,9 +1,7 @@
-from .pipeline import pipeline
 from ..model import FigureFactory
 
 
-
-def get(db):
+def get(db, pipeline):
     data = db.datasets
     ff = FigureFactory()
     figures = []
