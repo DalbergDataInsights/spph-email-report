@@ -95,7 +95,7 @@ class EmailTemplateParser:
         district = filters.get("district")
         fname = f"{self.folder}/{district}/{self.config.get('date')}/{indicator}/{image_file_name}.png"
         self.payload[image_cid] = fname
-        return item
+        return item + "<br style=\"line-height:1px\">"
 
     def __parse_image_title(self, item, filters):
         try:
