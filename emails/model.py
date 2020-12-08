@@ -89,12 +89,11 @@ class EmailTemplateParser:
         item = f'<center><img src="cid:{image_cid[1:-1]}"></center>'
         # filename is based on district
         district = filters.get("district")
-        try:
-            fname = f"{self.folder}/{district}/{self.config.get('date')}/{indicator}/{image_file_name}.png"
-            self.payload[image_cid] = fname
-            return item + '<br style="line-height:1px">'
-        except:
-            return "<NO DATA>"
+        fname = f"{self.folder}/{district}/{self.config.get('date')}/{indicator}/{image_file_name}.png"
+        if not os.path.isfile(fname):
+            return "<p>No visualization available for this indicator</p>"
+        self.payload[image_cid] = fname
+        return item + '<br style="line-height:1px">'
 
     def __parse_image_title(self, item, filters):
         try:
@@ -109,7 +108,7 @@ class EmailTemplateParser:
         district = filters.get("district")
         fname = f"{self.folder}/{district}/{self.config.get('date')}/{indicator}/titles.json"
         with open(fname, "r") as f:
-            title = json.load(f).get(figure)
+            title = json.load(f).get(figure, f"No data for {indicator}")
         item = item.replace(f"%title.{indicator}.{figure}%", title)
 
         return item + "<br>"
