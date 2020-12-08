@@ -89,9 +89,12 @@ class EmailTemplateParser:
         item = f'<center><img src="cid:{image_cid[1:-1]}"></center>'
         # filename is based on district
         district = filters.get("district")
-        fname = f"{self.folder}/{district}/{self.config.get('date')}/{indicator}/{image_file_name}.png"
-        self.payload[image_cid] = fname
-        return item + '<br style="line-height:1px">'
+        try:
+            fname = f"{self.folder}/{district}/{self.config.get('date')}/{indicator}/{image_file_name}.png"
+            self.payload[image_cid] = fname
+            return item + '<br style="line-height:1px">'
+        except:
+            return "<NO DATA>"
 
     def __parse_image_title(self, item, filters):
         try:

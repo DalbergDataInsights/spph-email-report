@@ -123,4 +123,4 @@ def run(pipeline):
 # TODO email to pdf implementation
 
 if __name__ == "__main__":
-    run(["extract_country"])
+    run(["extract"])

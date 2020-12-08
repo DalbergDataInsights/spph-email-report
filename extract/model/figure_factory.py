@@ -189,6 +189,7 @@ class FigureFactory:
 
                 data = bar_district_plot(db.datasets).get("district")
                 parsed = data.reset_index().facility_name.iloc[-1]
+                print(parsed)
             elif agg == "top_facility_contribution":
                 from dataset.transform import bar_district_plot
 
