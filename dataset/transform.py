@@ -48,10 +48,24 @@ def bar_district_plot(data):
 
     data_in = data_in[["facility_name", val_col]].groupby(by=["facility_name"]).sum()
     data_in = data_in[data_in[val_col] > 0]
-    data_in = data_in.sort_values(val_col, ascending = False).reset_index()
-    data_in.loc[data_in.index >= 12, 'facility_name']='Others'
-    data_in=data_in.groupby('facility_name').sum().sort_values(val_col)
+    data_in = data_in.sort_values(val_col, ascending=False).reset_index()
+    data_in.loc[data_in.index >= 12, "facility_name"] = "Others"
+    data_in = data_in.groupby("facility_name").sum().sort_values(val_col)
     custom_dict = {"Others": 99}
-    data_in=data_in.sort_values(by=['facility_name'], key=lambda x: x.map(custom_dict))
+    data_in = data_in.sort_values(
+        by=["facility_name"], key=lambda x: x.map(custom_dict)
+    )
     return {"district": data_in}
- 
+
+
+def scatter_country_plot(df):
+
+    df_country = df.get("country")
+
+    df_country = df_country[df_country[df_country.columns[-1]] > 0]
+
+    df_country = helper.get_year_and_month_cols(df_country)
+
+    df_country = helper.get_sub_dfs(df_country, "year", [2018, 2019, 2020], "month")
+
+    return df_country

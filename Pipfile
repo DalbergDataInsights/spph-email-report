@@ -14,10 +14,15 @@ plotly = "*"
 dash-html-components = "*"
 rich = "*"
 kaleido = "*"
-psycopg2-binary = "*"
 psutil = "*"
+shapely = "*"
+gdal = "*"
 
 [dev-packages]
+black = "*"
 
 [requires]
 python_version = "3.9"
+
+[pipenv]
+allow_prereleases = true
