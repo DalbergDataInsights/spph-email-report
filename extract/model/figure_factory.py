@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import numpy as np
-import geopandas as gpd
+
 import json
 import math
 
@@ -123,7 +123,7 @@ class FigureFactory:
             legend=dict(
                 orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1
             ),
-            margin=dict(l=20, r=20, b=20, t=20, pad=2),
+            margin=dict(l=20, r=20, b=1, t=20, pad=2),
             autosize=False,
             width=800,
             height=400,
