@@ -7,13 +7,17 @@ def get(db, pipeline):
     figures = []
     figure_titles = []
     for figure in pipeline:
+        d = figure.get("transform")(data)
         try:
-            d = figure.get("transform")(data)
             figures.append(
                 ff.get_figure(
                     figure.get("type"), d, figure.get("color"), **figure.get("args", {})
                 )
             )
+        except Exception as e:
+            print(e)
+            figures.append(None)
+        try:
             figure_titles.append(
                 ff.get_figure_title(
                     figure.get("title", ""), db, figure.get("title_args", [])
@@ -21,6 +25,6 @@ def get(db, pipeline):
             )
         except Exception as e:
             print(e)
-            figures.append(None)
+            figures[-1] = None
             figure_titles.append("")
     return figures, figure_titles
