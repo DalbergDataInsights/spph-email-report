@@ -66,7 +66,7 @@ def run(pipeline):
     recipients = get_config("email_recipients")
     engine = {
     "smtp": os.environ["SMTP"],
-    "username": os.environ["EMAIL"],
+    "username": os.environ["USERNAME"],
     "password": os.environ["PASSWORD"]
     }
 
@@ -80,4 +80,4 @@ def run(pipeline):
             run_emails(config, engine, email_template, recipients)
 
 if __name__ == "__main__":
-    run(["email"])
+    run(["extract"])
