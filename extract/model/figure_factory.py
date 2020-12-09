@@ -95,7 +95,7 @@ class FigureFactory:
                 fig.update_traces(
                     textposition="inside",
                     # customdata =
-                    texttemplate="%{x:%}",
+                    texttemplate="%{x}",
                     orientation="h",
                     y=df.index,
                     x=df[df.columns[0]],
@@ -123,7 +123,7 @@ class FigureFactory:
             legend=dict(
                 orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1
             ),
-            margin=dict(l=20, r=20, b=1, t=20, pad=2),
+            margin=dict(l=20, r=20, b=1, t=20, pad=1),
             autosize=False,
             width=800,
             height=400,
