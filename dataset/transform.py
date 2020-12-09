@@ -42,7 +42,7 @@ def scatter_reporting_district_plot(data):
 def bar_district_plot(data):
 
     data_in = data.get("district_dated")
-    district = data_in.id.iloc[0]
+    #district = data_in.id.iloc[0]
     val_col = data_in.columns[-1]
     data_in = data_in.reset_index()
     data_in = data_in[data_in.date == data_in.date.max()]
