@@ -200,12 +200,8 @@ class FigureFactory:
                 from ..dataset.transform import bar_district_plot
                 data = bar_district_plot(db.datasets).get("district").reset_index()
                 facility_name = data.reset_index().facility_name.iloc[-1]
-                
-                try:
-                    facility_value = data.loc[data.facility_name == facility_name, indicator].item()
-                    parsed = str(round(facility_value/data[indicator].sum()* 100) ) + "%"
-                except: 
-                    parsed="none"
+                facility_value = data.loc[data.facility_name == facility_name, indicator].item()
+                parsed = str(round(facility_value/data[indicator].sum()* 100) ) + "%"
             format_aggs.append(parsed)
         return title.format(*format_aggs)
 
