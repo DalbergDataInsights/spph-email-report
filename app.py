@@ -54,7 +54,7 @@ def run_extract_contry(config, db, figure_pipeline):
     print(f"Launching figure generation for {target_date}")
     reference_date = target_date.replace(year=target_date.year - 1)
 
-    db.filter_by_policy("Correct outliers - using standard deviation")
+    # db.filter_by_policy("Correct outliers - using standard deviation")
 
     for indicator in config.get("indicators"):
         # TODO filter by indicator
@@ -123,4 +123,4 @@ def run(pipeline):
 # TODO email to pdf implementation
 
 if __name__ == "__main__":
-    run(["extract_country"])
+    run(["email"])
