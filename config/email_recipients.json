@@ -1,7 +1,7 @@
 [
     {
         "recipients": [
-            "denys.sementsov@dalberg.com"
+            "valeriya.cherepova@dalberg.com"
         ],
         "filters": {
             "district": "AMURU",
@@ -50,7 +50,7 @@
         "filters": {
             "district": "BUHWEJU",
             "recipients_name": "Dr. Oyik Bruno",
-            "biostatistician_name": "you"
+            "biostatistician_name": ""
             
         }
     }
