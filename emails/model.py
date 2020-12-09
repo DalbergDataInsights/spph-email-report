@@ -95,7 +95,7 @@ class EmailTemplateParser:
         district = filters.get("district")
         fname = f"{self.folder}/{district}/{self.config.get('date')}/{indicator}/{image_file_name}.png"
         if not os.path.isfile(fname):
-            return '<p align="center">No visualization available for this indicator</p>'
+            return '<p align="center">Due to the lack of data on this indicator in the reporting month, no visualization of individual facilities\' contribution available </p>'
         self.payload[image_cid] = fname
 
         return item + "<br style=\"line-height:1px\">"
