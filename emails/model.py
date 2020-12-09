@@ -25,7 +25,10 @@ class EmailTemplateParser:
             if msg:
                 parsed_message.append(msg)
         message.add_alternative(
-            f"<html><body>{''.join(parsed_message)}<body><html>", subtype="html"
+            '<html><body style="{}">{}<body><html>'.format(
+                self.template.get("meta"), "".join(parsed_message)
+            ),
+            subtype="html",
         )
         # add images to payload
         message = self.set_payload(message)
@@ -86,14 +89,16 @@ class EmailTemplateParser:
             return None
 
         image_cid = make_msgid()
-        item = f'<center><img src="cid:{image_cid[1:-1]}"></center>'
+        image_html = f'<img src="cid:{image_cid[1:-1]}">'
+        item = item.replace(f"%image.{indicator}.{image_file_name}%", image_html)
         # filename is based on district
         district = filters.get("district")
         fname = f"{self.folder}/{district}/{self.config.get('date')}/{indicator}/{image_file_name}.png"
         if not os.path.isfile(fname):
             return '<p align="center">No visualization available for this indicator</p>'
         self.payload[image_cid] = fname
-        return item + '<br style="line-height:1px">'
+
+        return item + "<br style=\"line-height:1px\">"
 
     def __parse_image_title(self, item, filters):
         try:

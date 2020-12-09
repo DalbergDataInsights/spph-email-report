@@ -89,7 +89,7 @@ def run_emails(config, engine, email_template, recipients):
 def run(pipeline):
 
     # Configs
-    DATABASE_URI = os.environ["DB_URI"]
+    DATABASE_URI = os.environ["HEROKU_POSTGRESQL_CYAN_URL"]
     config = get_config("config")
     email_template = get_config("email_template")
     recipients = get_config("email_recipients")
@@ -124,3 +124,4 @@ def run(pipeline):
 
 if __name__ == "__main__":
     run(["email"])
+

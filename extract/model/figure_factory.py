@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import numpy as np
-import geopandas as gpd
+
 import json
 import math
 

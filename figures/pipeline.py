@@ -12,7 +12,7 @@ from dataset.national_transform import (
     map_country_compare_plot,
     reporting_count_transform,
 )
-import geopandas as gpd
+#import geopandas as gpd
 
 national_pipeline = [
     {
@@ -62,7 +62,7 @@ national_pipeline = [
             "bar_mode": "overlay",
             "tolerance": 0.005,
             "locations": "id",
-            "gdf": gpd.read_file("./data/shapefiles/shapefile.shp"),
+           # "gdf": gpd.read_file("./data/shapefiles/shapefile.shp"),
         },
         "title": "The {} {} between {} and {}",
         "title_args": [
