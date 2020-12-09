@@ -98,7 +98,7 @@ class EmailTemplateParser:
             return '<p align="center">Due to the lack of data on this indicator in the reporting month, no visualization of individual facilities\' contribution available </p>'
         self.payload[image_cid] = fname
 
-        return item + "<br style=\"line-height:1px\">"
+        return item 
 
     def __parse_image_title(self, item, filters):
         try:
