@@ -1,32 +1,21 @@
+import json
 import os
+
 import numpy as np
 import pandas as pd
-import json
 
-from . import dataset
-from . import model
-from . import figure
+from . import figure, model
 
 
-def run(db, config):
-
-    # 1. Define filters pipeline
-
-    pipeline = dataset.pipeline.get()
-
-    # 2. Run pipeline for current config
-    db.init_pipeline(pipeline)
+def run(db, config, pipeline, folder="viz"):
 
     db.run_pipeline(config)
 
-    # 3. Get figures based on the current data
-
-    fig_pipeline, fig_titles = figure.get(db)
+    fig_pipeline, fig_titles = figure.get(db, pipeline)
 
     # 4. Save figures
-        
 
-    path = f"data/viz/{config.get('district')}/{config.get('date')}/{config.get('indicator')}"
+    path = f"data/{folder}/{config.get('district', 'default')}/{config.get('date')}/{config.get('indicator')}"
     if not os.path.exists(path):
         os.makedirs(path)
     with open(f"{path}/titles.json", "w") as f:
@@ -37,4 +26,5 @@ def run(db, config):
         json.dump(fig_titles, f)
     for i in range(0, len(fig_pipeline)):
         filename = f"{path}/figure_{i+1}.png"
-        fig_pipeline[i].write_image(filename)
+        if fig_pipeline[i]: # if an exception happens during the image extraction, None is appended to the figure list
+            fig_pipeline[i].write_image(filename)
