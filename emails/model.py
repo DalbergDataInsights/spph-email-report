@@ -109,7 +109,7 @@ class EmailTemplateParser:
         fname = f"{self.folder}/{district}/{self.config.get('date')}/{indicator}/titles.json"
         with open(fname, "r") as f:
             title = json.load(f).get(figure, f"No data for {indicator}")
-        item = item.replace(f"%title.{indicator}.{figure}%", title)
+        item = item.replace(f"%title.{indicator}.{figure}%", title or "")
 
         return item + "<br>"
 
