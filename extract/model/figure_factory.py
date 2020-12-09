@@ -66,7 +66,7 @@ class FigureFactory:
         # Update the map
         fig.update_layout(
             mapbox_style="carto-positron",
-            mapbox_zoom=5.50,
+            mapbox_zoom=5.25,
             mapbox_center=bounds.get("center"),
         )
 
@@ -123,7 +123,7 @@ class FigureFactory:
             legend=dict(
                 orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1
             ),
-            margin=dict(l=20, r=20, b=20, t=20, pad=2),
+            margin=dict(l=20, r=20, b=1, t=20, pad=2),
             autosize=False,
             width=800,
             height=400,
