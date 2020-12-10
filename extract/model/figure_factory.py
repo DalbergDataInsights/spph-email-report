@@ -93,7 +93,7 @@ class FigureFactory:
             )
             if bar_mode == "overlay":
                 fig.update_traces(
-                    textposition="inside",
+                    textposition="outside",
                     # customdata =
                     texttemplate="%{x}",
                     orientation="h",
