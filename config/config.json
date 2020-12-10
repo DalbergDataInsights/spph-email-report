@@ -4,20 +4,24 @@
     ],
     "date": "202010",
     "indicators": [
-       
         "1st ANC Visits",
         "4th ANC Visits",
         "Deliveries in unit",
         "Low weight births",
+        "DPT3 doses to U1", 
         "DPT3 doses to U1 (coverage)",
+        "MR1 doses to U1", 
         "MR1 doses to U1 (coverage)",
+        "1st doses of vitamin A to U5",
         "1st doses of vitamin A to U5 (coverage)",
+        "2nd doses of vitamin A to U5",
         "2nd doses of vitamin A to U5 (coverage)",
         "SAM cases identified",
         "ANC tested HIV positive",
         "ANC initiated on ART",
         "TB cases registered in treatment unit",
         "OPD attendance"
+        
        
     ]
 }
