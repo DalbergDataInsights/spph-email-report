@@ -54,7 +54,6 @@ def bar_district_plot(data):
     data_in = data_in.sort_values(
         by=["facility_name"], key=lambda x: x.map(custom_dict)
     )
-    print(data_in)
     return {"district": data_in}
 
 
