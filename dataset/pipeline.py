@@ -55,7 +55,7 @@ def bar_district_dated_data(
     )
 
     df_district_dated = filter.by_district(df_district_dated, district)
-
+    
     return df_district_dated
 
 
