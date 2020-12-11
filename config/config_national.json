@@ -1,7 +1,9 @@
 {
     "date": "202010",
     "indicators": [
-        "Low weight births",
-        "TB cases registered in treatment unit (per 100 000)"
+        "DPT3 doses to U1 (coverage)",
+        "MR1 doses to U1 (coverage)",
+        "1st doses of vitamin A to U5 (coverage)",
+        "2nd doses of vitamin A to U5 (coverage)"
     ]
 }
