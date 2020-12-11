@@ -32,7 +32,7 @@
         "<div>%image.DPT3 doses to U1 (coverage).figure_1%<div/>",
         "<p style=\"color:rgb(42, 87, 131);\"><i> %title.DPT3 doses to U1 (coverage).figure_1% </i><br></p>",
         "<p><i> %national_title.DPT3 doses to U1 (coverage).figure_1% </i></p>",
-        "<p style=\"font-size:10px;color:dimgray\">Note: we show the deviations from the target value, which is calculated as the total estimated number of children U1 in the country divided by 12 month. The target value is then equalised to one (1) for simplicity.<br></p>", 
+        "<p style=\"font-size:12px;color:rgb(26, 26, 26)\">Note: we show the deviations from the target value, which is calculated as the total estimated number of children U1 in the country divided by 12 month.<br>The target value is then equalised to one (1) for simplicity.<br></p>", 
         "<div>%image.DPT3 doses to U1.figure_2%<div/>",
         "<p style=\"color:rgb(42, 87, 131);\"><i> %title.DPT3 doses to U1.figure_2% </i><br></p>",
         "<h4 style=\"color:orange;font-size:18px;\" ><b>1.2.2. Coverage of children under one receiving their MR-1 vaccine in %district% </b></h4>",
