@@ -15,7 +15,7 @@ def run(db, config, pipeline, folder="viz"):
 
     # 4. Save figures
 
-    path = f"data/{folder}/{config.get('district', 'default')}/{config.get('date')}/{config.get('indicator')}"
+    path = f"data/{folder}/{config.get('district', 'national')}/{config.get('date')}/{config.get('indicator')}"
     if not os.path.exists(path):
         os.makedirs(path)
     with open(f"{path}/titles.json", "w") as f:
