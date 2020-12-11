@@ -53,20 +53,22 @@ class EmailTemplateParser:
 
     def parse_item(self, item, filters):
         if "%date%" in item:
-            item = self.__parse_date(item)
+            item = self.__parse_date(item, filters)
         elif "%image" in item:
             item = self.__parse_image(item, filters)
         elif "%district%" in item:
             item = self.__parse_district(item, filters)
         elif "%title" in item:
             item = self.__parse_image_title(item, filters)
+        elif "%national_title" in item:
+            item = self.__parse_national_title(item, filters)
         elif "%recipients_name%" in item:
             item = self.__parse_recipients_name(item, filters)
         else:
             item = item
         return item
 
-    def __parse_date(self, item):
+    def __parse_date(self, item, filters):
 
         date = self.config.get("date")
         year = date[:4]
@@ -74,7 +76,7 @@ class EmailTemplateParser:
         month = calendar.month_name[int(month)]
         date = f"{month} {year}"
 
-        item = item.replace("%date%", date)
+        item = item.replace("%district%", filters.get("district")).replace("%date%", date)
 
         return item
 
@@ -106,7 +108,7 @@ class EmailTemplateParser:
         except ValueError as e:
             print(e)
             print(
-                f"Image tag {item} in email template does not contain engought parameters! Please use %image.<indicator>.<figure_number>%"
+                f"Image tag {item} in email template does not contain engought parameters! Please use %title.<indicator>.<figure_number>%"
             )
             return None
         # filename is based on district
@@ -116,17 +118,25 @@ class EmailTemplateParser:
             title = json.load(f).get(figure, f"No data for {indicator}")
         item = item.replace(f"%title.{indicator}.{figure}%", title or "")
 
-        return item + "<br>"
+        return item 
 
     def __parse_district(self, item, filters):
-        item = item.replace(
-            "%biostat_name%", filters.get("biostatistician_name")
-        ).replace("%district%", filters.get("district"))
+        item = item.replace("%district%", filters.get("district"))
         return item
 
     def __parse_recipients_name(self, item, filters):
         item = item.replace("%recipients_name%", filters.get("recipients_name"))
         return item
+
+    def __parse_national_title(self, item, filters):
+
+        _, indicator, figure = item.split("%")[1].split(".")
+        fname = f"{self.folder}/national/{self.config.get('date')}/{indicator}/titles.json"
+        with open(fname, "r") as f: 
+            title = json.load(f).get(figure, f"No data for {indicator}")
+        item = item.replace(f"%national_title.{indicator}.{figure}%", title or "")
+
+        return item   
 
 
 class Email:
