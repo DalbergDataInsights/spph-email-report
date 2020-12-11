@@ -68,7 +68,7 @@ def run_extract_contry(config, db, figure_pipeline):
             "reference_month": calendar.month_abbr[reference_date.month],
             "trends_map_compare_agg": "Compare month of interest to month of reference",
         }
-        extract.run(db, controls, figure_pipeline, folder="national")
+        extract.run(db, controls, figure_pipeline)
 
 
 def run_emails(config, engine, email_template, recipients):
