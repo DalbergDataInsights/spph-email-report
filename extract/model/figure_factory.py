@@ -188,7 +188,6 @@ class FigureFactory:
                 )
             elif agg == "facility_count":
                 data=db.datasets.get("district_dated")
-                print(data)
                 val_col=data.columns[-1]
                 data = data[data.date == data.date.max()]
                 data = data[["facility_name", val_col]].groupby(by=["facility_name"]).sum()
