@@ -187,8 +187,13 @@ class FigureFactory:
                     self.__get_positive_reporting(db.datasets.get("reporting_district"))
                 )
             elif agg == "facility_count":
+                data=db.datasets.get("district_dated")
+                print(data)
+                val_col=data.columns[-1]
+                data = data[data.date == data.date.max()]
+                data = data[["facility_name", val_col]].groupby(by=["facility_name"]).sum()
                 parsed = str(
-                    db.datasets.get("district_dated")
+                    data
                     .reset_index()
                     .facility_name.count()
                 )
