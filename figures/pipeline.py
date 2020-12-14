@@ -51,7 +51,7 @@ pipeline = [
         "transform": bar_district_plot,
         "color": {"district": "rgb(42, 87, 131)"},
         "args": {"bar_mode": "overlay"},
-        "title": "{} contribute <b>{}</b> of {} in {} in {}",
+        "title": "{} contributes <b>{}</b> of {} in {} in {}",
         "title_args": [
             "top_facility",
             "top_facility_contribution",
