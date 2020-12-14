@@ -187,14 +187,25 @@ class FigureFactory:
                     self.__get_positive_reporting(db.datasets.get("reporting_district"))
                 )
             elif agg == "facility_count":
-                data=db.datasets.get("district_dated")
-                val_col=data.columns[-1]
-                data = data[data.date == data.date.max()]
-                data = data[["facility_name", val_col]].groupby(by=["facility_name"]).sum()
+                from dataset.transform import scatter_reporting_district_plot
+
+                positive = scatter_reporting_district_plot(db.datasets).get(
+                    "Reported one or above for selected indicator"
+                )
+                positive = positive.iloc[-1].item()
+                no_positive = scatter_reporting_district_plot(db.datasets).get(
+                    "Reported null or zero for selected indicator"
+                )
+                no_positive = no_positive.iloc[-1].item()
+                
+                no_report = scatter_reporting_district_plot(db.datasets).get(
+                    "Did not report on their 105:1 form"
+                )
+                no_report = no_report.iloc[-1].item()
+                
                 parsed = str(
-                    data
-                    .reset_index()
-                    .facility_name.count()
+                    positive + no_positive + no_report
+                    
                 )
             elif agg == "top_facility":
                 from dataset.transform import bar_district_plot
