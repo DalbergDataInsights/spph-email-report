@@ -106,7 +106,9 @@ class FigureFactory:
         if figure_object == "Bar":
             fig.update_layout(barmode=bar_mode)
         elif figure_object == "Scatter":
+            print("updating traces for scatter")
             fig.update_traces(marker=dict(symbol="square", size=10))
+            print("updating lines for scatter")
             fig.update_traces(line=dict(width=2))
 
         return fig
@@ -119,11 +121,11 @@ class FigureFactory:
 
         fig.update_layout(
             legend=dict(
-                orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1
+                orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1.02
             ),
-            margin=dict(l=20, r=20, b=0.5, t=20, pad=1),
+            margin=dict(l=20, r=20, b=0.5, t=20, pad=2),
             autosize=False,
-            width=850,
+            width=800,
             height=400,
         )
 
@@ -226,21 +228,23 @@ class FigureFactory:
                 data_today = data.reset_index().date.max()
                 parsed = (data_today - relativedelta(years=1)).strftime("%B %Y")
             elif agg == "reporting_positive":
-                from dataset.national_transform import reporting_count_transform
+                from dataset.transform import scatter_reporting_district_plot
 
-                data = reporting_count_transform(db.datasets).get(
+                data = scatter_reporting_district_plot(db.datasets).get(
                     "Percentage of reporting facilities that reported a value of one or above for this indicator"
                 )
                 date = next(iter(db.datasets.values())).reset_index().date.max()
-                parsed = data.loc[date][0]
+                parsed = data.iloc[-1].item()
             elif agg == "reporting_reported":
-                from dataset.national_transform import reporting_count_transform
+                from dataset.transform import scatter_reporting_district_plot
 
-                data = reporting_count_transform(db.datasets).get(
+                data = scatter_reporting_district_plot(db.datasets).get(
                     "Percentage of facilities expected to report which reported on their 105-1 form"
                 )
+                print(data)
                 date = next(iter(db.datasets.values())).reset_index().date.max()
-                parsed = data.loc[date][0]
+                parsed = data.iloc[-1].item()
+             
             format_aggs.append(parsed)
         return title.format(*format_aggs)
 

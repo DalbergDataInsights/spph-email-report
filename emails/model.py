@@ -156,12 +156,7 @@ class Email:
         self.smtp.sendmail(self.send_from, self.send_to, self.message.as_string())
 
     def to_html(self, fname, filters):
-        parser = EmailTemplateParser("data/viz", email_template, config)
-        district = filters.get("district")
-        fname = f"{self.folder}/html/{district}/{self.config.get('date')}/html.html"
-        with open(fname, "w+") as f: 
-            f.write(())
-            f.close()
+       
         pass
 
     def from_html(self, fname):
