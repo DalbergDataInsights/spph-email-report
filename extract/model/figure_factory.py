@@ -24,8 +24,6 @@ class FigureFactory:
             return self.get_bar_or_scatter("Scatter", data, colors, **kwargs)
         elif figure_type == "bar":
             return self.get_bar_or_scatter("Bar", data, colors, **kwargs)
-        elif figure_type == "treemap":
-            return self.get_treemap("Treemap", data, colors, **kwargs)
         elif figure_type == "map":
             return self.get_map(
                 figure_object="Choroplethmapbox", data=data, colors=colors, **kwargs
@@ -125,7 +123,7 @@ class FigureFactory:
             ),
             margin=dict(l=20, r=20, b=0.5, t=20, pad=1),
             autosize=False,
-            width=800,
+            width=850,
             height=400,
         )
 
