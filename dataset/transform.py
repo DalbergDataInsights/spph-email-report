@@ -17,32 +17,7 @@ def scatter_district_plot(df):
 
 
 def scatter_reporting_district_plot(data):
-
-    data = data.get("reporting_district")
-    # Set index
-    data = helper.check_index(data)
-    # Remove unnecessary index values
-    data = data.droplevel(["id"])
-    # Count number of positive_indic
-    df_positive = helper.get_num(data, 3)
-    # Count number of no_positive_indic
-    df_no_positive = helper.get_num(data, 2)
-    # Count number of no_form_report
-    df_no_form_report = helper.get_num(data, 1)
-
-    data = {
-        "Reported one or above for selected indicator": df_positive,
-        "Reported null or zero for selected indicator": df_no_positive,
-        "Did not report on their 105:1 form": df_no_form_report,
-    }
-
-    return data
-
-
-def reporting_district_count_transform(data):
-    """
-    Counts occurrence of type of reporting label for each date, returning dictionary
-    """
+    
     data = data.get("reporting_district")
     # Set index
     data = helper.check_index(data)
@@ -60,16 +35,16 @@ def reporting_district_count_transform(data):
             (df_positive + df_no_positive)
             / (df_positive + df_no_positive + df_no_form_report)
         )
-        * 100
-    )
-    reported_positive = round((df_positive / (df_positive + df_no_positive)) * 100)
+        * 100)
+    reported_positive = round(
+        (df_positive / (df_positive + df_no_positive)) * 100)
 
     data = {
         "Percentage of facilities expected to report which reported on their 105-1 form": reported,
-        "Percentage of reporting facilities that reported a value of one or above for this indicator": reported_positive,
+        "Percentage of reporting facilities that reported a value of one or above for this indicator": reported_positive
     }
 
-    return data 
+    return data
 
 
 def bar_district_plot(data):
