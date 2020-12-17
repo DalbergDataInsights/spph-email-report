@@ -2,7 +2,8 @@ import dataset
 from dataset.transform import (
     scatter_district_plot,
     bar_district_plot,
-    scatter_reporting_district_plot
+    scatter_reporting_district_plot,
+    scatter_country_plot,
 )
 
 from dataset.national_transform import (
@@ -12,25 +13,6 @@ from dataset.national_transform import (
     reporting_count_transform,
 )
 #import geopandas as gpd
-
-national_pipeline = [ 
-    {
-        "type": "scatter",
-        "transform": scatter_country_plot,
-        "color": {
-            2018: "rgb(185, 221, 241)",
-            2019: "rgb(106, 155, 195)",
-            2020: "rgb(200, 19, 60)",
-        },
-        "title": """Across the country, in {} the {} is amounted to <b>{}</b> """,
-        "title_args": [
-            "date_national",
-            "indicator_view",
-            "latest_value",
-            
-        ],
-    }
-]
 
 
 pipeline = [
@@ -74,4 +56,20 @@ pipeline = [
             "indicator_view",
         ],
     },
+    {
+        "type": "scatter",
+        "transform": scatter_country_plot,
+        "color": {
+            2018: "rgb(185, 221, 241)",
+            2019: "rgb(106, 155, 195)",
+            2020: "rgb(200, 19, 60)",
+        },
+        "title": """Across the country, in {} the {} is amounted to <b>{}</b> """,
+        "title_args": [
+            "date_national",
+            "indicator_view",
+            "latest_value",
+            
+        ],
+    }
 ]

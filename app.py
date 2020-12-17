@@ -118,7 +118,6 @@ def run(pipeline):
             run_extract_contry(config, db, figures.national_pipeline)
 
 
-# TODO make sure that email runs
 # TODO separate email html save from send
 # TODO email to pdf implementation
 
