@@ -106,9 +106,7 @@ class FigureFactory:
         if figure_object == "Bar":
             fig.update_layout(barmode=bar_mode)
         elif figure_object == "Scatter":
-            print("updating traces for scatter")
             fig.update_traces(marker=dict(symbol="square", size=10))
-            print("updating lines for scatter")
             fig.update_traces(line=dict(width=2))
 
         return fig
@@ -164,9 +162,7 @@ class FigureFactory:
             elif agg=="latest_value": 
                 data = db.datasets.get("country")
                 value= data.reset_index().iloc[-1,-1].item()
-                print(value)
                 parsed = str(round(value, 2))
-                print(parsed)
 
             elif agg == "ratio":
                 data = db.datasets.get("district")
@@ -241,7 +237,6 @@ class FigureFactory:
                 data = scatter_reporting_district_plot(db.datasets).get(
                     "Percentage of facilities expected to report which reported on their 105-1 form"
                 )
-                print(data)
                 date = next(iter(db.datasets.values())).reset_index().date.max()
                 parsed = data.iloc[-1].item()
              
