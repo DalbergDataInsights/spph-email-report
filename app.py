@@ -107,7 +107,8 @@ def send_emails(config, engine, email_template, recipients):
                     send_from=engine.get("username"), 
                     send_to=recipient.get("recipients"),
                     fname=f'./data/emails/{recipient.get("filters").get("district")}/{config.get("date")}.msg',
-                    subject = parser.get_parsed_subject(recipient.get("filters"))) 
+                    subject =parser.get_parsed_subject(recipient.get("filters")),
+                    ) 
 
 
 def save_emails_to_pdf(config, engine, email_template, recipients):
@@ -167,4 +168,4 @@ def run(pipeline):
 # TODO email to pdf implementation
 
 if __name__ == "__main__":
-    run(["email_to_pdf"])
+    run(["extract"])
