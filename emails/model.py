@@ -9,7 +9,6 @@ from email.message import EmailMessage
 from email.utils import make_msgid
 from email.parser import BytesParser
 import mimetypes
-import weasyprint
 
 
 class EmailTemplateParser:
@@ -162,8 +161,7 @@ class Email:
     """
     def __init__(self, message):
         self.message = message
-        # self.message = MIMEMultipart("related")
-        # self.message.attach(message)
+      
 
     def set_subject(self, subject):
         self.message["Subject"] = subject
@@ -189,8 +187,8 @@ class Email:
             message = BytesParser(policy=policy.default).parse(f)
         return Email(message)
 
-    # def to_pdf(self, fname):
+    # def to_pdf(self, fname, directory="./data/emails/pdf"):
     #     body = weasyprint.HTML(self.message.as_string())
     #     with open(fname, "wb") as f:
     #         f.write(body)
-
+      
