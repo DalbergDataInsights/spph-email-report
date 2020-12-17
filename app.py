@@ -85,6 +85,38 @@ def run_emails(config, engine, email_template, recipients):
 
     smtp.quit()
 
+def save_emails(config, engine, email_template, recipients):
+    parser = EmailTemplateParser("data/viz", email_template, config)
+
+    for recipient in recipients:
+        print(f"Running email send for {recipient}")
+        emails.compose_email(parser, recipient.get("filters"), fname=f'{config.get("date")}.msg', directory=f'./data/emails/{recipient.get("filters").get("district")}/')
+
+
+def send_emails(config, engine, email_template, recipients):
+
+    parser = EmailTemplateParser("data/viz", email_template, config)
+
+    smtp = smtplib.SMTP(host=engine.get("smtp"), port=587)
+    smtp.starttls(context=ssl.create_default_context())
+    smtp.login(engine.get("username"), engine.get("password"))
+
+    for recipient in recipients:
+        print(f"Running email send for {recipient}")
+        emails.send(smtp, 
+                    send_from=engine.get("username"), 
+                    send_to=recipient.get("recipients"),
+                    fname=f'./data/emails/{recipient.get("filters").get("district")}/{config.get("date")}.msg',
+                    subject = parser.get_parsed_subject(recipient.get("filters"))) 
+
+
+def save_emails_to_pdf(config, engine, email_template, recipients):
+    parser = EmailTemplateParser("data/viz", email_template, config)
+
+    for recipient in recipients:
+        emails.to_pdf(msg_fname=f'./data/emails/{recipient.get("filters").get("district")}/{config.get("date")}.msg',
+                      pdf_fname=f'./data/emails/{recipient.get("filters").get("district")}/{config.get("date")}.pdf')
+
 
 def run(pipeline):
 
@@ -98,6 +130,11 @@ def run(pipeline):
         "username": os.environ["USERNAME"],
         "password": os.environ["PASSWORD"],
     }
+
+    ## TODO
+
+    # if congig.get("date") == "now":
+    # config["date"] = datetime.utc.now().replace(day=1)
 
     for pipe in pipeline:
 
@@ -117,11 +154,17 @@ def run(pipeline):
             db.init_pipeline(pipeline)
             run_extract_contry(config, db, figures.national_pipeline)
 
+        elif pipe == "email_extract":
+            save_emails(config, engine, email_template, recipients)
 
+        elif pipe == "email_send":
+            send_emails(config, engine, email_template, recipients)
+
+        elif pipe == "email_to_pdf":
+            save_emails_to_pdf(config, engine, email_template, recipients)
 # TODO make sure that email runs
 # TODO separate email html save from send
 # TODO email to pdf implementation
 
 if __name__ == "__main__":
-    run(["email"])
-
+    run(["email_to_pdf"])
