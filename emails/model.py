@@ -1,4 +1,4 @@
-from email import message
+from email import message, policy
 import config
 import json
 import calendar
@@ -7,7 +7,9 @@ import os
 
 from email.message import EmailMessage
 from email.utils import make_msgid
+from email.parser import BytesParser
 import mimetypes
+import weasyprint
 
 
 class EmailTemplateParser:
@@ -141,10 +143,24 @@ class EmailTemplateParser:
 
 
 class Email:
-    def __init__(self, smtp, send_to, send_from, message):
-        self.smtp = smtp
-        self.send_to = send_to
-        self.send_from = send_from
+    """
+    
+    You can create Emails from text like that:
+        email = Email("This is a long message of an email")
+    Tip:
+        Use EmailTemplateParser with HTML template to create elaborate HTML emails automatically
+
+    You can also create Emails from earlier create files:
+        email = Email.from_file("/path/to/file.msg")
+
+    Once created, you may save the file:
+        email.to_file("/path/to/file.html")
+
+    Or send it using Python native smtp profile
+        email.send(smtp, from@mail.com, "to@mail.com, anotherto@mail.com")
+
+    """
+    def __init__(self, message):
         self.message = message
         # self.message = MIMEMultipart("related")
         # self.message.attach(message)
@@ -152,20 +168,29 @@ class Email:
     def set_subject(self, subject):
         self.message["Subject"] = subject
 
-    def send(self):
-        self.smtp.sendmail(self.send_from, self.send_to, self.message.as_string())
+    def send(self, smtp, send_from, send_to):
+        smtp.sendmail(send_from, send_to, self.message.as_string())
 
-    def to_html(self, fname, filters):
-        parser = EmailTemplateParser("data/viz", email_template, config)
-        district = filters.get("district")
-        fname = f"{self.folder}/html/{district}/{self.config.get('date')}/html.html"
-        with open(fname, "w+") as f: 
-            f.write(())
-            f.close()
-        pass
 
-    def from_html(self, fname):
-        pass
+    def to_file(self, fname, directory="./data/emails/"): # < fname = "./html/message.msg"
 
-    def to_pdf(self, fname):
-        pass
+        assert len(fname.split("/")) == 1, "Please use directory keyword for directory"
+
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        with open(directory + fname, "wb") as f:
+            f.write(bytes(self.message))
+
+
+    @staticmethod
+    def from_file(fname):
+        with open(fname, "rb") as f:
+            message = BytesParser(policy=policy.default).parse(f)
+        return Email(message)
+
+    # def to_pdf(self, fname):
+    #     body = weasyprint.HTML(self.message.as_string())
+    #     with open(fname, "wb") as f:
+    #         f.write(body)
+
