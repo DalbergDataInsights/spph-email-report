@@ -49,8 +49,8 @@ pipeline = [
         },
         "title": "in {} in {}, <b>{}%</b> of facilities expected to report reported on their 105:1 form, and, out of those, <b>{}%</b> reported one or above for {}",
         "title_args": [
-            "district",
             "date",
+            "district",
             "reporting_reported",
             "reporting_positive",
             "indicator_view",
