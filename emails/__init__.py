@@ -5,7 +5,7 @@
 from emails.model import Email
 
 
-def run(send_from, recipient, parser, smtp):
+def run(send_from, send_to, recipient, parser, smtp):
 
     message = parser.get_parsed_message(recipient.get("filters"))
     email = Email(message)
@@ -22,7 +22,7 @@ def compose_email(parser, filters, **kwargs):
 def send(smtp, send_from, send_to, fname, subject="Automated email"):
     email = Email.from_file(fname)
     email.set_subject(subject)
-    email.send(smtp , send_from, send_to)
+    email.send(smtp, send_from, send_to)
 
 
 def to_pdf(msg_fname, pdf_fname):
