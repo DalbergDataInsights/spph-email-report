@@ -32,14 +32,14 @@ def scatter_reporting_district_plot(data):
     # Count number of no_form_report
     df_no_form_report = helper.get_num(data, 1)
 
-    reported = round(
+    reported = round((
         (
             (df_positive + df_no_positive)
             / (df_positive + df_no_positive + df_no_form_report)
         )
-        * 100)
-    reported_positive = round(
-        (df_positive / (df_positive + df_no_positive)) * 100)
+        * 100), 1)
+    reported_positive = round((
+        (df_positive / (df_positive + df_no_positive)) * 100), 1)
 
     data = {
         "Percentage of facilities expected to report which reported on their 105-1 form": reported,
