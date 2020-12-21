@@ -221,21 +221,21 @@ class FigureFactory:
                 data = db.datasets.get("country")
                 data_today = data.reset_index().date.max()
                 parsed = (data_today - relativedelta(years=1)).strftime("%B %Y")
+
             elif agg == "reporting_positive":
                 from dataset.transform import scatter_reporting_district_plot
 
                 data = scatter_reporting_district_plot(db.datasets).get(
                     "Percentage of reporting facilities that reported a value of one or above for this indicator"
                 )
-                date = next(iter(db.datasets.values())).reset_index().date.max()
                 parsed = data.iloc[-1].item()
+
             elif agg == "reporting_reported":
                 from dataset.transform import scatter_reporting_district_plot
 
                 data = scatter_reporting_district_plot(db.datasets).get(
                     "Percentage of facilities expected to report which reported on their 105-1 form"
                 )
-                date = next(iter(db.datasets.values())).reset_index().date.max()
                 parsed = data.iloc[-1].item()
              
             format_aggs.append(parsed)
