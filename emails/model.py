@@ -11,6 +11,7 @@ from email.parser import BytesParser
 import mimetypes
 import weasyprint
 from io import BytesIO
+import mailparser
 
 
 class EmailTemplateParser:
@@ -191,11 +192,11 @@ class Email:
 
     def to_pdf(self, fname, directory="./data/emails/pdf"):
 
-        html = self.message.get_payload(decode=True)
+        mail = mailparser.parse_from_file_msg(self.message)
+        html = mail.body
         out = BytesIO()
-        stylesheets=[weasyprint.CSS(settings.STATIC_ROOT + 'css/pdf.css')]
-        weasyprint.HTML(string=html).write_pdf(out,
-                                           stylesheets=stylesheets)
+        
+        weasyprint.HTML(string=html).write_pdf(out)
     #     body = weasyprint.HTML(self.message.as_string())
     #     with open(fname, "wb") as f:
     #         f.write(body)
