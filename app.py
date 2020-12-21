@@ -3,11 +3,12 @@ import calendar
 import os
 import smtplib
 import ssl
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
+import pandas as pd
 
 from six import get_function_closure
 
-# from dateutil.relativedelta import relativedelta
+from dateutil.relativedelta import relativedelta
 
 import emails
 import extract
@@ -70,6 +71,25 @@ def run_extract_contry(config, db, figure_pipeline):
         }
         extract.run(db, controls, figure_pipeline)
 
+def run_next_month(config):
+    current=config.get("date")
+    print(current)
+    current= pd.to_datetime(current, format='%Y%m')
+    print(current)
+
+
+    print("changing date") 
+
+    next_date = current + relativedelta(months=1)
+    next_date = next_date.strftime("%Y%m")
+    print(next_date)
+    import json
+    with open('config/config.json') as f:
+        json_data = json.load(f)
+        for item in json_data: 
+            item["date"] = next_date.strip()
+    with open('config/config.json', 'w') as f:
+        json.dump(json_data, f)        
 
 def run_emails(config, engine, email_template, recipients):
 
@@ -163,9 +183,13 @@ def run(pipeline):
 
         elif pipe == "email_to_pdf":
             save_emails_to_pdf(config, engine, email_template, recipients)
+
+        elif pipe == "increment-date":
+            run_next_month(config)
+
 # TODO make sure that email runs
 # TODO separate email html save from send
 # TODO email to pdf implementation
 
 if __name__ == "__main__":
-    run(["extract"])
+    run(["increment-date"])
