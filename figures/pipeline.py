@@ -47,7 +47,7 @@ pipeline = [
             "Percentage of facilities expected to report which reported on their 105-1 form": "rgb(106, 155, 195)",
             "Percentage of reporting facilities that reported a value of one or above for this indicator": "rgb(200, 19, 60)",
         },
-        "title": "in {}, in {}, of the <b>{}</b> health facilities expected to report <b>(100%)</b>, only <b>{}</b> reported one or above <b>({}%)</b> for {}. ",
+        "title": "in {}, in {}, of the <b>{}</b> health facilities expected to report <b>(100%)</b>, only <b>{}</b> <b>({}%)</b> reported one or above for {}. ",
         "title_args": [
             "district",
             "date",

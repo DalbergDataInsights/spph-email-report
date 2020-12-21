@@ -200,7 +200,6 @@ class FigureFactory:
                     positive + no_positive + no_report
                     
                 )
-                print(parsed)
             elif agg == "top_facility":
                 from dataset.transform import bar_district_plot
 
