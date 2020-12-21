@@ -6,6 +6,7 @@ import numpy as np
 
 import json
 import math
+from dataset import helper
 
 
 class FigureFactory:
@@ -183,26 +184,23 @@ class FigureFactory:
                     self.__get_positive_reporting(db.datasets.get("reporting_district"))
                 )
             elif agg == "facility_count":
-                from dataset.transform import scatter_reporting_district_plot
-
-                positive = scatter_reporting_district_plot(db.datasets).get(
-                    "Reported one or above for selected indicator"
-                )
-                positive = positive.iloc[-1].item()
-                no_positive = scatter_reporting_district_plot(db.datasets).get(
-                    "Reported null or zero for selected indicator"
-                )
-                no_positive = no_positive.iloc[-1].item()
+                data= db.datasets.get("reporting_district")
+                data = helper.check_index(data)
+                data = data.droplevel(["id"])
+                df_positive = helper.get_num(data, 3)
+                df_no_positive = helper.get_num(data, 2)
+                df_no_form_report = helper.get_num(data, 1)
                 
-                no_report = scatter_reporting_district_plot(db.datasets).get(
-                    "Did not report on their 105:1 form"
-                )
-                no_report = no_report.iloc[-1].item()
+                positive = df_positive.iloc[-1].item()
+                no_positive = df_no_positive.iloc[-1].item()
+                
+                no_report = df_no_form_report.iloc[-1].item()
                 
                 parsed = str(
                     positive + no_positive + no_report
                     
                 )
+                print(parsed)
             elif agg == "top_facility":
                 from dataset.transform import bar_district_plot
 
