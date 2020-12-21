@@ -12,7 +12,7 @@ from dataset.national_transform import (
     map_country_compare_plot,
     reporting_count_transform,
 )
-#import geopandas as gpd
+import geopandas as gpd
 
 national_pipeline = [
     {
