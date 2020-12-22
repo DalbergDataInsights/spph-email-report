@@ -1,7 +1,10 @@
+from datetime import datetime
 from email import message
 import config
 import json
 import calendar
+from dateutil.relativedelta import relativedelta
+import pandas as pd
 
 import os
 
@@ -65,6 +68,8 @@ class EmailTemplateParser:
             item = self.__parse_national_title(item, filters)
         elif "%recipients_name%" in item:
             item = self.__parse_recipients_name(item, filters)
+        elif "%extraction_month%" in item: 
+            item = self.__parse_extraction_month(item, filters) # it parses also the date of the next report's publishing 
         else:
             item = item
         return item
@@ -76,8 +81,21 @@ class EmailTemplateParser:
         month = date[-2:]
         month = calendar.month_name[int(month)]
         date = f"{month} {year}"
+        extraction_date = pd.to_datetime(date) + relativedelta(months=1)
+        extraction_date=extraction_date.strftime("%B")
 
-        item = item.replace("%district%", filters.get("district")).replace("%date%", date)
+        item = item.replace("%district%", filters.get("district")).replace("%date%", date).replace("%extraction_month%", extraction_date) #Because when multiple values to replace are in one line or string it reqires usage of the chained .replace()
+
+        return item
+
+    def __parse_extraction_month(self, item, filters): 
+        date = self.config.get("date")
+        extraction_date = pd.to_datetime(date, format='%Y%m') 
+        extraction_date = extraction_date + relativedelta(months=1)
+        future_report_month= extraction_date + relativedelta(months=2)
+        extraction_date=extraction_date.strftime("%B")
+        future_report_month=future_report_month.strftime("%B")
+        item=item.replace("%extraction_month%",extraction_date).replace("%future_report_month%", future_report_month )   
 
         return item
 
@@ -138,7 +156,12 @@ class EmailTemplateParser:
         item = item.replace(f"%national_title.{indicator}.{figure}%", title or "")
 
         return item   
+    #def __parse_extraction_month(self, item, filters): 
+        #reporting_date=self.config.get("date")
+        #extraction_date= reporting_date + relativedelta(month=1)
+        #item=item.replace("%extraction_date%",(extraction_date.strftime("%B"))
 
+        
 
 class Email:
     def __init__(self, smtp, send_to, send_from, message):
