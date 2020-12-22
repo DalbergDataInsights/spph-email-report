@@ -3,6 +3,8 @@ import pandas as pd
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import numpy as np
+from itertools import cycle
+from plotly.validators.scatter.marker import SymbolValidator
 
 import json
 import math
@@ -107,7 +109,20 @@ class FigureFactory:
         if figure_object == "Bar":
             fig.update_layout(barmode=bar_mode)
         elif figure_object == "Scatter":
-            fig.update_traces(marker=dict(symbol="square", size=10))
+            raw_symbols = SymbolValidator().values
+            namestems = []
+            namevariants = []
+            symbols = []
+            for i in range(0,len(raw_symbols),3):
+                name = raw_symbols[i+2]
+                symbols.append(raw_symbols[i])
+                namestems.append(name.replace("-open", "").replace("-dot", ""))
+                namevariants.append(name[len(namestems[-1]):])
+                markers = cycle(list(set(namestems)))   
+            fig.update_traces(mode='lines+markers')
+            for d in fig.data:
+                d.marker.symbol = next(markers)
+                d.marker.size = 10
             fig.update_traces(line=dict(width=2))
 
         return fig
