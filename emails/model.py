@@ -9,7 +9,7 @@ from email.message import EmailMessage
 from email.utils import make_msgid
 from email.parser import BytesParser
 import mimetypes
-import weasyprint
+#import weasyprint
 from io import BytesIO
 import mailparser
 

@@ -1,4 +1,5 @@
 import calendar
+import json
 
 import os
 import smtplib
@@ -71,25 +72,36 @@ def run_extract_contry(config, db, figure_pipeline):
         }
         extract.run(db, controls, figure_pipeline)
 
+
 def run_next_month(config):
-    current=config.get("date")
-    print(current)
-    current= pd.to_datetime(current, format='%Y%m')
-    print(current)
+    current = datetime.strptime(config.get("date"), "%Y%m")
+    now = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
+
+    if current==now: 
+        print("The figures are up to date, try later")
+        
+    elif now > current: 
+        print("Changing date...") 
+        next_date = current + relativedelta(months=1)
+        next_date = next_date.strftime("%Y%m")
+        
+        with open('config/config.json') as f:
+            data = json.load(f)
+            data["date"] = next_date
+        with open('config/config.json', 'w') as f:
+            json.dump(data, f, indent=2)   
+    else: 
+        print("Normalizing date...")
+        now = datetime.today().strftime("%Y%m")
+        print(now)
+        with open('config/config.json') as f:
+            data = json.load(f)
+            data["date"] = now
+        with open('config/config.json', 'w') as f:
+            json.dump(data, f, indent=2) 
 
 
-    print("changing date") 
 
-    next_date = current + relativedelta(months=1)
-    next_date = next_date.strftime("%Y%m")
-    print(next_date)
-    import json
-    with open('config/config.json') as f:
-        json_data = json.load(f)
-        for item in json_data: 
-            item["date"] = next_date.strip()
-    with open('config/config.json', 'w') as f:
-        json.dump(json_data, f)        
 
 def run_emails(config, engine, email_template, recipients):
 
