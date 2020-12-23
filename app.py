@@ -75,7 +75,7 @@ def run_extract_contry(config, db, figure_pipeline):
 
 def run_next_month(config):
     current = datetime.strptime(config.get("date"), "%Y%m")
-    now = datetime.today().replace(hour=0, minute=0, second=0, microsecond=0)
+    now = datetime.today().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
 
     if current==now: 
         print("The figures are up to date, try later")
