@@ -139,7 +139,7 @@ def send_emails(config, engine, email_template, recipients):
                     send_from=engine.get("username"), 
                     send_to=recipient.get("recipients"),
                     fname=f'./data/emails/{recipient.get("filters").get("district")}/{config.get("date")}.msg',
-                    subject =parser.get_parsed_subject(recipient.get("filters")),
+                    subject =parser.get_parsed_subject(recipient.get("filters"))
                     ) 
 
 
@@ -155,7 +155,7 @@ def run(pipeline):
 
     # Configs
     DATABASE_URI = os.environ["HEROKU_POSTGRESQL_CYAN_URL"]
-    config = get_config("config")
+    config = get_config("config")    
     email_template = get_config("email_template")
     recipients = get_config("email_recipients")
     engine = {
@@ -164,10 +164,6 @@ def run(pipeline):
         "password": os.environ["PASSWORD"],
     }
 
-    ## TODO
-
-    # if congig.get("date") == "now":
-    # config["date"] = datetime.utc.now().replace(day=1)
 
     for pipe in pipeline:
 
@@ -204,4 +200,4 @@ def run(pipeline):
 # TODO email to pdf implementation
 
 if __name__ == "__main__":
-    run(["increment-date"])
+    run(["email_to_pdf"])

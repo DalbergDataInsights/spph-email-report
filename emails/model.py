@@ -9,7 +9,9 @@ from email.message import EmailMessage
 from email.utils import make_msgid
 from email.parser import BytesParser
 import mimetypes
-#import weasyprint
+import weasyprint
+from weasyprint import HTML
+from django.template.loader import render_to_string
 from io import BytesIO
 import mailparser
 
@@ -194,10 +196,13 @@ class Email:
 
         mail = mailparser.parse_from_file_msg(self.message)
         html = mail.body
-        out = BytesIO()
+        print(html)
+        html=render_to_string(html)
+
         
-        weasyprint.HTML(string=html).write_pdf(out)
-    #     body = weasyprint.HTML(self.message.as_string())
-    #     with open(fname, "wb") as f:
-    #         f.write(body)
+        weasyprint.HTML(string=html).write_pdf(directory + fname)
+
+        #body = weasyprint.HTML(self.message.as_string())
+        #with open(fname, "wb") as f:
+             #f.write(body)
       
