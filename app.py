@@ -99,12 +99,9 @@ def run_next_month(config):
             data["date"] = now
         with open('config/config.json', 'w') as f:
             json.dump(data, f, indent=2) 
-
-
-
+ 
 
 def run_emails(config, engine, email_template, recipients):
-
     parser = EmailTemplateParser("data/viz", email_template, config)
 
     smtp = smtplib.SMTP(host=engine.get("smtp"), port=587)
@@ -195,9 +192,8 @@ def run(pipeline):
         elif pipe == "increment-date":
             run_next_month(config)
 
-# TODO make sure that email runs
-# TODO separate email html save from send
+
 # TODO email to pdf implementation
 
 if __name__ == "__main__":
-    run(["email_to_pdf"])
+    run(["email_send"])

@@ -17,6 +17,7 @@ kaleido = "*"
 psutil = "*"
 shapely = "*"
 gdal = "*"
+xhtml2pdf = "*"
 
 [dev-packages]
 black = "*"

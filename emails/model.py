@@ -11,12 +11,19 @@ from email.parser import BytesParser
 import mimetypes
 import weasyprint
 from weasyprint import HTML
+from django.http import HttpResponse
 from django.template.loader import render_to_string
+from xhtml2pdf import pisa
 from io import BytesIO
 import mailparser
 
 
+
 class EmailTemplateParser:
+    """
+    Assembles components into one email 
+    
+    """
     def __init__(self, data_folder, email_template, config):
         self.folder = data_folder
         self.template = email_template
@@ -194,15 +201,23 @@ class Email:
 
     def to_pdf(self, fname, directory="./data/emails/pdf"):
 
-        mail = mailparser.parse_from_file_msg(self.message)
-        html = mail.body
-        print(html)
-        html=render_to_string(html)
-
-        
-        weasyprint.HTML(string=html).write_pdf(directory + fname)
+        mail = mailparser.parse_from_file_msg("./data/emails/AMURU/202010.msg")
 
         #body = weasyprint.HTML(self.message.as_string())
         #with open(fname, "wb") as f:
-             #f.write(body)
+            #f.write(body)
+
+        html = mail.body
+        html=render_to_string(html)
+        weasyprint.HTML(string=html).write_pdf(directory + fname)
+
+
+        #html = render_to_string(self.message)
+        #result = BytesIO()
+        #pdf = pisa.pisaDocument(BytesIO(html.encode("utf-8")), result)
+        #if not pdf.err:
+            #return result.getvalue()
+        #return None    
+
+
       
