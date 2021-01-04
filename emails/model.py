@@ -68,6 +68,8 @@ class EmailTemplateParser:
             item = self.__parse_national_title(item, filters)
         elif "%recipients_name%" in item:
             item = self.__parse_recipients_name(item, filters)
+        elif "%biostatistician_name%" in item: 
+            item = self.__parse_biostatistician_name(item, filters)  
         elif "%extraction_month%" in item: 
             item = self.__parse_extraction_month(item, filters) # it parses also the date of the next report's publishing 
         else:
@@ -144,8 +146,13 @@ class EmailTemplateParser:
         return item
 
     def __parse_recipients_name(self, item, filters):
-        item = item.replace("%recipients_name%", filters.get("recipients_name"))
+        item = item.replace("%recipients_name%", filters.get("recipients_name")).replace("%biostatistician_name%", filters.get("biostatistician_name"))
         return item
+
+    def __parse_biostatistician_name(self, item, filters):
+        item = item.replace("%biostatistician_name%", filters.get("biostatistician_name"))
+        return item
+
 
     def __parse_national_title(self, item, filters):
 
