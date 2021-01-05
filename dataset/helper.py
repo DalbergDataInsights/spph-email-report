@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 import calendar
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+
 
 
 def get_ratio(df, indicator, agg_level):
@@ -132,11 +134,11 @@ def get_date_list(target_year, target_month, reference_year, reference_month):
 
     date_list = [
         target_date,
-        target_date.replace(month=target_date.month + 1),
-        target_date.replace(month=target_date.month + 2),
+        target_date + relativedelta(months=1),
+        target_date + relativedelta(months=2),
         reference_date,
-        reference_date.replace(month=reference_date.month + 1),
-        reference_date.replace(month=reference_date.month + 2),
+        reference_date + relativedelta(months=1),
+        reference_date + relativedelta(months=2),
     ]
 
     return date_list
