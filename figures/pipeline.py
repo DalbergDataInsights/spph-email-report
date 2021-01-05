@@ -31,7 +31,7 @@ pipeline = [
         "transform": bar_district_plot,
         "color": {"district": "rgb(42, 87, 131)"},
         "args": {"bar_mode": "overlay"},
-        "title": "{} contributes <b>{}</b> to {} in {} in {}",
+        "title": "{} contributes <b>{}</b> to the {} in {} in {}",
         "title_args": [
             "top_facility",
             "top_facility_contribution",
@@ -47,7 +47,7 @@ pipeline = [
             "Percentage of facilities expected to report which reported on their 105-1 form": "rgb(106, 155, 195)",
             "Percentage of reporting facilities that reported a value of one or above for this indicator": "rgb(200, 19, 60)",
         },
-        "title": "in {}, in {}, of the <b>{}</b> health facilities expected to report <b>(100%)</b>, only <b>{}</b> <b>({}%)</b> reported one or above for {}. ",
+        "title": "In {}, in {}, of the <b>{}</b> health facilities expected to report <b>(100%)</b>, only <b>{}</b> <b>({}%)</b> reported one or above for the {}. ",
         "title_args": [
             "district",
             "date",
