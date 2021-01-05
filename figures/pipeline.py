@@ -12,7 +12,7 @@ from dataset.national_transform import (
     map_country_compare_plot,
     reporting_count_transform,
 )
-import geopandas as gpd
+#import geopandas as gpd
 
 national_pipeline = [
     {
@@ -46,32 +46,7 @@ national_pipeline = [
             "date_national",
         ],
     },
-    {
-        "type": "map",
-        "transform": map_country_compare_plot,
-        "color": {
-            "Change between reference and target date": [
-                "#b00d3b",
-                "#f77665",
-                "#dedad9",
-                "#96c0e0",
-                "#3c6792",
-            ],
-        },
-        "args": {
-            "bar_mode": "overlay",
-            "tolerance": 0.005,
-            "locations": "id",
-           # "gdf": gpd.read_file("./data/shapefiles/shapefile.shp"),
-        },
-        "title": "The {} {} between {} and {}",
-        "title_args": [
-            "indicator_view",
-            "ratio_year",
-            "date_reference",
-            "date_national",
-        ],
-    },
+    
     {
         "type": "scatter",
         "transform": reporting_count_transform,
