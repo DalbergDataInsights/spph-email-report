@@ -41,7 +41,7 @@
         "filters": {
             "district": "BUVUMA",
             "recipients_name": "Kanyike Baker",
-            "biostatistician_name": " "
+            "biostatistician_name": "Dear Biostatistician of Buvuma "
             
         }
     },
@@ -50,7 +50,7 @@
         "filters": {
             "district": "BUHWEJU",
             "recipients_name": "Dr. Oyik Bruno",
-            "biostatistician_name": " "
+            "biostatistician_name": "Dear Biostatistician of Buhweju"
             
         }
     }
