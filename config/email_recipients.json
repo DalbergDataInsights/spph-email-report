@@ -1,7 +1,7 @@
 [
     {
         "recipients": [
-            "valeriya.cherepova@dalberg.com"
+            "valeriya.cherepova@dalberg.com", "Audrey.Vanderghinste@dalberg.com"
         ],
         "filters": {
             "district": "AMURU",
@@ -10,7 +10,7 @@
         }
     },
     {
-        "recipients": ["valeriya.cherepova@dalberg.com"],
+        "recipients": ["valeriya.cherepova@dalberg.com", "Audrey.Vanderghinste@dalberg.com"],
         "filters": {
             "district": "MUKONO",
             "recipients_name": "Dr. Tumushabe Elly",
@@ -19,7 +19,7 @@
         }
     },
     {
-        "recipients": ["valeriya.cherepova@dalberg.com"],
+        "recipients": ["valeriya.cherepova@dalberg.com", "Audrey.Vanderghinste@dalberg.com"],
         "filters": {
             "district": "WAKISO",
             "recipients_name": "Dr. Lugoloobi Mathias",
@@ -28,7 +28,7 @@
         }
     },
     {
-        "recipients": ["valeriya.cherepova@dalberg.com"],
+        "recipients": ["valeriya.cherepova@dalberg.com", "Audrey.Vanderghinste@dalberg.com"],
         "filters": {
             "district": "BUSIA",
             "recipients_name": "Nanyama Benah",
@@ -37,7 +37,7 @@
         }
     },
     {
-        "recipients": ["valeriya.cherepova@dalberg.com"],
+        "recipients": ["valeriya.cherepova@dalberg.com", "Audrey.Vanderghinste@dalberg.com"],
         "filters": {
             "district": "BUVUMA",
             "recipients_name": "Kanyike Baker",
@@ -46,7 +46,7 @@
         }
     },
     {
-        "recipients": ["valeriya.cherepova@dalberg.com"],
+        "recipients": ["valeriya.cherepova@dalberg.com", "Audrey.Vanderghinste@dalberg.com"],
         "filters": {
             "district": "BUHWEJU",
             "recipients_name": "Dr. Oyik Bruno",
