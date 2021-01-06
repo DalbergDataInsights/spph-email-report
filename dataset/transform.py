@@ -37,15 +37,16 @@ def scatter_reporting_district_plot(data):
             (df_positive + df_no_positive)
             / (df_positive + df_no_positive + df_no_form_report)
         )
-        * 100), 1)
+        * 100), 1)    
+    reported= reported.sort_index()
     reported_positive = round((
         (df_positive / (df_positive + df_no_positive)) * 100), 1)
+    reported_positive= reported_positive.sort_index()
 
     data = {
         "Percentage of facilities expected to report which reported on their 105-1 form": reported,
         "Percentage of reporting facilities that reported a value of one or above for this indicator": reported_positive
     }
-
     return data
 
 
