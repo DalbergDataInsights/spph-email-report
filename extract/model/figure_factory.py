@@ -109,6 +109,7 @@ class FigureFactory:
         if figure_object == "Bar":
             fig.update_layout(barmode=bar_mode)
         elif figure_object == "Scatter":
+            ''' Assigns randomly different markers to each data line in scatter plots'''
             raw_symbols = SymbolValidator().values
             namestems = []
             namevariants = []
@@ -132,7 +133,7 @@ class FigureFactory:
     #########
 
     def style_figure(self, fig):
-
+    ''' 1. Calibrates the size of the visualisation; 2. Sets the style of the grids and background'''
         fig.update_layout(
             legend=dict(
                 orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1.02
@@ -155,6 +156,11 @@ class FigureFactory:
         )
 
     def get_figure_title(self, title, db, aggs):
+        """
+        Extracts and returns the arguments of the titles predefined in the figures' pipeline (figures/pipeline.py) 
+        data is called from db 
+
+        """
         format_aggs = []
         indicator = next(iter(db.datasets.values())).columns[-1]
         for agg in aggs:
@@ -162,14 +168,18 @@ class FigureFactory:
             if agg == "date":
                 data = db.datasets.get("district_dated")
                 parsed = data.reset_index().date.max().strftime("%B %Y")
+
             if agg == "date_national":
                 data = db.datasets.get("country")
                 parsed = data.reset_index().date.max().strftime("%B %Y")
+
             elif agg == "district":
                 data = db.datasets.get("district_dated")
                 parsed = data.reset_index().id[0]
+
             elif agg == "indicator_view":
                 parsed = db.get_indicator_view(indicator)
+
             elif agg == "date_reference":
                 data = db.datasets.get("country")
                 max_date = data.reset_index().date.max()
@@ -198,7 +208,7 @@ class FigureFactory:
                 parsed = str(
                     self.__get_positive_reporting(db.datasets.get("reporting_district"))
                 )
-            elif agg == "facility_count":
+            elif agg == "facility_count": 
                 data= db.datasets.get("reporting_district")
                 data = helper.check_index(data)
                 data = data.droplevel(["id"])
@@ -256,6 +266,10 @@ class FigureFactory:
         return title.format(*format_aggs)
 
     def __get_percentage_description(self, value):
+        """" 
+        Returns description of direction of the change in a value (increase/decrease/stable)
+
+        """"
         absolute_value = abs(value)
         if value >= 0.1:
             description = f"increased by {absolute_value}%"
@@ -266,6 +280,9 @@ class FigureFactory:
         return description
 
     def __get_percentage_difference_between_time(self, data, min_date, max_date):
+        """
+        Parses the value for a given date and returns the string with the percentage and its description
+        """
         indicator = data.columns[-1]
         data = data.reset_index()
 
@@ -284,6 +301,9 @@ class FigureFactory:
         return description
 
     def __get_positive_reporting(self, data):
+        """
+        Returns the number of facilities reported positive from the set of facilities expected to report for reporting bar chart (more info in dataset/transform.py )
+        """
 
         indicator = data.columns[-1]
         data = data.reset_index()
