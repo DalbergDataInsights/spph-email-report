@@ -1,14 +1,14 @@
 # SPPH-EMAIL-REPORT 
 
 
-The main aim of the current programm is to create the given number of emails with the customized set of visualisations of indicators presented in the CEHS tool. 
+The main aim of the current program is to create the given number of emails with the customized set of visualisations of indicators presented in the CEHS tool. 
 
 The current instruction file will serve as a step-by-step guide, which shows how to run the program and gives the information on its structure and underlying scripts. 
 
 Shortly, the program consists of two parts: 
-* Creation of the visualusations and captions
+* Creation of the visualisations and captions
 * Creation of the emails
-Consequently, it is impossible to successfuly execute the second part until the first part is completed. 
+Consequently, it is impossible to successfully execute the second part until the first part is completed. 
  
 
 The content of the instruction file is structured as follows: 
