@@ -106,7 +106,10 @@ class FigureFactory:
         self.style_figure(fig)
 
         if figure_object == "Bar":
-            fig.update_layout(barmode=bar_mode)
+            fig.update_layout(barmode=bar_mode,
+            autosize=False,
+            width=500,
+            height=400)
         elif figure_object == "Scatter":
             fig.update_traces(marker=dict(symbol="square", size=10))
             fig.update_traces(line=dict(width=2))
@@ -125,7 +128,7 @@ class FigureFactory:
             ),
             margin=dict(l=20, r=20, b=1, t=20, pad=2),
             autosize=False,
-            width=800,
+            width=900,
             height=400,
         )
 
