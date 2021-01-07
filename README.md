@@ -110,7 +110,7 @@ In the template figures are defined in a following form:
 ```
 while adding the picture, replicate the syntax: `<div>%image.*indicator's name*.*figure number*%<div/>`, where indicator's name is defined similarly to the one in config.json 
 The figures numbers can be found in data/viz in relevant folders. 
-If there is a mistake in the parameters the code comes up with an error message and stops excecution. 
+If there is a mistake in the parameters the code comes up with an error message and stops execution. 
 #### ADDING CAPTIONS
 
 In the template captions are defined in a following form:
