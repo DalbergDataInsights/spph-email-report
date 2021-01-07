@@ -96,9 +96,28 @@ To see the template in config folder open email_template.json.
 config >> email_template.json
 
 All the text information can be altered directly there, keeping the preset format (for more information see any HTML Style Guide and Coding Conventions. For example, https://www.w3schools.com/html/html5_syntax.asp)
-### ADD FIGURES
+### HOW TO ALTER THE EMAIL TEMPLATE
 
+To see the template in config folder open email_template.json.
+config >> email_template.json
 
+All the text information can be altered directly there, keeping the preset format (for more information see any HTML Style Guide and Coding Conventions. For example, https://www.w3schools.com/html/html5_syntax.asp)
+#### ADDING FIGURES
+
+In the template figures are defined in a following form:
+```python
+"<div>%image.1st ANC Visits.figure_1%<div/>",
+```
+while adding the picture, replicate the syntax: `<div>%image.*indicator's name*.*figure number*%<div/>`, where indicator's name is defined similarly to the one in config.json 
+The figures numbers can be found in data/viz in relevant folders. 
+If there is a mistake in the parameters the code comes up with an error message and stops excecution. 
+#### ADDING CAPTIONS
+
+In the template captions are defined in a following form:
+```python
+"<p style=\"color:rgb(42, 87, 131); \"><i>%title.1st ANC Visits.figure_1% </i></p>",
+```
+while adding the picture, replicate the syntax: `%title.*indicator's name*.*figure number*%`, where indicator's name is defined similarly to the one in config.json and figure's number corresponds to the related to the caption figure. To read the caption before adding, open titles.json in data/viz/**date**/**district**/**indicator**. 
 
 ### FOR DEVELOPERS
 
