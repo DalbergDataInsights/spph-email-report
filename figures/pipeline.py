@@ -67,7 +67,7 @@ pipeline = [
         },
         "title": """Across the country, in {} the {} is amounted to <b>{}</b> """,
         "title_args": [
-            "date_national",
+            "date",
             "indicator_view",
             "latest_value",
             
