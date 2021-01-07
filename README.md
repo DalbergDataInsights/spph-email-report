@@ -1,24 +1,24 @@
 # SPPH-EMAIL-REPORT 
 
 
-The main aim of the current programm is to create the given number of emails with the customized set of visualisations of indicators presented in the CEHS tool. 
+The main aim of the current program is to create the given number of emails with the customized set of visualisations of indicators presented in the CEHS tool. 
 
 The current instruction file will serve as a step-by-step guide, which shows how to run the program and gives the information on its structure and underlying scripts. 
 
 Shortly, the program consists of two parts: 
-* Creation of the visualusations and captions
+* Creation of the visualisations and captions
 * Creation of the emails
-Consequently, it is impossible to successfuly execute the second part until the first part is completed. 
+Consequently, it is impossible to successfully execute the second part until the first part is completed. 
  
 
 The content of the instruction file is structured as follows: 
-1. HOW TO RUN THE PROGRAM 
-2. HOW TO CHANGE RECEPIENTS
-3. HOW TO CHOOSE THE REPORTING DATE 
-4. HOW TO ADD OR DELETE INDICATORS OR DISTRICTS
-5. HOW TO ALTER THE EMAIL TEMPLATE 
-    4.1 ADD FIGURES
-    4.2 ADD CAPTIONS UNDER THE FIGURES IN THE TEMPLATE 
+1. How to run the program
+2. How to change recipients
+3. How to choose reporting date
+4. How to add or delete indicators or districts
+5. How to alter an email template
+    4.1 Adding figures
+    4.2 Adding captions 
 
 ### HOW TO RUN THE PROGRAM 
 
