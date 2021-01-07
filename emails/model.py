@@ -132,7 +132,7 @@ class EmailTemplateParser:
         except ValueError as e:
             print(e)
             print(
-                f"Image tag {item} in email template does not contain engought parameters! Please use %image.<indicator>.<figure_number>%"
+                f"Image tag {item} in email template does not contain engough parameters! Please use %image.<indicator>.<figure_number>%"
             )
             return None
 
