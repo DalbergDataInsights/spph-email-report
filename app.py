@@ -71,49 +71,7 @@ def run_extract_contry(config, db, figure_pipeline):
             "trends_map_compare_agg": "Compare month of interest to month of reference",
         }
         extract.run(db, controls, figure_pipeline)
-
-
-def run_next_month(config):
-    current = datetime.strptime(config.get("date"), "%Y%m")
-    now = datetime.today().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-
-    if current==now: 
-        print("The figures are up to date, try later")
-        
-    elif now > current: 
-        print("Changing date...") 
-        next_date = current + relativedelta(months=1)
-        next_date = next_date.strftime("%Y%m")
-        
-        with open('config/config.json') as f:
-            data = json.load(f)
-            data["date"] = next_date
-        with open('config/config.json', 'w') as f:
-            json.dump(data, f, indent=2)   
-    else: 
-        print("Normalizing date...")
-        now = datetime.today().strftime("%Y%m")
-        print(now)
-        with open('config/config.json') as f:
-            data = json.load(f)
-            data["date"] = now
-        with open('config/config.json', 'w') as f:
-            json.dump(data, f, indent=2) 
  
-
-def run_emails(config, engine, email_template, recipients):
-    parser = EmailTemplateParser("data/viz", email_template, config)
-
-    smtp = smtplib.SMTP(host=engine.get("smtp"), port=587)
-    smtp.starttls(context=ssl.create_default_context())
-    smtp.login(engine.get("username"), engine.get("password"))
-
-    for recipient in recipients:
-        print(f"Running email send for {recipient}")
-        emails.run(engine.get("username"), recipient, parser, smtp)
-
-    smtp.quit()
-
 def save_emails(config, engine, email_template, recipients):
     parser = EmailTemplateParser("data/viz", email_template, config)
 
@@ -147,6 +105,31 @@ def save_emails_to_pdf(config, engine, email_template, recipients):
         emails.to_pdf(msg_fname=f'./data/emails/{recipient.get("filters").get("district")}/{config.get("date")}.msg',
                       pdf_fname=f'./data/emails/{recipient.get("filters").get("district")}/{config.get("date")}.pdf')
 
+def run_next_month(config):
+    current = datetime.strptime(config.get("date"), "%Y%m")
+    now = datetime.today().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+    if current==now: 
+        print("The figures are up to date, try later")
+        
+    elif now > current: 
+        print("Changing date...") 
+        next_date = current + relativedelta(months=1)
+        next_date = next_date.strftime("%Y%m")
+        
+        with open('config/config.json') as f:
+            data = json.load(f)
+            data["date"] = next_date
+        with open('config/config.json', 'w') as f:
+            json.dump(data, f, indent=2)   
+    else: 
+        print("Normalizing date...")
+        now = datetime.today().strftime("%Y%m")
+        with open('config/config.json') as f:
+            data = json.load(f)
+            data["date"] = now
+        with open('config/config.json', 'w') as f:
+            json.dump(data, f, indent=2) 
 
 def run(pipeline):
 
@@ -170,9 +153,6 @@ def run(pipeline):
             db.init_pipeline(pipeline)
             run_extract(config, db, figures.pipeline)
 
-        elif pipe == "email":
-            run_emails(config, engine, email_template, recipients)
-
         elif pipe == "extract_country":
             config = get_config("config_national")
             db = Database(DATABASE_URI)
@@ -180,7 +160,7 @@ def run(pipeline):
             db.init_pipeline(pipeline)
             run_extract_contry(config, db, figures.national_pipeline)
 
-        elif pipe == "email_extract":
+        elif pipe == "email_create":
             save_emails(config, engine, email_template, recipients)
 
         elif pipe == "email_send":
@@ -196,4 +176,4 @@ def run(pipeline):
 # TODO email to pdf implementation
 
 if __name__ == "__main__":
-    run(["email_to_pdf"])
+    run(["email_create"])
