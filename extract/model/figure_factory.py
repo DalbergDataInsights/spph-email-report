@@ -164,9 +164,7 @@ class FigureFactory:
             elif agg=="latest_value": 
                 data = db.datasets.get("country")
                 value= data.reset_index().iloc[-1,-1].item()
-                print(value)
                 parsed = str(round(value, 2))
-                print(parsed)
 
             elif agg == "ratio":
                 data = db.datasets.get("district")
