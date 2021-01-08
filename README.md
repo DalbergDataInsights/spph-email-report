@@ -8,7 +8,10 @@ The current instruction file will serve as a step-by-step guide, which shows how
 Shortly, the program consists of two parts: 
 * Creation of the visualisations and captions
 * Creation of the emails
+
 Consequently, it is impossible to successfully execute the second part until the first part is completed. 
+The output of the first part of the program is a json file and for visualisations for each indicator. First three visualisations are a scatter plot with district-level overview of the indicator, a barchart with facilities' contribution and reporting scatter plot. The fourth visualisation is a country-level overview scatter of the indicator. The json file contains titles of the figures, which are implemented to emails as figures' captions. 
+Output of the second part of the program is emails.
  
 
 The content of the instruction file is structured as follows: 
@@ -17,8 +20,9 @@ The content of the instruction file is structured as follows:
 3. How to choose reporting date
 4. How to add or delete indicators or districts
 5. How to alter an email template
-    4.1 Adding figures
-    4.2 Adding captions 
+    5.1 Adding figures
+    5.2 Adding captions 
+6. How to alter captions    
 
 ### HOW TO RUN THE PROGRAM 
 
@@ -74,7 +78,7 @@ For example:
 To choose the date open config.json
 config >> config.json
 
-In dictionary in "date" change the date, keeping the preset formt: YYYYMM -> 202011 is November 2020.
+In dictionary in "date" change the date, keeping the preset format: YYYYMM -> 202011 is November 2020.
 Note, this change affects the data extraction (data is extracted for the given month) and automatically updates the email, so that no altering of template is necessary for the new date.   
 
 ### HOW TO ADD OR DELETE INDICATORS OR DISTRICTS 
@@ -109,6 +113,32 @@ In the template captions are defined in a following form:
 "<p style=\"color:rgb(42, 87, 131); \"><i>%title.1st ANC Visits.figure_1% </i></p>",
 ```
 while adding the picture, replicate the syntax: `%title.*indicator's name*.*figure number*%`, where indicator's name is defined similarly to the one in config.json and figure's number corresponds to the related to the caption figure. To read the caption before adding, open titles.json in data/viz/**date**/**district**/**indicator**. 
+
+### HOW TO ALTER CAPTIONS 
+
+To change the captions, open figures' pipeline -> figures/pipeline.py and make necessary changes in `"titles"`. Note that districts' level pipeline is `pipeline`, the `national_pipeline` is for country-level monthly reports. 
+
+To add more arguments to the caption, add name of the argument to the `"title_args":`, place it to the `"titles"` as `{}` and define a new argument in extract/model/figure_factory.py in 
+```python
+def get_figure_title(self, title, db, aggs):
+    format_aggs = []
+        indicator = next(iter(db.datasets.values())).columns[-1]
+        for agg in aggs:
+            parsed = ""
+            if agg == "date":
+                data = db.datasets.get("district_dated")
+                parsed = data.reset_index().date.max().strftime("%B %Y")
+            ...
+            elif agg == "reference_date":
+                data = db.datasets.get("country")
+                data_today = data.reset_index().date.max()
+                parsed = (data_today - relativedelta(years=1)).strftime("%B %Y")
+            format_aggs.append(parsed)
+        return title.format(*format_aggs)   
+```
+Where the new argument is to define after the if-statement. 
+
+
 ### FOR DEVELOPERS
 
 SPPH-EMAIL-REPORT 
@@ -116,7 +146,7 @@ Table of content of the program:
 * config - configuration files (.json)
 * data - output folder, where visualisations and captions (in json format) are stored
 * dataset - data transformation. Pretty identical to CEHS' one
-* emails - skrpts to create and compile emails
+* emails - skripts to create and compile emails
 * extract - creation of visualisations and captions
 * figures - figures' pipeline 
 
