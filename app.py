@@ -196,4 +196,4 @@ def run(pipeline):
 # TODO email to pdf implementation
 
 if __name__ == "__main__":
-    run(["email_send"])
+    run(["email_to_pdf"])

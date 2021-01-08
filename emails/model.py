@@ -201,15 +201,16 @@ class Email:
 
     def to_pdf(self, fname, directory="./data/emails/pdf"):
 
-        mail = mailparser.parse_from_file_msg("./data/emails/AMURU/202010.msg")
+        mail = mailparser.parse_from_file_msg(self.message)
 
-        #body = weasyprint.HTML(self.message.as_string())
-        #with open(fname, "wb") as f:
-            #f.write(body)
+        body = weasyprint.HTML(self.message.as_string())
+        with open(fname, "wb") as f:
+            f.write(body)
 
-        html = mail.body
-        html=render_to_string(html)
-        weasyprint.HTML(string=html).write_pdf(directory + fname)
+        #"./data/emails/AMURU/202010.msg"
+        #html = mail.body
+        #html=render_to_string(html)
+        #weasyprint.HTML(string=html).write_pdf(directory + fname)
 
 
         #html = render_to_string(self.message)
