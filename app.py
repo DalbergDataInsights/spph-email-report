@@ -109,7 +109,7 @@ def run(pipeline):
 
     for pipe in pipeline:
 
-        if pipe == "extract": #creates and prints images 
+        if pipe == "extract": #creates and prints images for districts' emails
             db = Database(DATABASE_URI) 
             pipeline = dataset.pipeline.get()
             db.init_pipeline(pipeline)
@@ -118,7 +118,7 @@ def run(pipeline):
         elif pipe == "email": #compiles and sends emails 
             run_emails(config, engine, email_template, recipients)
 
-        elif pipe == "extract_country":
+        elif pipe == "extract_country": #creates and prints pictures for country-level monthly reports 
             config = get_config("config_national")
             db = Database(DATABASE_URI)
             pipeline = dataset.national_pipeline.get()
@@ -130,5 +130,5 @@ def run(pipeline):
 # TODO email to pdf implementation
 
 if __name__ == "__main__":
-    run(["extract", "email"])
+    run(["email"])
 
