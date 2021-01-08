@@ -17,8 +17,10 @@ The content of the instruction file is structured as follows:
 3. How to choose reporting date
 4. How to add or delete indicators or districts
 5. How to alter an email template
-    4.1 Adding figures
-    4.2 Adding captions 
+    5.1 Adding figures
+    5.2 Adding captions 
+6. How to alter captions   
+
 
 ### HOW TO RUN THE PROGRAM 
 
@@ -112,6 +114,30 @@ In the template captions are defined in a following form:
 "<p style=\"color:rgb(42, 87, 131); \"><i>%title.1st ANC Visits.figure_1% </i></p>",
 ```
 while adding the picture, replicate the syntax: `%title.*indicator's name*.*figure number*%`, where indicator's name is defined similarly to the one in config.json and figure's number corresponds to the related to the caption figure. To read the caption before adding, open titles.json in data/viz/**date**/**district**/**indicator**. 
+
+### HOW TO ALTER CAPTIONS 
+
+To change the captions, open figures' pipeline -> figures/pipeline.py and make necessary changes in `"titles"`. Note that districts' level pipeline is `pipeline`, the `national_pipeline` is for country-level monthly reports. 
+
+To add more arguments to the caption, add name of the argument to the `"title_args":`, place it to the `"titles"` as `{}` and define a new argument in extract/model/figure_factory.py in 
+```python
+def get_figure_title(self, title, db, aggs):
+    format_aggs = []
+        indicator = next(iter(db.datasets.values())).columns[-1]
+        for agg in aggs:
+            parsed = ""
+            if agg == "date":
+                data = db.datasets.get("district_dated")
+                parsed = data.reset_index().date.max().strftime("%B %Y")
+            ...
+            elif agg == "reference_date":
+                data = db.datasets.get("country")
+                data_today = data.reset_index().date.max()
+                parsed = (data_today - relativedelta(years=1)).strftime("%B %Y")
+            format_aggs.append(parsed)
+        return title.format(*format_aggs)   
+```
+Where the new argument is to define after the if-statement. 
 ### FOR DEVELOPERS
 
 SPPH-EMAIL-REPORT 
