@@ -133,7 +133,7 @@ class FigureFactory:
     #########
 
     def style_figure(self, fig):
-    ''' 1. Calibrates the size of the visualisation; 2. Sets the style of the grids and background'''
+        ''' 1. Calibrates the size of the visualisation; 2. Sets the style of the grids and background'''
         fig.update_layout(
             legend=dict(
                 orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1.02
@@ -268,8 +268,8 @@ class FigureFactory:
     def __get_percentage_description(self, value):
         """" 
         Returns description of direction of the change in a value (increase/decrease/stable)
-
-        """"
+        
+        """
         absolute_value = abs(value)
         if value >= 0.1:
             description = f"increased by {absolute_value}%"

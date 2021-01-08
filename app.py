@@ -22,9 +22,9 @@ load_dotenv(find_dotenv())
 
 
 def run_extract(config, db, figure_pipeline):
-'''
-Fuction to create figures and captions for districs
-'''
+    """"
+    Fuction to create figures and captions for districs
+    """""
     target_date = datetime.strptime(config.get("date"), "%Y%m") # gets date from config.json
     print(f"Launching figure generation for {target_date}")
     reference_date = (target_date - timedelta(days=1)).replace(day=1)
@@ -49,9 +49,9 @@ Fuction to create figures and captions for districs
 
 
 def run_extract_contry(config, db, figure_pipeline):
-'''
-Fuction to create figures and captions for the whole country
-'''
+    '''
+    Fuction to create figures and captions for the whole country
+    '''
     target_date = datetime.strptime(config.get("date"), "%Y%m") # gets date from config.json
     print(f"Launching figure generation for {target_date}")
     reference_date = target_date.replace(year=target_date.year - 1)
@@ -74,9 +74,9 @@ Fuction to create figures and captions for the whole country
 
 
 def run_emails(config, engine, email_template, recipients):
-'''
-Fuction to parse a completed template and send it from a later defined email address to recipients
-'''    
+    '''
+    Fuction to parse a completed template and send it from a later defined email address to recipients
+    '''    
     parser = EmailTemplateParser("data/viz", email_template, config)
 
     smtp = smtplib.SMTP(host=engine.get("smtp"), port=587)
@@ -130,5 +130,5 @@ def run(pipeline):
 # TODO email to pdf implementation
 
 if __name__ == "__main__":
-    run(["email"])
+    run(["extract", "email"])
 
