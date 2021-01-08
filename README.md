@@ -37,7 +37,7 @@ if __name__ == "__main__":
 5. "increment-date" - upgrades the date to the current month (doesn't change anything if already upgraded)
 
 NB! Check the date of the report before starting the extraction (see: HOW TO CHOOSE THE DATE )
-To change predifined input, use configuration files in a config folder in the workspace. 
+To change predefined input, use configuration files in a config folder in the workspace. 
 
 This section is under the development, so the changes will be implemented soon. 
 
@@ -96,12 +96,6 @@ To see the template in config folder open email_template.json.
 config >> email_template.json
 
 All the text information can be altered directly there, keeping the preset format (for more information see any HTML Style Guide and Coding Conventions. For example, https://www.w3schools.com/html/html5_syntax.asp)
-### HOW TO ALTER THE EMAIL TEMPLATE
-
-To see the template in config folder open email_template.json.
-config >> email_template.json
-
-All the text information can be altered directly there, keeping the preset format (for more information see any HTML Style Guide and Coding Conventions. For example, https://www.w3schools.com/html/html5_syntax.asp)
 #### ADDING FIGURES
 
 In the template figures are defined in a following form:
@@ -118,7 +112,6 @@ In the template captions are defined in a following form:
 "<p style=\"color:rgb(42, 87, 131); \"><i>%title.1st ANC Visits.figure_1% </i></p>",
 ```
 while adding the picture, replicate the syntax: `%title.*indicator's name*.*figure number*%`, where indicator's name is defined similarly to the one in config.json and figure's number corresponds to the related to the caption figure. To read the caption before adding, open titles.json in data/viz/**date**/**district**/**indicator**. 
-
 ### FOR DEVELOPERS
 
 SPPH-EMAIL-REPORT 
@@ -137,3 +130,27 @@ Notes on **extract**:
 Figures are configured to be skipped in case of missing data, so the code execution doesn't stop. Change it in extract/figure/__init__.py
 
 Visualisations are configured in extract/model/figure_factory.py. Besides visualisations, the varying part of the captions is defined there in `def get_figure_title`. 
+
+
+
+Notes on **figures**: 
+
+
+
+Figure's pipeline is located in >figures/pipeline.py. To change the captions is possible via this pipline in titles. 
+"national_pipeline" is for national level figures, mostly used in a monthly report, "pipeline" is a district-level pipeline. 
+
+Extraction of the figures from 
+
+Data transform is pretty similar to one used in CEHS
+
+
+Change the outlier policy is possible in extract/model/database.py -> in class Database choose relevant active_repo
+
+Figures are configured to be skipped in case of missing data. Change it in extract/figure/__init__.py
+
+
+
+
+
+    
