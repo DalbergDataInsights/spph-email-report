@@ -30,20 +30,20 @@ if __name__ == "__main__":
 ```
 
 `run([])` in the body of the function allows to choose the operation, which must be performed. The name of operations are given as pipes in `def run(pipeline)` above: 
-1. "extract" - creates and prints the visualisations to the predifined folders;
+1. "extract" - creates and prints the visualisations to the predefined folders;
 2. "email" - compiles and sends off the emails with the given set of indicators to the predefined recipients in the districts. 
 
 NB! Check the date of the report before starting the extraction (see: HOW TO CHOOSE THE DATE )
-To change predifined input, use configuration files in a config folder in the workspace. 
+To change predefined input, use configuration files in a config folder in the workspace. 
 
 This section is under the development, so the changes will be implemented soon. 
 
-### HOW TO CHANGE RECEPIENTS  
+### HOW TO CHANGE RECIPIENTS  
 
 In config folder open email_recipients.json
 config >> email_recipients.json
 
-Change or add and email addressin "recipients". Note, that each dictionary {} refers to only one district. So, by adding the email address, the original email won't be changed. 
+Change or add and email address in "recipients". Note, that each dictionary {} refers to only one district. So, by adding the email address, the original email won't be changed. 
 If it is necessary to send the same email but with the different recipient name, you have to copy the structure of a dictionary and change the name of the recipient in filters. 
 For example: 
 ```python
@@ -134,7 +134,7 @@ Notes on **figures**:
 
 
 
-Figure's pipeline is located in >figures/pipeline.py. To change the captions is possible via this pipline in titles. 
+Figure's pipeline is located in >figures/pipeline.py. To change the captions is possible via this pipeline in titles. 
 "national_pipeline" is for national level figures, mostly used in a monthly report, "pipeline" is a district-level pipeline. 
 
 Extraction of the figures from 
