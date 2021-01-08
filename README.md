@@ -8,7 +8,10 @@ The current instruction file will serve as a step-by-step guide, which shows how
 Shortly, the program consists of two parts: 
 * Creation of the visualisations and captions
 * Creation of the emails
+
 Consequently, it is impossible to successfully execute the second part until the first part is completed. 
+The output of the first part of the program is a json file and for visualisations for each indicator. First three visualisations are a scatter plot with district-level overview of the indicator, a bar chart with facilities' contribution and reporting scatter plot. The fourth visualisation is a country-level overview scatter of the indicator. The json file contains titles of the figures, which are implemented to emails as figures' captions. 
+Output of the second part of the program is emails.
  
 
 The content of the instruction file is structured as follows: 
@@ -21,7 +24,6 @@ The content of the instruction file is structured as follows:
     5.2 Adding captions 
 6. How to alter captions   
 
-
 ### HOW TO RUN THE PROGRAM 
 
 The script "app.py" is the script which runs the program. 
@@ -32,7 +34,7 @@ if __name__ == "__main__":
 ```
 
 `run([])` in the body of the function allows to choose the operation, which must be performed. The name of operations are given as pipes in `def run(pipeline)` above: 
-1. "extract" - creates and prints the visualisations to the predifined folders;
+1. "extract" - creates and prints the visualisations to the predefined folders;
 2. "email_save" - compiles and saves the emails using the given set of indicators and districts;
 3. "email_send" - sends already created emails off 
 4. "email_to_pdf" - converts .msg files (emails) into pdf 
@@ -43,12 +45,12 @@ To change predefined input, use configuration files in a config folder in the wo
 
 This section is under the development, so the changes will be implemented soon. 
 
-### HOW TO CHANGE RECEPIENTS  
+### HOW TO CHANGE RECIPIENTS  
 
 In config folder open email_recipients.json
 config >> email_recipients.json
 
-Change or add and email addressin "recipients". Note, that each dictionary {} refers to only one district. So, by adding the email address, the original email won't be changed. 
+Change or add and email address in "recipients". Note, that each dictionary {} refers to only one district. So, by adding the email address, the original email won't be changed. 
 If it is necessary to send the same email but with the different recipient name, you have to copy the structure of a dictionary and change the name of the recipient in filters. 
 For example: 
 ```python
@@ -79,7 +81,7 @@ For example:
 To choose the date open config.json
 config >> config.json
 
-In dictionary in "date" change the date, keeping the preset formt: YYYYMM -> 202011 is November 2020.
+In dictionary in "date" change the date, keeping the preset format: YYYYMM -> 202011 is November 2020.
 Note, this change affects the data extraction (data is extracted for the given month) and automatically updates the email, so that no altering of template is necessary for the new date.   
 
 ### HOW TO ADD OR DELETE INDICATORS OR DISTRICTS 
@@ -145,7 +147,7 @@ Table of content of the program:
 * config - configuration files (.json)
 * data - output folder, where visualisations and captions (in json format) are stored
 * dataset - data transformation. Pretty identical to CEHS' one
-* emails - skrpts to create and compile emails
+* emails - skripts to create and compile emails
 * extract - creation of visualisations and captions
 * figures - figures' pipeline 
 
