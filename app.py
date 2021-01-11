@@ -22,7 +22,7 @@ load_dotenv(find_dotenv())
 
 def run_extract(config, db, figure_pipeline):
     """"
-    Function to create figures and captions for districs
+    Function to create figures and captions for districts
     """""
     target_date = datetime.strptime(config.get("date"), "%Y%m") # gets date from config.json
     print(f"Launching figure generation for {target_date}")
