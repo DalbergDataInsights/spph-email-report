@@ -6,7 +6,7 @@
         "filters": {
             "district": "AMURU",
             "recipients_name": "Dr Odong Patrick Olwedo",
-            "biostatistician_name": "Dear Walter Tobina,"
+            "biostatistician_name": "Walter Tobina,"
         }
     },
     {
@@ -14,7 +14,7 @@
         "filters": {
             "district": "MUKONO",
             "recipients_name": "Dr. Tumushabe Elly",
-            "biostatistician_name": "Dear Ivan Mwesigwa,"
+            "biostatistician_name": "Ivan Mwesigwa,"
             
         }
     },
@@ -23,7 +23,7 @@
         "filters": {
             "district": "WAKISO",
             "recipients_name": "Dr. Lugoloobi Mathias",
-            "biostatistician_name": "Dear Frank Kakande,"
+            "biostatistician_name": "Frank Kakande,"
             
         }
     },
@@ -32,7 +32,7 @@
         "filters": {
             "district": "BUSIA",
             "recipients_name": "Nanyama Benah",
-            "biostatistician_name": "Dear Carolyn Balwanaki,"
+            "biostatistician_name": "Carolyn Balwanaki,"
             
         }
     },
@@ -41,7 +41,7 @@
         "filters": {
             "district": "BUVUMA",
             "recipients_name": "Kanyike Baker",
-            "biostatistician_name": "Dear Biostatistician of Buvuma "
+            "biostatistician_name": "Biostatistician of Buvuma "
             
         }
     },
@@ -50,7 +50,7 @@
         "filters": {
             "district": "BUHWEJU",
             "recipients_name": "Dr. Oyik Bruno",
-            "biostatistician_name": "Dear Biostatistician of Buhweju"
+            "biostatistician_name": "Biostatistician of Buhweju"
             
         }
     }
