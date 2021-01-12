@@ -95,7 +95,7 @@ def run(pipeline):
     '''
 
     # Configurations: 
-    DATABASE_URI = os.environ["HEROKU_POSTGRESQL_CYAN_URL"] # sets the Database 
+    DATABASE_URI = os.environ["DATABASE"] # sets the Database 
     config = get_config("config")
     email_template = get_config("email_template") #sets the template
     recipients = get_config("email_recipients") #sets the recipients
@@ -129,5 +129,5 @@ def run(pipeline):
 # TODO email to pdf implementation
 
 if __name__ == "__main__":
-    run(["email"])
+    run(["extract"])
 
