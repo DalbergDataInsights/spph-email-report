@@ -1,58 +1,65 @@
-# SPPH-EMAIL-REPORT 
+# SPPH-EMAIL-REPORT  
 
 
-The main aim of the current program is to create the given number of emails with the customized set of visualisations of indicators presented in the CEHS tool. 
+The main aim of the current program is to create the given number of emails with the customized set of visualisations of indicators presented in the CEHS tool.  
 
-The current instruction file will serve as a step-by-step guide, which shows how to run the program and gives the information on its structure and underlying scripts. 
+The current instruction file will serve as a step-by-step guide, which shows how to run the program and gives the information on its structure and underlying scripts.  
 
-Shortly, the program consists of two parts: 
+Shortly, the program consists of two parts:  
+  
 * Creation of the visualisations and captions
 * Creation of the emails
 
 Consequently, it is impossible to successfully execute the second part until the first part is completed. 
-The output of the first part of the program is a json file and for visualisations for each indicator. First three visualisations are a scatter plot with district-level overview of the indicator, a bar chart with facilities' contribution and reporting scatter plot. The fourth visualisation is a country-level overview scatter of the indicator. The json file contains titles of the figures, which are implemented to emails as figures' captions. 
+The output of the first part of the program is a json file and for visualisations for each indicator. First three visualisations are a scatter plot with district-level overview of the indicator, a bar chart with facilities' contribution and reporting scatter plot. The fourth visualisation is a country-level overview scatter of the indicator. The json file contains titles of the figures, which are implemented to emails as figures' captions.  
 Output of the second part of the program is emails.
- 
 
-The content of the instruction file is structured as follows: 
-1. How to run the program
-2. How to change recipients
-3. How to choose reporting date
-4. How to add or delete indicators or districts
-5. How to alter an email template
-    5.1 Adding figures
-    5.2 Adding captions 
-6. How to alter captions   
+The content of the instruction file is structured as follows:  
 
-### HOW TO RUN THE PROGRAM 
+## CONTENT
 
-The script "app.py" is the script which runs the program. 
-In order to start running it is necessary to scroll down the script until 
+1. [How to run the program](#first)
+2. [How to change recipients](#second)
+3. [How to choose a reporting date](#third)
+4. [How to add or delete indicators or districts](#fourth)
+5. [How to alter an email template](#fifth)
+    1. [Adding figures](#fifthpointone)
+    2. [Adding captions](#fifthpointtwo)
+6. [How to alter captions](#sixth) 
+7. [For developers](#seventh)
+8. [Modules' dictionary](#dictionary)
+
+### HOW TO RUN THE PROGRAM <a name="first"></a>
+
+The script [app.py](app.py) is the script which runs the program.  
+In order to start running it is necessary to scroll down the script until  
 ```python
 if __name__ == "__main__":
     run(["extract"])
 ```
 
-`run([])` in the body of the function allows to choose the operation, which must be performed. The name of operations are given as pipes in `def run(pipeline)` above: 
+`run([])` in the body of the function allows to choose the operation, which must be performed. The name of operations are given as pipes in `def run(pipeline)` above:  
+  
 1. "extract" - creates and prints the visualisations to the predefined folders;
 2. "email_save" - compiles and saves the emails using the given set of indicators and districts;
-3. "email_send" - sends already created emails off 
-4. "email_to_pdf" - converts .msg files (emails) into pdf 
+3. "email_send" - sends already created emails off  
+4. "email_to_pdf" - converts .msg files (emails) into pdf  
 5. "increment-date" - upgrades the date to the current month (doesn't change anything if already upgraded)
 
-NB! Check the date of the report before starting the extraction (see: HOW TO CHOOSE THE DATE )
-To change predefined input, use configuration files in a config folder in the workspace. 
+NB! Check the date of the report before starting the extraction (see:[How to choose a reporting date](#third))
+To change predefined input, use configuration files in a config folder in the workspace.  
 
-This section is under the development, so the changes will be implemented soon. 
+This section is under the development, so the changes will be implemented soon.  
 
-### HOW TO CHANGE RECIPIENTS  
+### HOW TO CHANGE RECIPIENTS <a name="second"></a>
 
-In config folder open email_recipients.json
+In config folder open [email_recipients.json](config/email_recipients.json)
 config >> email_recipients.json
 
-Change or add and email address in "recipients". Note, that each dictionary {} refers to only one district. So, by adding the email address, the original email won't be changed. 
-If it is necessary to send the same email but with the different recipient name, you have to copy the structure of a dictionary and change the name of the recipient in filters. 
-For example: 
+Change or add and email address in "recipients". Note, that each dictionary {} refers to only one district. So, by adding the email address, the original email won't be changed.  
+If it is necessary to send the same email but with the different recipient name, you have to copy the structure of a dictionary and change the name of the recipient in filters.  
+For example:  
+
 ```python
 {
         "recipients": [
@@ -65,6 +72,7 @@ For example:
 ```
 
 + add the new greeting and additional recipient, which won't be mentioned in the email 
+
 ```python
 {
         "recipients": [
@@ -76,52 +84,59 @@ For example:
         }
 ```
 
-### HOW TO CHOOSE THE DATE 
+### HOW TO CHOOSE THE DATE <a name="third"></a>
 
-To choose the date open config.json
+To choose the date open [config.json](config/config.json)
 config >> config.json
 
 In dictionary in "date" change the date, keeping the preset format: YYYYMM -> 202011 is November 2020.
-Note, this change affects the data extraction (data is extracted for the given month) and automatically updates the email, so that no altering of template is necessary for the new date.   
+Note, this change affects the data extraction (data is extracted for the given month) and automatically updates the email, so that no altering of template is necessary for the new date.
 
-### HOW TO ADD OR DELETE INDICATORS OR DISTRICTS 
+### HOW TO ADD OR DELETE INDICATORS OR DISTRICTS <a name="fourth"></a>
 
-The used indicators are listed in config.json
+The used indicators are listed in [config.json](config/config.json)
 config >> config.json
 
 Add or delete districts is possible in the "districts" list.
-Add or delete indicators is possible in the "indicators" list. Note, that indicators must be named identically to the ones in the database in use. 
+Add or delete indicators is possible in the "indicators" list. Note, that indicators must be named identically to the ones in the database in use.  
 
-Note! In here only extraction of images and relevant transformation of data will be changed. Altering the indicators/districts at this point won't change the emails. To implement related changes to the emails, please see the section "HOW TO ALTER THE EMAIL TEMPLATE". 
+Note! In here only extraction of images and relevant transformation of data will be changed. Altering the indicators/districts at this point won't change the emails. To implement related changes to the emails, please see the section [How to alter an email template](#fifth).  
 
-### HOW TO ALTER THE EMAIL TEMPLATE
+### HOW TO ALTER THE EMAIL TEMPLATE <a name="fifth"></a>
 
-To see the template in config folder open email_template.json.
+To see the template in config folder open [email_template.json](config/email_template.json).
 config >> email_template.json
 
-All the text information can be altered directly there, keeping the preset format (for more information see any HTML Style Guide and Coding Conventions. For example, https://www.w3schools.com/html/html5_syntax.asp)
-#### ADDING FIGURES
+All the text information can be altered directly there, keeping the preset format. For more information see any [HTML Style Guide and Coding Conventions](https://www.w3schools.com/html/html5_syntax.asp).
+The pdf file, which shows links between mail_template.json and created email for Amuru district is [here]  
+
+#### ADDING FIGURES <a name="fifthpointone"></a>
 
 In the template figures are defined in a following form:
-```python
+
+```python  
 "<div>%image.1st ANC Visits.figure_1%<div/>",
 ```
-while adding the picture, replicate the syntax: `<div>%image.*indicator's name*.*figure number*%<div/>`, where indicator's name is defined similarly to the one in config.json 
-The figures numbers can be found in data/viz in relevant folders. 
-If there is a mistake in the parameters the code comes up with an error message and stops execution. 
-#### ADDING CAPTIONS
+
+while adding the picture, replicate the syntax: `<div>%image.*indicator's name*.*figure number*%<div/>`, where indicator's name is defined similarly to the one in config.json.  
+The figures numbers can be found in data/viz in relevant folders.  
+If there is a mistake in the parameters the code comes up with an error message and stops execution.  
+#### ADDING CAPTIONS <a name="fifthpointtwo"></a>
 
 In the template captions are defined in a following form:
+
 ```python
 "<p style=\"color:rgb(42, 87, 131); \"><i>%title.1st ANC Visits.figure_1% </i></p>",
 ```
-while adding the picture, replicate the syntax: `%title.*indicator's name*.*figure number*%`, where indicator's name is defined similarly to the one in config.json and figure's number corresponds to the related to the caption figure. To read the caption before adding, open titles.json in data/viz/**date**/**district**/**indicator**. 
 
-### HOW TO ALTER CAPTIONS 
+while adding the picture, replicate the syntax: `%title.*indicator's name*.*figure number*%`, where indicator's name is defined similarly to the one in config.json and figure's number corresponds to the related to the caption figure. To read the caption before adding, open titles.json in [data/viz/**date**/**district**/**indicator**](data/viz).  
 
-To change the captions, open figures' pipeline -> figures/pipeline.py and make necessary changes in `"titles"`. Note that districts' level pipeline is `pipeline`, the `national_pipeline` is for country-level monthly reports. 
+### HOW TO ALTER CAPTIONS <a name="sixth"></a>
 
-To add more arguments to the caption, add name of the argument to the `"title_args":`, place it to the `"titles"` as `{}` and define a new argument in extract/model/figure_factory.py in 
+To change the captions, open figures' pipeline -> [figures/pipeline.py](figures/pipeline.py) and make necessary changes in `"titles"`. Note that districts' level pipeline is `pipeline`, the `national_pipeline` is for country-level monthly reports.  
+
+To add more arguments to the caption, add name of the argument to the `"title_args":`, place it to the `"titles"` as `{}` and define a new argument in extract/model/figure_factory.py in  
+
 ```python
 def get_figure_title(self, title, db, aggs):
     format_aggs = []
@@ -139,36 +154,120 @@ def get_figure_title(self, title, db, aggs):
             format_aggs.append(parsed)
         return title.format(*format_aggs)   
 ```
-Where the new argument is to define after the if-statement. 
-### FOR DEVELOPERS
 
-SPPH-EMAIL-REPORT 
-Table of content of the program: 
-* config - configuration files (.json)
-* data - output folder, where visualisations and captions (in json format) are stored
-* dataset - data transformation. Pretty identical to CEHS' one
-* emails - skripts to create and compile emails
-* extract - creation of visualisations and captions
-* figures - figures' pipeline 
+Where the new argument is to define after the if-statement.  
+### FOR DEVELOPERS <a name="seventh"></a>
 
-Notes on **emails**: 
+#### Table of content of the program  
 
-Notes on **extract**: 
+* [config](#config) - configuration files (.json)
+* [data](#data) - output folder, where visualisations and captions (in json format) are stored
+* [dataset](#dataset) - data transformation. Pretty identical to CEHS' one
+* [emails](#emails) - skripts to create and compile emails
+* [extract](#extract) - creation of visualisations and captions
+* [figures](#figures) - figures' pipeline  
 
-Figures are configured to be skipped in case of missing data, so the code execution doesn't stop. Change it in extract/figure/__init__.py
+##### CONFIG <a name="config"></a>
+The folder contains currently four config files (.json).  
+[config_national.json](config/config_national.json) is the config file, which interacts with the [national pipeline](figures/pipeline.py) and serves for monthly report needs. Output: country-level visualisations.  
+[config.json](config/config.json) contains the essential information for the district-level emails, incl. list of districts, date and list of indicators (for more see [here](#fourth))
+[email_recipients.json](config/email_recipients.json) contains a list of dictionaries, where recipients' email addresses, names and districts are specified. Any changes in this json affect only dispatch of emails, but not visualisations or list of districts (for more, see [here](#second))  
+[email_template.json](config/email_template.json) is the template in html-format. Brings together visualisations, captions and aggs (see [emails](#emails) and [How to alter an email template](#fifth) for more)
 
-Visualisations are configured in extract/model/figure_factory.py. Besides visualisations, the varying part of the captions is defined there in `def get_figure_title`. 
+##### DATA <a name="data"></a>
+Output directory.  
+The folder [viz](data/viz) includes [extracted](#extract) visualisations and captions, sorted by district -> reporting date -> indicator.
+The folder [emails](data/emails) keeps compiled emails as .msg  
+The folder [pdf] contains pdf-files converted from .msg files. For details see [emails](#emails) in documentation and `class Email:` in the [module](emails/model.py) directly
+
+##### DATASET <a name="dataset"></a>
+The folder "dataset" contains helper, pipeline and transform.  
+[Helper](dataset/helper.py) contains sorting by district and date functions.  
+[pipeline.py](dataset/pipeline.py) contains functions, which fetch and clean raw data from the database for each type of visualisation. 
+[transform](dataset/transform.py) contains functions, which structure the clean data in a form, suitable for visualisation. Here the data can be rearranged in case of unreadable representation or checked for errors if they are visible in a visualisation. 
+Note! Errors in visualisations can origin from [figure factory](extract/model/figure_factory.py).  
+##### EMAILS <a name="emails"></a>
+
+The folder "emails" includes [model.py](emails/model.py) module. 
+The module contains two main classes `class EmailTemplateParser` and `class Email`.  
+`class EmailTemplateParser` includes functions, which compile the emails such as: `def get_parsed_message(self, filters)`, `def set_payload(self, message)` and `def get_parsed_subject(self, filters)`. Additionally, the class includes the parsers. These parsers define which information is inserted in the email template for automatically adaptable parts.  
+
+The main parser:  
+
+```python
+def parse_item(self, item, filters):
+        if "%date%" in item:
+            item = self.__parse_date(item, filters)
+        elif "%image" in item:
+            item = self.__parse_image(item, filters)
+        elif "%district%" in item:
+            item = self.__parse_district(item, filters)
+        elif "%title" in item:
+            item = self.__parse_image_title(item, filters)
+        elif "%recipients_name%" in item:
+            item = self.__parse_recipients_name(item, filters)
+        else:
+            item = item
+        return item
+```
+
+Example of parsing of a district:
+
+```python
+def __parse_district(self, item, filters):
+        item = item.replace("%district%", filters.get("district"))
+        return item
+```
+
+Note! Sometimes there is a chained .replace() in the body of a parser. It is made due to necessity to keep automatic parts in one string in the template. The only way to do several different replacements in one string is the chained replace. See an example below.  
+
+```python
+def __parse_date(self, item, filters):
+
+        date = self.config.get("date")
+        year = date[:4]
+        month = date[-2:]
+        month = calendar.month_name[int(month)]
+        date = f"{month} {year}"
+
+        item = item.replace("%district%", filters.get("district")).replace("%date%", date)
+
+        return item
+```
+
+In the above example: the subject of the emails contain two adaptable parts - district's name and the date. So the doubled `.replace()` is used.  
+Note: there are also secondary functions in [init](emails/__init__.py).  
+
+##### EXTRACT <a name="extract"></a>
+
+The backbone of the visualisations' printing is based in the [extract](extract) folder.  
+The path where figures and their titles (=captions) are being stored, defined in [init.py](extract/__init__.py).  
+The extract contains figure and model folders.  
+
+[Figure](extract/figure) defines in [_init.py_](extract/figure/__init__.py) the following feature: images with title are being skipped without interrupting code execution if relevant data is missing. Instead in email the error message will be parsed. The error message is defined in emails/model.py in  `def __parse_image(self, item, filters, mime_type=True)`.  
+[Model](extract/model) contains [database](extract/model/database.py).  
+[Figure factory](extract/model/figure_factory.py) 
+
+
+##### FIGURES <a name="figures"></a>
+
+Notes on **emails**:  
+
+Notes on **extract**:  
+
+Figures are configured to be skipped in case of missing data, so the code execution doesn't stop. Change it in [extract/figure/__init__.py](extract/figure/__init__.py)
+
+Visualisations are configured in [extract/model/figure_factory.py](extract/model/figure_factory.py). Besides visualisations, the varying part of the captions is defined there in `def get_figure_title`.  
+
+
+Notes on **figures**:  
 
 
 
-Notes on **figures**: 
+Figure's pipeline is located in >figures/pipeline.py. To change the captions is possible via this pipline in titles.  
+"national_pipeline" is for national level figures, mostly used in a monthly report, "pipeline" is a district-level pipeline.  
 
-
-
-Figure's pipeline is located in >figures/pipeline.py. To change the captions is possible via this pipline in titles. 
-"national_pipeline" is for national level figures, mostly used in a monthly report, "pipeline" is a district-level pipeline. 
-
-Extraction of the figures from 
+Extraction of the figures from  
 
 Data transform is pretty similar to one used in CEHS
 
@@ -176,6 +275,8 @@ Data transform is pretty similar to one used in CEHS
 Change the outlier policy is possible in extract/model/database.py -> in class Database choose relevant active_repo
 
 Figures are configured to be skipped in case of missing data. Change it in extract/figure/__init__.py
+
+### DICTIONARY <a name="dictionary"></a>
 
 
 
