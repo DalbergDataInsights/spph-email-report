@@ -27,7 +27,7 @@ The content of the instruction file is structured as follows:
     2. [Adding captions](#fifthpointtwo)
 6. [How to alter captions](#sixth) 
 7. [For developers](#seventh)
-8. [Modules' dictionary](#dictionary)
+8. [Modules dictionary](#dictionary)
 
 ### HOW TO RUN THE PROGRAM <a name="first"></a>
 
