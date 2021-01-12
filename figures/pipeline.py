@@ -1,4 +1,5 @@
 import dataset
+#import geopandas as gpd
 #for districts (emails)
 from dataset.transform import (
     scatter_district_plot,
@@ -42,22 +43,20 @@ pipeline = [
         ],
     },
     {
-        "type": "bar",
-        "transform": scatter_reporting_district_plot,
+        "type": "scatter",
+        "transform": scatter_reporting_district_plot, 
         "color": {
-            "Reported one or above for selected indicator": "rgb(42, 87, 131)",
-            "Reported null or zero for selected indicator": "rgb(247, 190, 178)",
-            "Did not report on their 105:1 form": "rgb(211, 41, 61)",
+            "Percentage of facilities expected to report which reported on their 105-1 form": "rgb(106, 155, 195)",
+            "Percentage of reporting facilities that reported a value of one or above for this indicator": "rgb(200, 19, 60)",
         },
-        "args": {"bar_mode": "stack"},
-        # Of the 36 health facilities in Amuru, 16 health facilities reported with a number different from zero for the number of women attending their first ANC visit in September 2020
-        "title": "Of the {} health facilities expected to report in {}, <b>{} health facilities</b> reported with a number different from zero for the {} in {}",
+        "title": "In {}, in {}, of the <b>{}</b> health facilities expected to report <b>(100%)</b>, only <b>{}</b> <b>({}%)</b> reported one or above for the {}. ",
         "title_args": [
-            "facility_count",
             "district",
-            "facility_count_reported",
-            "indicator_view",
             "date",
+            "facility_count", 
+            "facility_count_reported", 
+            "reporting_positive",
+            "indicator_view",
         ],
     },
     {
@@ -78,7 +77,6 @@ pipeline = [
     }
 ]
 
-#import geopandas as gpd
 
 national_pipeline = [
     {
@@ -112,32 +110,7 @@ national_pipeline = [
             "date_national",
         ],
     },
-    {
-        "type": "map",
-        "transform": map_country_compare_plot,
-        "color": {
-            "Change between reference and target date": [
-                "#b00d3b",
-                "#f77665",
-                "#dedad9",
-                "#96c0e0",
-                "#3c6792",
-            ],
-        },
-        "args": {
-            "bar_mode": "overlay",
-            "tolerance": 0.005,
-            "locations": "id",
-           # "gdf": gpd.read_file("./data/shapefiles/shapefile.shp"),
-        },
-        "title": "The {} {} between {} and {}",
-        "title_args": [
-            "indicator_view",
-            "ratio_year",
-            "date_reference",
-            "date_national",
-        ],
-    },
+    
     {
         "type": "scatter",
         "transform": reporting_count_transform,
@@ -152,5 +125,6 @@ national_pipeline = [
             "reporting_positive",
             "indicator_view",
         ],
-    }
+    },
 ]
+

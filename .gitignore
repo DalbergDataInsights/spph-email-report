@@ -5,3 +5,5 @@
 .env
 data/*
 .DS_Store
+.vscode
+*.whl

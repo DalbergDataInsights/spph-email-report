@@ -17,8 +17,11 @@ def scatter_district_plot(df):
 
 
 def scatter_reporting_district_plot(data):
-
+    
     data = data.get("reporting_district")
+    reporting_date=data.date.max()
+    data = data[(data.date <= reporting_date) & 
+        (data.date >= reporting_date - pd.DateOffset(months=12))]   
     # Set index
     data = helper.check_index(data)
     # Remove unnecessary index values
@@ -30,12 +33,21 @@ def scatter_reporting_district_plot(data):
     # Count number of no_form_report
     df_no_form_report = helper.get_num(data, 1)
 
-    data = {
-        "Reported one or above for selected indicator": df_positive,
-        "Reported null or zero for selected indicator": df_no_positive,
-        "Did not report on their 105:1 form": df_no_form_report,
-    }
+    reported = round((
+        (
+            (df_positive + df_no_positive)
+            / (df_positive + df_no_positive + df_no_form_report)
+        )
+        * 100), 1)    
+    reported= reported.sort_index()
+    reported_positive = round((
+        (df_positive / (df_positive + df_no_positive)) * 100), 1)
+    reported_positive= reported_positive.sort_index()
 
+    data = {
+        "Percentage of facilities expected to report which reported on their 105-1 form": reported,
+        "Percentage of reporting facilities that reported a value of one or above for this indicator": reported_positive
+    }
     return data
 
 
@@ -57,6 +69,7 @@ def bar_district_plot(data):
     return {"district": data_in}
 
 
+
 def scatter_country_plot(df):
 
     df_country = df.get("country")
@@ -68,3 +81,5 @@ def scatter_country_plot(df):
     df_country = helper.get_sub_dfs(df_country, "year", [2018, 2019, 2020], "month")
 
     return df_country
+
+
