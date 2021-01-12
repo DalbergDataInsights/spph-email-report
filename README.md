@@ -162,8 +162,8 @@ Where the new argument is to define after the if-statement.
 
 * [config](#config) - configuration files (.json)
 * [data](#data) - output folder, where visualisations and captions (in json format) are stored
-* [dataset](#dataset) - data transformation. Pretty identical to CEHS' one
-* [emails](#emails) - skripts to create and compile emails
+* [dataset](#dataset) - data transformation
+* [emails](#emails) - creation and compilation emails
 * [extract](#extract) - creation of visualisations and captions
 * [figures](#figures) - figures' pipeline  
 
