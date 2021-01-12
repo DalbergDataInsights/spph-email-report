@@ -19,8 +19,9 @@ def scatter_district_plot(df):
 def scatter_reporting_district_plot(data):
     
     data = data.get("reporting_district")
-    data = data[(data.date <= pd.to_datetime('now')) & 
-        (data.date >= pd.to_datetime('now')- pd.DateOffset(months=12))]
+    reporting_date=data.date.max()
+    data = data[(data.date <= reporting_date) & 
+        (data.date >= reporting_date - pd.DateOffset(months=12))]   
     # Set index
     data = helper.check_index(data)
     # Remove unnecessary index values
