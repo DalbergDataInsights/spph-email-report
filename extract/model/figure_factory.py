@@ -3,9 +3,12 @@ import pandas as pd
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import numpy as np
+from itertools import cycle
+from plotly.validators.scatter.marker import SymbolValidator
 
 import json
 import math
+from dataset import helper
 
 
 class FigureFactory:
@@ -24,8 +27,6 @@ class FigureFactory:
             return self.get_bar_or_scatter("Scatter", data, colors, **kwargs)
         elif figure_type == "bar":
             return self.get_bar_or_scatter("Bar", data, colors, **kwargs)
-        elif figure_type == "treemap":
-            return self.get_treemap("Treemap", data, colors, **kwargs)
         elif figure_type == "map":
             return self.get_map(
                 figure_object="Choroplethmapbox", data=data, colors=colors, **kwargs
@@ -108,7 +109,21 @@ class FigureFactory:
         if figure_object == "Bar":
             fig.update_layout(barmode=bar_mode)
         elif figure_object == "Scatter":
-            fig.update_traces(marker=dict(symbol="square", size=10))
+            ''' Assigns randomly different markers to each data line in scatter plots'''
+            raw_symbols = SymbolValidator().values
+            namestems = []
+            namevariants = []
+            symbols = []
+            for i in range(0,len(raw_symbols),3):
+                name = raw_symbols[i+2]
+                symbols.append(raw_symbols[i])
+                namestems.append(name.replace("-open", "").replace("-dot", ""))
+                namevariants.append(name[len(namestems[-1]):])
+                markers = cycle(list(set(namestems)))   
+            fig.update_traces(mode='lines+markers')
+            for d in fig.data:
+                d.marker.symbol = next(markers)
+                d.marker.size = 10
             fig.update_traces(line=dict(width=2))
 
         return fig
@@ -118,12 +133,12 @@ class FigureFactory:
     #########
 
     def style_figure(self, fig):
-
+        ''' 1. Calibrates the size of the visualisation; 2. Sets the style of the grids and background'''
         fig.update_layout(
             legend=dict(
-                orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1
+                orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1.02
             ),
-            margin=dict(l=20, r=20, b=0.5, t=20, pad=1),
+            margin=dict(l=20, r=20, b=0.5, t=20, pad=2),
             autosize=False,
             width=800,
             height=400,
@@ -141,6 +156,11 @@ class FigureFactory:
         )
 
     def get_figure_title(self, title, db, aggs):
+        """
+        Extracts and returns the arguments of the titles predefined in the figures' pipeline (figures/pipeline.py) 
+        data is called from db 
+
+        """
         format_aggs = []
         indicator = next(iter(db.datasets.values())).columns[-1]
         for agg in aggs:
@@ -148,14 +168,18 @@ class FigureFactory:
             if agg == "date":
                 data = db.datasets.get("district_dated")
                 parsed = data.reset_index().date.max().strftime("%B %Y")
+
             if agg == "date_national":
                 data = db.datasets.get("country")
                 parsed = data.reset_index().date.max().strftime("%B %Y")
+
             elif agg == "district":
                 data = db.datasets.get("district_dated")
                 parsed = data.reset_index().id[0]
+
             elif agg == "indicator_view":
                 parsed = db.get_indicator_view(indicator)
+
             elif agg == "date_reference":
                 data = db.datasets.get("country")
                 max_date = data.reset_index().date.max()
@@ -184,22 +208,18 @@ class FigureFactory:
                 parsed = str(
                     self.__get_positive_reporting(db.datasets.get("reporting_district"))
                 )
-            elif agg == "facility_count":
-                from dataset.transform import scatter_reporting_district_plot
-
-                positive = scatter_reporting_district_plot(db.datasets).get(
-                    "Reported one or above for selected indicator"
-                )
-                positive = positive.iloc[-1].item()
-                no_positive = scatter_reporting_district_plot(db.datasets).get(
-                    "Reported null or zero for selected indicator"
-                )
-                no_positive = no_positive.iloc[-1].item()
+            elif agg == "facility_count": 
+                data= db.datasets.get("reporting_district")
+                data = helper.check_index(data)
+                data = data.droplevel(["id"])
+                df_positive = helper.get_num(data, 3)
+                df_no_positive = helper.get_num(data, 2)
+                df_no_form_report = helper.get_num(data, 1)
                 
-                no_report = scatter_reporting_district_plot(db.datasets).get(
-                    "Did not report on their 105:1 form"
-                )
-                no_report = no_report.iloc[-1].item()
+                positive = df_positive.iloc[-1].item()
+                no_positive = df_no_positive.iloc[-1].item()
+                
+                no_report = df_no_form_report.iloc[-1].item()
                 
                 parsed = str(
                     positive + no_positive + no_report
@@ -225,26 +245,31 @@ class FigureFactory:
                 data = db.datasets.get("country")
                 data_today = data.reset_index().date.max()
                 parsed = (data_today - relativedelta(years=1)).strftime("%B %Y")
-            elif agg == "reporting_positive":
-                from dataset.national_transform import reporting_count_transform
 
-                data = reporting_count_transform(db.datasets).get(
+            elif agg == "reporting_positive":
+                from dataset.transform import scatter_reporting_district_plot
+
+                data = scatter_reporting_district_plot(db.datasets).get(
                     "Percentage of reporting facilities that reported a value of one or above for this indicator"
                 )
-                date = next(iter(db.datasets.values())).reset_index().date.max()
-                parsed = data.loc[date][0]
-            elif agg == "reporting_reported":
-                from dataset.national_transform import reporting_count_transform
+                parsed = data.iloc[-1].item()
 
-                data = reporting_count_transform(db.datasets).get(
+            elif agg == "reporting_reported":
+                from dataset.transform import scatter_reporting_district_plot
+
+                data = scatter_reporting_district_plot(db.datasets).get(
                     "Percentage of facilities expected to report which reported on their 105-1 form"
                 )
-                date = next(iter(db.datasets.values())).reset_index().date.max()
-                parsed = data.loc[date][0]
+                parsed = data.iloc[-1].item()
+             
             format_aggs.append(parsed)
         return title.format(*format_aggs)
 
     def __get_percentage_description(self, value):
+        """" 
+        Returns description of direction of the change in a value (increase/decrease/stable)
+        
+        """
         absolute_value = abs(value)
         if value >= 0.1:
             description = f"increased by {absolute_value}%"
@@ -255,6 +280,9 @@ class FigureFactory:
         return description
 
     def __get_percentage_difference_between_time(self, data, min_date, max_date):
+        """
+        Parses the value for a given date and returns the string with the percentage and its description
+        """
         indicator = data.columns[-1]
         data = data.reset_index()
 
@@ -273,6 +301,9 @@ class FigureFactory:
         return description
 
     def __get_positive_reporting(self, data):
+        """
+        Returns the number of facilities reported positive from the set of facilities expected to report for reporting bar chart (more info in dataset/transform.py )
+        """
 
         indicator = data.columns[-1]
         data = data.reset_index()

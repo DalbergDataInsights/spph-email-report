@@ -1,7 +1,10 @@
+from datetime import datetime
 from email import message, policy
 import config
 import json
 import calendar
+from dateutil.relativedelta import relativedelta
+import pandas as pd
 
 import os
 
@@ -31,6 +34,10 @@ class EmailTemplateParser:
         self.payload = {}
 
     def get_parsed_message(self, filters):
+        """
+        the function consolidates the template and varying elements (items) along with pictures into one email
+        to add pictures set_payload is defined below
+        """
         message = EmailMessage()
         parsed_message = []
         payloads = []
@@ -59,6 +66,9 @@ class EmailTemplateParser:
         return message
 
     def get_parsed_subject(self, filters):
+        """
+        The function appends subject from email_template to the email
+        """
         return self.parse_item(self.template.get("subject"), filters)
 
     ###########
@@ -66,6 +76,13 @@ class EmailTemplateParser:
     ###########
 
     def parse_item(self, item, filters):
+        """
+        It parses items to replace in the template. 
+        The function finds an item with the defined names. 
+        Example: %date% in the template is replaced with the value, assigned in individual parsing function, see: def __parse_date()
+        To change or add an item, add it to the email_template surrounded by % and defiine the replacement value in the individual function 
+        and add to the current function
+        """
         if "%date%" in item:
             item = self.__parse_date(item, filters)
         elif "%image" in item:
@@ -76,6 +93,9 @@ class EmailTemplateParser:
             item = self.__parse_image_title(item, filters)
         elif "%recipients_name%" in item:
             item = self.__parse_recipients_name(item, filters)
+        elif "%extraction_month%" in item: 
+            # it parses also the date of the next report's publishing 
+            item = self.__parse_extraction_month(item, filters) 
         else:
             item = item
         return item
@@ -86,19 +106,44 @@ class EmailTemplateParser:
         year = date[:4]
         month = date[-2:]
         month = calendar.month_name[int(month)]
+        #Current date is below: 
         date = f"{month} {year}"
+        #Date of the data extraction: 
+        extraction_date = pd.to_datetime(date) + relativedelta(months=1)
+        extraction_date=extraction_date.strftime("%B")
+        #Due to presence of multiple values to replace in one line or string, the chained .replace() is required
+        item = item.replace("%district%", filters.get("district")).replace("%date%", date).replace("%extraction_month%", extraction_date) 
 
-        item = item.replace("%district%", filters.get("district")).replace("%date%", date)
+        return item
+
+    def __parse_extraction_month(self, item, filters): 
+        """
+        the function parses varying dates for the email, incl. date of the data extraction from DHIS2 and date of the next report
+        """
+        date = self.config.get("date")
+        extraction_date = pd.to_datetime(date, format='%Y%m') 
+        extraction_date = extraction_date + relativedelta(months=1)
+        future_report_month= extraction_date + relativedelta(months=2)
+        extraction_date=extraction_date.strftime("%B")
+        future_report_month=future_report_month.strftime("%B")
+        item=item.replace("%extraction_month%",extraction_date).replace("%future_report_month%", future_report_month )   
 
         return item
 
     def __parse_image(self, item, filters, mime_type=True):
+        """
+        The function parses already existing pictures (see: data/viz) and inserts them into emails.
+        The name of the vizualization is of the predifined form in the template (<div>%image.INDICATOR'S NAME.figure_1%<div/>), 
+        so that it defines the type of the object (%image.), indicator's name (.INDICATOR'S NAME.) and the particular figure, defined by number (.figure1/2/3%).
+        In case of deviating formatting, the figure won't be attached and the error message appears on the terminal
+
+        """
         try:
             _, indicator, image_file_name = item.split("%")[1].split(".")
         except ValueError as e:
             print(e)
             print(
-                f"Image tag {item} in email template does not contain engought parameters! Please use %image.<indicator>.<figure_number>%"
+                f"Image tag {item} in email template does not contain engough parameters! Please use %image.<indicator>.<figure_number>%"
             )
             return None
 
@@ -109,7 +154,7 @@ class EmailTemplateParser:
         district = filters.get("district")
         fname = f"{self.folder}/{district}/{self.config.get('date')}/{indicator}/{image_file_name}.png"
         if not os.path.isfile(fname):
-            return '<p align="center">Due to the lack of data on this indicator in the reporting month, no visualization of individual facilities\' contribution is available </p>'
+            return '<p align="center">Due to the lack of data on this indicator in the reporting month, no visualization is available </p>'
         self.payload[image_cid] = fname
 
         return item 
@@ -137,7 +182,8 @@ class EmailTemplateParser:
         return item
 
     def __parse_recipients_name(self, item, filters):
-        item = item.replace("%recipients_name%", filters.get("recipients_name"))
+        #chained replace is necessary because the names are in one line in the email template
+        item = item.replace("%recipients_name%", filters.get("recipients_name")).replace("%biostatistician_name%", filters.get("biostatistician_name"))
         return item
  
 
@@ -168,7 +214,6 @@ class Email:
 
     def send(self, smtp, send_from, send_to):
         smtp.sendmail(send_from, send_to, self.message.as_string())
-
 
     def to_file(self, fname, directory="./data/emails/"): # < fname = "./html/message.msg"
 
