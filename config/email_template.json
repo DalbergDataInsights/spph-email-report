@@ -50,6 +50,7 @@
         "<div>%image.1st doses of vitamin A to U5 (coverage).figure_1%<div/>",
         "<p style=\"color:rgb(42, 87, 131); \"><i> %title.1st doses of vitamin A to U5 (coverage).figure_1% </i></p>",
         "<p><i> %title.1st doses of vitamin A to U5 (coverage).figure_4% </i><br></p>",
+
         "<p style=\"font-size:12px;color:rgb(64, 64, 64)\"><b>Note:</b> we show the deviations from the target value, which is calculated as the total estimated number of children under 5 in the country divided by 12 months.<br>The target value is then equalised to one (1) for simplicity.<br></p>",
         "<div>%image.1st doses of vitamin A to U5.figure_2%<div/>",
         "<p style=\"color:rgb(42, 87, 131); \"><i> %title.1st doses of vitamin A to U5.figure_2% </i><br></p>",

@@ -1,5 +1,5 @@
 from datetime import datetime
-from email import message
+from email import message, policy
 import config
 import json
 import calendar
@@ -10,10 +10,23 @@ import os
 
 from email.message import EmailMessage
 from email.utils import make_msgid
+from email.parser import BytesParser
 import mimetypes
+import weasyprint
+from weasyprint import HTML
+from django.http import HttpResponse
+from django.template.loader import render_to_string
+from xhtml2pdf import pisa
+from io import BytesIO
+import mailparser
+
 
 
 class EmailTemplateParser:
+    """
+    Assembles components into one email 
+    
+    """
     def __init__(self, data_folder, email_template, config):
         self.folder = data_folder
         self.template = email_template
@@ -78,8 +91,6 @@ class EmailTemplateParser:
             item = self.__parse_district(item, filters)
         elif "%title" in item:
             item = self.__parse_image_title(item, filters)
-        elif "%national_title" in item:
-            item = self.__parse_national_title(item, filters)
         elif "%recipients_name%" in item:
             item = self.__parse_recipients_name(item, filters)
         elif "%extraction_month%" in item: 
@@ -174,44 +185,73 @@ class EmailTemplateParser:
         #chained replace is necessary because the names are in one line in the email template
         item = item.replace("%recipients_name%", filters.get("recipients_name")).replace("%biostatistician_name%", filters.get("biostatistician_name"))
         return item
-
-    def __parse_national_title(self, item, filters):
-
-        _, indicator, figure = item.split("%")[1].split(".")
-        fname = f"{self.folder}/national/{self.config.get('date')}/{indicator}/titles.json"
-        with open(fname, "r") as f: 
-            title = json.load(f).get(figure, f"No data for {indicator}")
-        item = item.replace(f"%national_title.{indicator}.{figure}%", title or "")
-
-        return item   
-    #def __parse_extraction_month(self, item, filters): #
-        #reporting_date=self.config.get("date")
-        #extraction_date= reporting_date + relativedelta(month=1)
-        #item=item.replace("%extraction_date%",(extraction_date.strftime("%B"))
-
-        
+ 
 
 class Email:
-    def __init__(self, smtp, send_to, send_from, message):
-        self.smtp = smtp
-        self.send_to = send_to
-        self.send_from = send_from
+    """
+    
+    You can create Emails from text like that:
+        email = Email("This is a long message of an email")
+    Tip:
+        Use EmailTemplateParser with HTML template to create elaborate HTML emails automatically
+
+    You can also create Emails from earlier create files:
+        email = Email.from_file("/path/to/file.msg")
+
+    Once created, you may save the file:
+        email.to_file("/path/to/file.html")
+
+    Or send it using Python native smtp profile
+        email.send(smtp, from@mail.com, "to@mail.com, anotherto@mail.com")
+
+    """
+    def __init__(self, message):
         self.message = message
-        # self.message = MIMEMultipart("related")
-        # self.message.attach(message)
+      
 
     def set_subject(self, subject):
         self.message["Subject"] = subject
 
-    def send(self):
-        self.smtp.sendmail(self.send_from, self.send_to, self.message.as_string())
+    def send(self, smtp, send_from, send_to):
+        smtp.sendmail(send_from, send_to, self.message.as_string())
 
-    def to_html(self, fname, filters):
-       
-        pass
+    def to_file(self, fname, directory="./data/emails/"): # < fname = "./html/message.msg"
 
-    def from_html(self, fname):
-        pass
+        assert len(fname.split("/")) == 1, "Please use directory keyword for directory"
 
-    def to_pdf(self, fname):
-        pass
+        if not os.path.exists(directory):
+            os.makedirs(directory)
+
+        with open(directory + fname, "wb") as f:
+            f.write(bytes(self.message))
+
+
+    @staticmethod
+    def from_file(fname):
+        with open(fname, "rb") as f:
+            message = BytesParser(policy=policy.default).parse(f)
+        return Email(message)
+
+    def to_pdf(self, fname, directory="./data/emails/pdf"):
+
+        mail = mailparser.parse_from_file_msg(self.message)
+
+        body = weasyprint.HTML(self.message.as_string())
+        with open(fname, "wb") as f:
+            f.write(body)
+
+        #"./data/emails/AMURU/202010.msg"
+        #html = mail.body
+        #html=render_to_string(html)
+        #weasyprint.HTML(string=html).write_pdf(directory + fname)
+
+
+        #html = render_to_string(self.message)
+        #result = BytesIO()
+        #pdf = pisa.pisaDocument(BytesIO(html.encode("utf-8")), result)
+        #if not pdf.err:
+            #return result.getvalue()
+        #return None    
+
+
+      
