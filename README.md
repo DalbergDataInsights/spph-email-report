@@ -20,14 +20,15 @@ The content of the instruction file is structured as follows:
 
 1. [How to run the program](#first)
 2. [How to change recipients](#second)
-3. [How to choose a reporting date](#third)
-4. [How to add or delete indicators or districts](#fourth)
-5. [How to alter an email template](#fifth)
+3. [How to change a sender](#thirdnull)
+4. [How to choose a reporting date](#third)
+5. [How to add or delete indicators or districts](#fourth)
+6. [How to alter an email template](#fifth)
     1. [Adding figures](#fifthpointone)
     2. [Adding captions](#fifthpointtwo)
-6. [How to alter captions](#sixth) 
-7. [For developers](#seventh)
-8. [Modules dictionary](#dictionary)
+7. [How to alter captions](#sixth) 
+8. [Dictionary for developers](#seventh)
+
 
 ### HOW TO RUN THE PROGRAM <a name="first"></a>
 
@@ -83,6 +84,21 @@ For example:
             "recipients_name": "Dr XXXXX,
         }
 ```
+
+### HOW TO CHANGE A SENDER <a name="thirdnull"></a>
+
+The sender's email credentials are set in the .env file (text configuration file) as the last three constants:  
+
+```
+export SMTP=smtp-mail.outlook.com
+export USERNAME=name@outlook.com
+export PASSWORD=xxxx
+```
+
+Use your account name and password.  
+Note! That if the new account is not outlook account, change the SMTP accordingly.  
+Example: smtp-mail.outlook.com -> smtp.gmail.com for a gmail account.  
+
 
 ### HOW TO CHOOSE THE DATE <a name="third"></a>
 
@@ -166,6 +182,7 @@ Where the new argument is to define after the if-statement.
 * [emails](#emails) - creation and compilation emails
 * [extract](#extract) - creation of visualisations and captions
 * [figures](#figures) - figures' pipeline  
+* [app](#app) - script, which runs the program
 
 ##### CONFIG <a name="config"></a>
 The folder contains currently four config files (.json).  
@@ -245,41 +262,62 @@ The path where figures and their titles (=captions) are being stored, defined in
 The extract contains figure and model folders.  
 
 [Figure](extract/figure) defines in [_init.py_](extract/figure/__init__.py) the following feature: images with title are being skipped without interrupting code execution if relevant data is missing. Instead in email the error message will be parsed. The error message is defined in emails/model.py in  `def __parse_image(self, item, filters, mime_type=True)`.  
-[Model](extract/model) contains [database](extract/model/database.py).  
-[Figure factory](extract/model/figure_factory.py) 
+[Model](extract/model) contains [database](extract/model/database.py), which contains settings for data fetching and allows to filter the data by policy in `class Database`.  
+Policy options:  
 
+* Correct outliers - using standard deviation: std,
+* Correct outliers - using interquartile range: iqr,
+* Keep outliers: out.
+By default "out" is chosen for the SPPH emails.  
+
+[Figure factory](extract/model/figure_factory.py) contains functions for visualisations building with the plotly graphing library. Both types of visualisations (scatters and a bar chart) is being developed with the one function `def get_bar_or_scatter`. Important is the definition of varying parts of figures' titles, which is done via  
+
+```python
+def get_figure_title(self, title, db, aggs):
+  
+        format_aggs = []
+        indicator = next(iter(db.datasets.values())).columns[-1]
+        for agg in aggs:
+            parsed = ""
+            if agg == "date":
+                data = db.datasets.get("district_dated")
+                parsed = data.reset_index().date.max().strftime("%B %Y")
+            ....
+            elif agg == "district":
+                data = db.datasets.get("district_dated")
+                parsed = data.reset_index().id[0]
+
+            elif agg == "indicator_view":
+                parsed = db.get_indicator_view(indicator)
+            ...
+        return title.format(*format_aggs)        
+
+```
+
+where each agg is one of the title_aggs from the figures/pipeline.py (see [figures](#figures) for more).  
 
 ##### FIGURES <a name="figures"></a>
 
-Notes on **emails**:  
+pipeline.py in figures contains pipeline for emails and national pipeline for monthly reports.  
+The pipeline for emails is in the scope of interest. For example,  
 
-Notes on **extract**:  
+```python
+{
+        "type": "scatter",
+        "transform": scatter_district_plot,
+        "color": {
+            2018: "rgb(185, 221, 241)",
+            2019: "rgb(106, 155, 195)",
+            2020: "rgb(200, 19, 60)",
+        },
+        "title": "The total {} in {} in {} <b>{}</b> from the month before",
+        "title_args": ["indicator_view", "district", "date", "ratio"],
+    }
+```
 
-Figures are configured to be skipped in case of missing data, so the code execution doesn't stop. Change it in [extract/figure/__init__.py](extract/figure/__init__.py)
-
-Visualisations are configured in [extract/model/figure_factory.py](extract/model/figure_factory.py). Besides visualisations, the varying part of the captions is defined there in `def get_figure_title`.  
-
-
-Notes on **figures**:  
-
-
-
-Figure's pipeline is located in >figures/pipeline.py. To change the captions is possible via this pipline in titles.  
-"national_pipeline" is for national level figures, mostly used in a monthly report, "pipeline" is a district-level pipeline.  
-
-Extraction of the figures from  
-
-Data transform is pretty similar to one used in CEHS
-
-
-Change the outlier policy is possible in extract/model/database.py -> in class Database choose relevant active_repo
-
-Figures are configured to be skipped in case of missing data. Change it in extract/figure/__init__.py
-
-### DICTIONARY <a name="dictionary"></a>
+from the pipeline defines the first figure (scatter plot with the indicator's overview) and its captions in `"title"`, while the  `"title_args"` accommodate all the adaptable parts of the captions. Titles can be change manually here, the relevant arguments take place of {} in the `"title"` and must be defined in order of appearance in `"title_args"` with the predefined names (see more in [extract](#extract)).  
 
 
+##### APP <a name="app"></a>
 
-
-
-    
+This app.py runs the code. 
