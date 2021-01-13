@@ -109,8 +109,7 @@ Note, this change affects the data extraction (data is extracted for the given m
 
 ### HOW TO ADD OR DELETE INDICATORS OR DISTRICTS <a name="fourth"></a>
 
-The used indicators are listed in [config.json](config/config.json)
-config >> config.json
+The used indicators are listed in [config.json](config/config.json).  
 
 Add or delete districts is possible in the "districts" list.
 Add or delete indicators is possible in the "indicators" list. Note, that indicators must be named identically to the ones in the database in use.  
@@ -119,8 +118,7 @@ Note! In here only extraction of images and relevant transformation of data will
 
 ### HOW TO ALTER THE EMAIL TEMPLATE <a name="fifth"></a>
 
-To see the template in config folder open [email_template.json](config/email_template.json).
-config >> email_template.json
+To see the template in config folder open [email_template.json](config/email_template.json).  
 
 All the text information can be altered directly there, keeping the preset format. For more information see any [HTML Style Guide and Coding Conventions](https://www.w3schools.com/html/html5_syntax.asp).
 The pdf file, which shows links between mail_template.json and created email for Amuru district is [here]  
