@@ -93,9 +93,9 @@ class EmailTemplateParser:
             item = self.__parse_image_title(item, filters)
         elif "%recipients_name%" in item:
             item = self.__parse_recipients_name(item, filters)
-        elif "%extraction_month%" in item: 
+        elif "%following_reporting_date%" in item: 
             # it parses also the date of the next report's publishing 
-            item = self.__parse_extraction_month(item, filters) 
+            item = self.__parse_following_date(item, filters) 
         else:
             item = item
         return item
@@ -108,25 +108,26 @@ class EmailTemplateParser:
         month = calendar.month_name[int(month)]
         #Current date is below: 
         date = f"{month} {year}"
-        #Date of the data extraction: 
-        extraction_date = pd.to_datetime(date) + relativedelta(months=1)
-        extraction_date=extraction_date.strftime("%B")
+        #Date of the data extraction, relativedelta(day=31) assigns the last day of the month: 
+        extraction_date = pd.to_datetime(date) + relativedelta(day=31)
+        print(extraction_date)
+        extraction_date=extraction_date.strftime("%d %B, %Y")
         #Due to presence of multiple values to replace in one line or string, the chained .replace() is required
-        item = item.replace("%district%", filters.get("district")).replace("%date%", date).replace("%extraction_month%", extraction_date) 
+        item = item.replace("%district%", filters.get("district")).replace("%date%", date).replace("%extraction_date%", extraction_date) 
 
         return item
 
-    def __parse_extraction_month(self, item, filters): 
+    def __parse_following_date(self, item, filters): 
         """
         the function parses varying dates for the email, incl. date of the data extraction from DHIS2 and date of the next report
         """
         date = self.config.get("date")
-        extraction_date = pd.to_datetime(date, format='%Y%m') 
-        extraction_date = extraction_date + relativedelta(months=1)
-        future_report_month= extraction_date + relativedelta(months=2)
-        extraction_date=extraction_date.strftime("%B")
-        future_report_month=future_report_month.strftime("%B")
-        item=item.replace("%extraction_month%",extraction_date).replace("%future_report_month%", future_report_month )   
+        following_date = pd.to_datetime(date, format='%Y%m') 
+        following_date = following_date + relativedelta(months=1)
+        future_report_month= following_date + relativedelta(months=2)
+        following_date=following_date.strftime("%B %Y")
+        future_report_month=future_report_month.strftime("%B %Y")
+        item=item.replace("%following_reporting_date%", following_date).replace("%future_report_date%", future_report_month)   
 
         return item
 
