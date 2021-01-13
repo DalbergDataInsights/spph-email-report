@@ -1,6 +1,5 @@
 # SPPH-EMAIL-REPORT  
 
-
 The main aim of the current program is to create the given number of emails with the customized set of visualisations of indicators presented in the CEHS tool.  
 
 The current instruction file will serve as a step-by-step guide, which shows how to run the program and gives the information on its structure and underlying scripts.  
@@ -10,7 +9,7 @@ Shortly, the program consists of two parts:
 * Creation of the visualisations and captions
 * Creation of the emails
 
-Consequently, it is impossible to successfully execute the second part until the first part is completed. 
+Consequently, it is impossible to successfully execute the second part until the first part is completed.  
 The output of the first part of the program is a json file and for visualisations for each indicator. First three visualisations are a scatter plot with district-level overview of the indicator, a bar chart with facilities' contribution and reporting scatter plot. The fourth visualisation is a country-level overview scatter of the indicator. The json file contains titles of the figures, which are implemented to emails as figures' captions.  
 Output of the second part of the program is emails.
 
@@ -26,14 +25,14 @@ The content of the instruction file is structured as follows:
 6. [How to alter an email template](#fifth)
     1. [Adding figures](#fifthpointone)
     2. [Adding captions](#fifthpointtwo)
-7. [How to alter captions](#sixth) 
+7. [How to alter captions](#sixth)  
 8. [Dictionary for developers](#seventh)
-
 
 ### HOW TO RUN THE PROGRAM <a name="first"></a>
 
 The script [app.py](app.py) is the script which runs the program.  
 In order to start running it is necessary to scroll down the script until  
+
 ```python
 if __name__ == "__main__":
     run(["extract"])
@@ -72,7 +71,7 @@ For example:
         }
 ```
 
-+ add the new greeting and additional recipient, which won't be mentioned in the email 
++ add the new greeting and additional recipient, which won't be mentioned in the email  
 
 ```python
 {
@@ -98,7 +97,6 @@ export PASSWORD=xxxx
 Use your account name and a password.  
 Note! That if the new account is not outlook account, change the SMTP accordingly.  
 Example: smtp-mail.outlook.com -> smtp.gmail.com for a gmail account.  
-
 
 ### HOW TO CHOOSE THE DATE <a name="third"></a>
 
@@ -134,6 +132,7 @@ In the template figures are defined in a following form:
 while adding the picture, replicate the syntax: `<div>%image.*indicator's name*.*figure number*%<div/>`, where indicator's name is defined similarly to the one in config.json.  
 The figures numbers can be found in data/viz in relevant folders.  
 If there is a mistake in the parameters the code comes up with an error message and stops execution.  
+
 #### ADDING CAPTIONS <a name="fifthpointtwo"></a>
 
 In the template captions are defined in a following form:
@@ -169,6 +168,7 @@ def get_figure_title(self, title, db, aggs):
 ```
 
 Where the new argument is to define after the if-statement.  
+
 ### FOR DEVELOPERS <a name="seventh"></a>
 
 #### Table of content of the program  
@@ -182,6 +182,7 @@ Where the new argument is to define after the if-statement.
 * [app](#first) - script, which runs the program
 
 ##### CONFIG <a name="config"></a>
+
 The folder contains currently four config files (.json).  
 [config_national.json](config/config_national.json) is the config file, which interacts with the [national pipeline](figures/pipeline.py) and serves for monthly report needs. Output: country-level visualisations.  
 [config.json](config/config.json) contains the essential information for the district-level emails, incl. list of districts, date and list of indicators (for more see [here](#fourth))
@@ -189,20 +190,23 @@ The folder contains currently four config files (.json).
 [email_template.json](config/email_template.json) is the template in html-format. Brings together visualisations, captions and aggs (see [emails](#emails) and [How to alter an email template](#fifth) for more)
 
 ##### DATA <a name="data"></a>
+
 Output directory.  
 The folder [viz](data/viz) includes [extracted](#extract) visualisations and captions, sorted by district -> reporting date -> indicator.
 The folder [emails](data/emails) keeps compiled emails as .msg  
 The folder [pdf] contains pdf-files converted from .msg files. For details see [emails](#emails) in documentation and `class Email:` in the [module](emails/model.py) directly
 
 ##### DATASET <a name="dataset"></a>
+
 The folder "dataset" contains helper, pipeline and transform.  
 [Helper](dataset/helper.py) contains sorting by district and date functions.  
-[pipeline.py](dataset/pipeline.py) contains functions, which fetch and clean raw data from the database for each type of visualisation. 
-[transform](dataset/transform.py) contains functions, which structure the clean data in a form, suitable for visualisation. Here the data can be rearranged in case of unreadable representation or checked for errors if they are visible in a visualisation. 
+[pipeline.py](dataset/pipeline.py) contains functions, which fetch and clean raw data from the database for each type of visualisation.  
+[transform](dataset/transform.py) contains functions, which structure the clean data in a form, suitable for visualisation. Here the data can be rearranged in case of unreadable representation or checked for errors if they are visible in a visualisation.  
 Note! Errors in visualisations can origin from [figure factory](extract/model/figure_factory.py).  
+
 ##### EMAILS <a name="emails"></a>
 
-The folder "emails" includes [model.py](emails/model.py) module. 
+The folder "emails" includes [model.py](emails/model.py) module.  
 The module contains two main classes `class EmailTemplateParser` and `class Email`.  
 `class EmailTemplateParser` includes functions, which compile the emails such as: `def get_parsed_message(self, filters)`, `def set_payload(self, message)` and `def get_parsed_subject(self, filters)`. Additionally, the class includes the parsers. These parsers define which information is inserted in the email template for automatically adaptable parts.  
 
@@ -313,4 +317,4 @@ The pipeline for emails is in the scope of interest. For example,
 ```
 
 from the pipeline defines the first figure (scatter plot with the indicator's overview) and its captions in `"title"`, while the  `"title_args"` accommodate all the adaptable parts of the captions. Titles can be change manually here, the relevant arguments take place of {} in the `"title"` and must be defined in order of appearance in `"title_args"` with the predefined names (see more in [extract](#extract)).  
- 
+  
