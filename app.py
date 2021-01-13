@@ -88,13 +88,6 @@ def run_extract_contry(config, db, figure_pipeline):
             "trends_map_compare_agg": "Compare month of interest to month of reference",
         }
         extract.run(db, controls, figure_pipeline)
- 
-def save_emails(config, engine, email_template, recipients):
-    parser = EmailTemplateParser("data/viz", email_template, config)
-
-    for recipient in recipients:
-        print(f"Running email send for {recipient}")
-        emails.compose_email(parser, recipient.get("filters"), fname=f'{config.get("date")}.msg', directory=f'./data/emails/{recipient.get("filters").get("district")}/')
 
                              
 def send_emails(config, engine, email_template, recipients):
@@ -103,6 +96,10 @@ def send_emails(config, engine, email_template, recipients):
     '''  
 
     parser = EmailTemplateParser("data/viz", email_template, config)
+
+    for recipient in recipients:
+        print(f"Running email save for {recipient}")
+        emails.compose_email(parser, recipient.get("filters"), fname=f'{config.get("date")}.msg', directory=f'./data/emails/{recipient.get("filters").get("district")}/')
 
     smtp = smtplib.SMTP(host=engine.get("smtp"), port=587)
     smtp.starttls(context=ssl.create_default_context())
@@ -117,7 +114,13 @@ def send_emails(config, engine, email_template, recipients):
                     subject =parser.get_parsed_subject(recipient.get("filters"))
                     ) 
 
+def save_emails(config, engine, email_template, recipients):
+    parser = EmailTemplateParser("data/viz", email_template, config)
 
+    for recipient in recipients:
+        print(f"Running email save for {recipient}")
+        emails.compose_email(parser, recipient.get("filters"), fname=f'{config.get("date")}.msg', directory=f'./data/emails/{recipient.get("filters").get("district")}/')
+        
 def save_emails_to_pdf(config, engine, email_template, recipients):
     parser = EmailTemplateParser("data/viz", email_template, config)
 
@@ -200,5 +203,5 @@ def run(pipeline):
 
 
 if __name__ == "__main__":
-    run(["extract"])
+    run(["email_send"])
 
