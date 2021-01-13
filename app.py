@@ -28,21 +28,21 @@ def run_extract(config, db, figure_pipeline):
     Function to create figures and captions for districts
     """""
     date = config.get("date")
-    if type(date) == int: 
-        date= date.strptime("%Y%m")
-    elif type(date) == str: 
+    if len(date) == 6: 
+        target_date = datetime.strptime(date, "%Y%m")
+    elif len(date) != 6: 
         if date == "now":
             date = datetime.now() - relativedelta(months=1)
-            date = date.strftime("%Y%m")
+            target_date = date.strftime("%Y%m")
             with open('config/config.json') as f:
                 data = json.load(f)
-                data["date"] = date
+                data["date"] = target_date
             with open('config/config.json', 'w') as f:
                 json.dump(data, f, indent=2)
         else: 
             print("The date in config.json is defined incorrectly. Possible: \"now\", \"YYYYMM\"")
             exit()
-    target_date = datetime.strptime(date, "%Y%m") # gets date from config.json
+    #target_date = datetime.strptime(date, "%Y%m") # gets date from config.json
     print(f"Launching figure generation for {target_date}")
     reference_date = (target_date - timedelta(days=1)).replace(day=1)
 
