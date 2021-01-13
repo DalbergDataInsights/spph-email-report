@@ -179,7 +179,7 @@ Where the new argument is to define after the if-statement.
 * [emails](#emails) - creation and compilation emails
 * [extract](#extract) - creation of visualisations and captions
 * [figures](#figures) - figures' pipeline  
-* [app](#app) - script, which runs the program
+* [app](#first) - script, which runs the program
 
 ##### CONFIG <a name="config"></a>
 The folder contains currently four config files (.json).  
@@ -313,8 +313,4 @@ The pipeline for emails is in the scope of interest. For example,
 ```
 
 from the pipeline defines the first figure (scatter plot with the indicator's overview) and its captions in `"title"`, while the  `"title_args"` accommodate all the adaptable parts of the captions. Titles can be change manually here, the relevant arguments take place of {} in the `"title"` and must be defined in order of appearance in `"title_args"` with the predefined names (see more in [extract](#extract)).  
-
-
-##### APP <a name="app"></a>
-
-This app.py runs the code. 
+ 
