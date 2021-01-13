@@ -27,7 +27,22 @@ def run_extract(config, db, figure_pipeline):
     """"
     Function to create figures and captions for districts
     """""
-    target_date = datetime.strptime(config.get("date"), "%Y%m") # gets date from config.json
+    date = config.get("date")
+    if type(date) == int: 
+        date= date.strptime("%Y%m")
+    elif type(date) == str: 
+        if date == "now":
+            date = datetime.now() - relativedelta(months=1)
+            date = date.strftime("%Y%m")
+            with open('config/config.json') as f:
+                data = json.load(f)
+                data["date"] = date
+            with open('config/config.json', 'w') as f:
+                json.dump(data, f, indent=2)
+        else: 
+            print("The date in config.json is defined incorrectly. Possible: \"now\", \"YYYYMM\"")
+            exit()
+    target_date = datetime.strptime(date, "%Y%m") # gets date from config.json
     print(f"Launching figure generation for {target_date}")
     reference_date = (target_date - timedelta(days=1)).replace(day=1)
 
@@ -111,15 +126,15 @@ def save_emails_to_pdf(config, engine, email_template, recipients):
                       pdf_fname=f'./data/emails/{recipient.get("filters").get("district")}/{config.get("date")}.pdf')
 
 def run_next_month(config):
-    current = datetime.strptime(config.get("date"), "%Y%m")
+    reporting_date = datetime.strptime(config.get("date"), "%Y%m")
     now = datetime.today().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
 
-    if current==now: 
+    if reporting_date==now: 
         print("The figures are up to date, try later")
         
-    elif now > current: 
+    elif now > reporting_date: 
         print("Changing date...") 
-        next_date = current + relativedelta(months=1)
+        next_date = reporting_date  + relativedelta(months=1)
         next_date = next_date.strftime("%Y%m")
         
         with open('config/config.json') as f:
@@ -185,5 +200,5 @@ def run(pipeline):
 
 
 if __name__ == "__main__":
-    run(["email_create"])
+    run(["extract"])
 
