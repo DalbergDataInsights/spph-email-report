@@ -102,8 +102,7 @@ Example: smtp-mail.outlook.com -> smtp.gmail.com for a gmail account.
 
 ### HOW TO CHOOSE THE DATE <a name="third"></a>
 
-To choose the date open [config.json](config/config.json)
-config >> config.json
+To choose the date open [config.json](config/config.json).  
 
 In dictionary in "date" change the date, keeping the preset format: YYYYMM -> 202011 is November 2020.
 Note, this change affects the data extraction (data is extracted for the given month) and automatically updates the email, so that no altering of template is necessary for the new date.
