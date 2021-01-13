@@ -95,7 +95,7 @@ export USERNAME=name@outlook.com
 export PASSWORD=xxxx
 ```
 
-Use your account name and password.  
+Use your account name and a password.  
 Note! That if the new account is not outlook account, change the SMTP accordingly.  
 Example: smtp-mail.outlook.com -> smtp.gmail.com for a gmail account.  
 
