@@ -96,6 +96,7 @@ export PASSWORD=xxxx
 Use your account name and password.  
 Note! That if the new account is not outlook account, change the SMTP accordingly.  
 Example: smtp-mail.outlook.com -> smtp.gmail.com for the gmail account.  
+Note! You may need to allow access to less secure applications in your account settings if emails are distributed from the gmail account.  
 
 ### HOW TO CHOOSE THE DATE <a name="third"></a>
 

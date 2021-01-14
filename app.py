@@ -102,6 +102,7 @@ def send_emails(config, engine, email_template, recipients):
         emails.compose_email(parser, recipient.get("filters"), fname=f'{config.get("date")}.msg', directory=f'./data/emails/{recipient.get("filters").get("district")}/')
 
     smtp = smtplib.SMTP(host=engine.get("smtp"), port=587)
+    smtp.ehlo()
     smtp.starttls(context=ssl.create_default_context())
     smtp.login(engine.get("username"), engine.get("password"))
 
