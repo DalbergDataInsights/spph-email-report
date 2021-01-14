@@ -1,8 +1,8 @@
 # SPPH-EMAIL-REPORT  
 
-The main aim of the current program is to create the given number of emails with the customized set of visualisations of indicators presented in the CEHS tool.  
+The main aim of the current program is to create the given number of emails with the customized set of visualisations of indicators also presented in the CEHS tool.  
 
-The current instruction file will serve as a step-by-step guide, which shows how to run the program and gives the information on its structure and underlying scripts.  
+The current instructions file will serve as a step-by-step guide showing how to run the programme, set up indicators and/or districts, and provide information on the program's structure and underlying scripts.  
 
 Shortly, the program consists of two parts:  
   
@@ -10,7 +10,7 @@ Shortly, the program consists of two parts:
 * Creation of the emails
 
 Consequently, it is impossible to successfully execute the second part until the first part is completed.  
-The output of the first part of the program is a json file and for visualisations for each indicator. First three visualisations are a scatter plot with district-level overview of the indicator, a bar chart with facilities' contribution and reporting scatter plot. The fourth visualisation is a country-level overview scatter of the indicator. The json file contains titles of the figures, which are implemented to emails as figures' captions.  
+The output of the first part of the program is a json file and four visualisations for each indicator. The first three visualisations are: a scatter plot with an overview of the indicator at county level, a bar chart with facilities contribution and a reporting scatter plot. The fourth visualisation is an overview scatter for an indicator, but at country level. The json file `titles.json`  contains figure titles, which are implemented in emails as figure captions.  
 Output of the second part of the program is emails.
 
 The content of the instruction file is structured as follows:  
@@ -38,26 +38,25 @@ if __name__ == "__main__":
     run(["extract"])
 ```
 
-`run([])` in the body of the function allows to choose the operation, which must be performed. The name of operations are given as pipes in `def run(pipeline)` above:  
+`run([])` in the body of the function allows to choose the operation, which must be performed. The name of operations are given as pipes in `def run(pipeline)`, where:  
   
 1. "extract" - creates and prints the visualisations to the predefined folders;
-2. "email_save" - compiles and saves the emails using the given set of indicators and districts;
-3. "email_send" - sends already created emails off  
-4. "email_to_pdf" - converts .msg files (emails) into pdf  
-5. "increment-date" - upgrades the date to the current month (doesn't change anything if already upgraded)
+2. "email_create" - compiles and saves emails using a predefined set of indicators and areas, but does not include sending;
+3. "email_send" - composes and sends e-mails.  
+4. "email_to_pdf" - converts .msg files (emails) to pdf (requires "email_create" to be run first).  
+5. "increment-date" - upgrades the date to the current month ((nothing changes if it has already been updated)
 
 NB! Check the date of the report before starting the extraction (see:[How to choose a reporting date](#third))
 To change predefined input, use configuration files in a config folder in the workspace.  
 
-This section is under the development, so the changes will be implemented soon.  
+*This section is under modification, so changes will be implemented shortly.*  
 
 ### HOW TO CHANGE RECIPIENTS <a name="second"></a>
 
 In config folder open [email_recipients.json](config/email_recipients.json)
-config >> email_recipients.json
 
-Change or add and email address in "recipients". Note, that each dictionary {} refers to only one district. So, by adding the email address, the original email won't be changed.  
-If it is necessary to send the same email but with the different recipient name, you have to copy the structure of a dictionary and change the name of the recipient in filters.  
+Change or add and email address in "recipients". Note that each dictionary {} refers to only one district. Thus by adding a recipient email address, the original email will not be changed.  
+If you want to send the same letter, but with a different recipient name, you must copy the dictionary structure and change the recipient name in the filters.  
 For example:  
 
 ```python
@@ -94,9 +93,9 @@ export USERNAME=name@outlook.com
 export PASSWORD=xxxx
 ```
 
-Use your account name and a password.  
+Use your account name and password.  
 Note! That if the new account is not outlook account, change the SMTP accordingly.  
-Example: smtp-mail.outlook.com -> smtp.gmail.com for a gmail account.  
+Example: smtp-mail.outlook.com -> smtp.gmail.com for the gmail account.  
 
 ### HOW TO CHOOSE THE DATE <a name="third"></a>
 
@@ -105,14 +104,57 @@ To choose the date open [config.json](config/config.json).
 In dictionary in "date" change the date, keeping the preset format: YYYYMM -> 202011 is November 2020.
 Note, this change affects the data extraction (data is extracted for the given month) and automatically updates the email, so that no altering of template is necessary for the new date.
 
+```python
+{
+    "districts": [
+        "AMURU", "BUHWEJU", "BUSIA", "BUVUMA", "MUKONO", "WAKISO"
+    ],
+    "date": "202011",
+    "indicators": [
+        "xxxx",
+        ...
+    ]
+}
+
+```
+
 ### HOW TO ADD OR DELETE INDICATORS OR DISTRICTS <a name="fourth"></a>
 
 The used indicators are listed in [config.json](config/config.json).  
 
-Add or delete districts is possible in the "districts" list.
-Add or delete indicators is possible in the "indicators" list. Note, that indicators must be named identically to the ones in the database in use.  
+Adding or removing districts is possible in the "districts" list, simply add the relevant district after the comma in uppercase letters, enclosed in quotes or delete the redundant one with a comma in front of it.  
+Adding or deleting indicators is possible in the "indicators" list, using the same scheme as for districts. Note that the indicator names must be identical to those in the database used, including the case (lower/upper) employed.  
 
-Note! In here only extraction of images and relevant transformation of data will be changed. Altering the indicators/districts at this point won't change the emails. To implement related changes to the emails, please see the section [How to alter an email template](#fifth).  
+```python
+{
+    "districts": [
+        "AMURU", "BUHWEJU", "BUSIA", "BUVUMA", "MUKONO", "WAKISO"
+    ],
+    "date": "YYYYMM",
+    "indicators": [
+        "1st ANC Visits",
+        "4th ANC Visits",
+        "Deliveries in unit",
+        "Low weight births",
+        "DPT3 doses to U1", 
+        "DPT3 doses to U1 (coverage)",
+        "MR1 doses to U1", 
+        "MR1 doses to U1 (coverage)",
+        "1st doses of vitamin A to U5",
+        "1st doses of vitamin A to U5 (coverage)",
+        "2nd doses of vitamin A to U5",
+        "2nd doses of vitamin A to U5 (coverage)",
+        "SAM cases identified",
+        "ANC tested HIV positive",
+        "ANC initiated on ART",
+        "TB cases registered in treatment unit",
+        "OPD attendance"
+    ]
+}
+```
+
+Note! Only the image extraction and corresponding data transformation is being changed here. Changing the indicators at this stage will not change the e-mails. To make appropriate changes to the letters, please refer to the section [How to alter an email template](#fifth).  
+However, if only districts are changed, only the recipient for the respective district should be added ([How to change recipients](#second)), the email for the new district will be made up according to the usual template.  
 
 ### HOW TO ALTER THE EMAIL TEMPLATE <a name="fifth"></a>
 
@@ -141,13 +183,13 @@ In the template captions are defined in a following form:
 "<p style=\"color:rgb(42, 87, 131); \"><i>%title.1st ANC Visits.figure_1% </i></p>",
 ```
 
-while adding the picture, replicate the syntax: `%title.*indicator's name*.*figure number*%`, where indicator's name is defined similarly to the one in config.json and figure's number corresponds to the related to the caption figure. To read the caption before adding, open titles.json in [data/viz/**date**/**district**/**indicator**](data/viz).  
+while adding the picture, replicate the syntax with: `%title.*indicator's name*.*figure number*%`, where indicator's name is defined similarly to the one in config.json and figure's number corresponds to the related to the caption figure. To read the caption before adding, open titles.json in [data/viz/**date**/**district**/**indicator**](data/viz).  
 
 ### HOW TO ALTER CAPTIONS <a name="sixth"></a>
 
 To change the captions, open figures' pipeline -> [figures/pipeline.py](figures/pipeline.py) and make necessary changes in `"titles"`. Note that districts' level pipeline is `pipeline`, the `national_pipeline` is for country-level monthly reports.  
 
-To add more arguments to the caption, add name of the argument to the `"title_args":`, place it to the `"titles"` as `{}` and define a new argument in extract/model/figure_factory.py in  
+To add more arguments to the caption, add name of the argument to the `"title_args":`, place it to the `"titles"` as `{}` and define a new argument in extract/model/[figure_factory.py](extract/model/figure_factory.py) in  
 
 ```python
 def get_figure_title(self, title, db, aggs):
@@ -167,9 +209,9 @@ def get_figure_title(self, title, db, aggs):
         return title.format(*format_aggs)   
 ```
 
-Where the new argument is to define after the if-statement.  
+where the new argument is to define after the if-statement. For more information on the arguments definition see [here](#extract).  
 
-### FOR DEVELOPERS <a name="seventh"></a>
+### DICTIONARY FOR DEVELOPERS <a name="seventh"></a>
 
 #### Table of content of the program  
 

@@ -110,7 +110,6 @@ class EmailTemplateParser:
         date = f"{month} {year}"
         #Date of the data extraction, relativedelta(day=31) assigns the last day of the month: 
         extraction_date = pd.to_datetime(date) + relativedelta(day=31)
-        print(extraction_date)
         extraction_date=extraction_date.strftime("%d %B, %Y")
         #Due to presence of multiple values to replace in one line or string, the chained .replace() is required
         item = item.replace("%district%", filters.get("district")).replace("%date%", date).replace("%extraction_date%", extraction_date) 
