@@ -1,31 +1,18 @@
-from datetime import datetime
-from email import message, policy
-import config
-import json
 import calendar
-from dateutil.relativedelta import relativedelta
-import pandas as pd
-
+import json
 import os
-
 from email.message import EmailMessage
 from email.utils import make_msgid
-from email.parser import BytesParser
-import mimetypes
-import weasyprint
-from weasyprint import HTML
-from django.http import HttpResponse
-from django.template.loader import render_to_string
-from xhtml2pdf import pisa
 from io import BytesIO
-import mailparser
 
+import pandas as pd
+from dateutil.relativedelta import relativedelta
 
 
 class EmailTemplateParser:
     """
     Fetches elements of an email together and inserts into the template to create the full email
-    
+
     """
     def __init__(self, data_folder, email_template, config):
         self.folder = data_folder
@@ -80,8 +67,8 @@ class EmailTemplateParser:
 
     def parse_item(self, item, filters):
         """
-        Finds items by keywords in the template and replaces them with the parsed objects 
-        
+        Finds items by keywords in the template and replaces them with the parsed objects
+
         """
         if "%date%" in item:
             item = self.__parse_date(item, filters)
@@ -93,9 +80,9 @@ class EmailTemplateParser:
             item = self.__parse_image_title(item, filters)
         elif "%recipients_name%" in item:
             item = self.__parse_recipients_name(item, filters)
-        elif "%following_reporting_date%" in item: 
-            # it parses also the date of the next report's publishing 
-            item = self.__parse_following_date(item, filters) 
+        elif "%following_reporting_date%" in item:
+            # it parses also the date of the next report's
+            item = self.__parse_following_date(item, filters)
         else:
             item = item
         return item
@@ -103,33 +90,33 @@ class EmailTemplateParser:
     def __parse_date(self, item, filters):
         """
         Finds all mentions of %date% in the template and replaces with the date from config.json
-        
+
         """
         date = self.config.get("date")
         year = date[:4]
         month = date[-2:]
         month = calendar.month_name[int(month)]
-        #Current date is below: 
+        #Current date is below:
         date = f"{month} {year}"
-        #Date of the data extraction, relativedelta(day=31) assigns the last day of the month: 
+        #Date of the data extraction, relativedelta(day=31) assigns the last day of the month:
         extraction_date = pd.to_datetime(date) + relativedelta(day=31)
         extraction_date=extraction_date.strftime("%d %B, %Y")
         #Due to presence of multiple values to replace in one line or string, the chained .replace() is required
-        item = item.replace("%district%", filters.get("district")).replace("%date%", date).replace("%extraction_date%", extraction_date) 
+        item = item.replace("%district%", filters.get("district")).replace("%date%", date).replace("%extraction_date%", extraction_date)
 
         return item
 
-    def __parse_following_date(self, item, filters): 
+    def __parse_following_date(self, item, filters):
         """
-        Replaces %following_reporting_date% and %future_report_date% with the date of the next report and the date of the next email dissemination respectively. 
+        Replaces %following_reporting_date% and %future_report_date% with the date of the next report and the date of the next email dissemination respectively.
         """
         date = self.config.get("date")
-        following_date = pd.to_datetime(date, format='%Y%m') 
+        following_date = pd.to_datetime(date, format='%Y%m')
         following_date = following_date + relativedelta(months=1)
         future_report_month= following_date + relativedelta(months=2)
         following_date=following_date.strftime("%B %Y")
         future_report_month=future_report_month.strftime("%B %Y")
-        item=item.replace("%following_reporting_date%", following_date).replace("%future_report_date%", future_report_month)   
+        item=item.replace("%following_reporting_date%", following_date).replace("%future_report_date%", future_report_month)
 
         return item
 
@@ -159,7 +146,7 @@ class EmailTemplateParser:
             return '<p align="center">Due to the lack of data on this indicator in the reporting month, no visualization is available </p>'
         self.payload[image_cid] = fname
 
-        return item 
+        return item
 
     def __parse_image_title(self, item, filters):
         """
@@ -167,7 +154,7 @@ class EmailTemplateParser:
         The name of the vizualization is of the predifined form in the template (%title.INDICATOR'S NAME.figure_1%).
         In case of deviating formatting, the figure won't be attached and the error message pops up.
 
-        """  
+        """
 
         try:
             _, indicator, figure = item.split("%")[1].split(".")
@@ -184,7 +171,7 @@ class EmailTemplateParser:
             title = json.load(f).get(figure, f"No data for {indicator}")
         item = item.replace(f"%title.{indicator}.{figure}%", title or "")
 
-        return item 
+        return item
 
     def __parse_district(self, item, filters):
         """
@@ -202,73 +189,19 @@ class EmailTemplateParser:
         #chained replace is necessary because the names are in one line in the email template
         item = item.replace("%recipients_name%", filters.get("recipients_name")).replace("%biostatistician_name%", filters.get("biostatistician_name"))
         return item
- 
+
 
 class Email:
-    """
-    
-    You can create Emails from text like that:
-        email = Email("This is a long message of an email")
-    Tip:
-        Use EmailTemplateParser with HTML template to create elaborate HTML emails automatically
-
-    You can also create Emails from earlier create files:
-        email = Email.from_file("/path/to/file.msg")
-
-    Once created, you may save the file:
-        email.to_file("/path/to/file.html")
-
-    Or send it using Python native smtp profile
-        email.send(smtp, from@mail.com, "to@mail.com, anotherto@mail.com")
-
-    """
-    def __init__(self, message):
+    def __init__(self, smtp, send_to, send_from, message):
+        self.smtp = smtp
+        self.send_to = send_to
+        self.send_from = send_from
         self.message = message
-      
 
     def set_subject(self, subject):
         self.message["Subject"] = subject
 
-    def send(self, smtp, send_from, send_to):
-        smtp.sendmail(send_from, send_to, self.message.as_string())
-
-    def to_file(self, fname, directory="./data/emails/"): # < fname = "./html/message.msg"
-
-        assert len(fname.split("/")) == 1, "Please use directory keyword for directory"
-
-        if not os.path.exists(directory):
-            os.makedirs(directory)
-
-        with open(directory + fname, "wb") as f:
-            f.write(bytes(self.message))
+    def send(self):
+        self.smtp.sendmail(self.send_from, self.send_to, self.message.as_string())
 
 
-    @staticmethod
-    def from_file(fname):
-        with open(fname, "rb") as f:
-            message = BytesParser(policy=policy.default).parse(f)
-        return Email(message)
-
-    def to_pdf(self, fname, directory="./data/emails/pdf"):
-
-        mail = mailparser.parse_from_file_msg(self.message)
-
-        body = weasyprint.HTML(self.message.as_string())
-        with open(fname, "wb") as f:
-            f.write(body)
-
-        #"./data/emails/AMURU/202010.msg"
-        #html = mail.body
-        #html=render_to_string(html)
-        #weasyprint.HTML(string=html).write_pdf(directory + fname)
-
-
-        #html = render_to_string(self.message)
-        #result = BytesIO()
-        #pdf = pisa.pisaDocument(BytesIO(html.encode("utf-8")), result)
-        #if not pdf.err:
-            #return result.getvalue()
-        #return None    
-
-
-      

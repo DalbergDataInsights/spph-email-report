@@ -1,14 +1,11 @@
-import plotly.graph_objects as go
-import pandas as pd
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
-import numpy as np
+from datetime import timedelta
 from itertools import cycle
-from plotly.validators.scatter.marker import SymbolValidator
 
-import json
-import math
+import numpy as np
+import plotly.graph_objects as go
 from dataset import helper
+from dateutil.relativedelta import relativedelta
+from plotly.validators.scatter.marker import SymbolValidator
 
 
 class FigureFactory:
@@ -27,51 +24,6 @@ class FigureFactory:
             return self.get_bar_or_scatter("Scatter", data, colors, **kwargs)
         elif figure_type == "bar":
             return self.get_bar_or_scatter("Bar", data, colors, **kwargs)
-        elif figure_type == "map":
-            return self.get_map(
-                figure_object="Choroplethmapbox", data=data, colors=colors, **kwargs
-            )
-
-    def get_map(
-        self, figure_object="Choroplethmapbox", data=None, colors=None, **kwargs
-    ):
-
-        FigType = getattr(go, figure_object)
-
-        choropleth_map = go.Choroplethmapbox()
-
-        locations = kwargs.pop("locations")
-        geojson, bounds = self.__get_geo_data(
-            kwargs.pop("gdf"), kwargs.pop("tolerance")
-        )
-
-        for df in data.values():
-
-            lower_bound, upper_bound = self.get_range(df[df.columns[0]])
-            colorscale = self.get_custom_colorscale((lower_bound, upper_bound), colors)
-
-            choropleth_map = FigType(
-                z=df[df.columns[0]],
-                geojson=geojson,
-                locations=df.reset_index()[locations],
-                hovertemplate="%{location} <br>" + ": %{z}" + "<extra></extra>",
-                marker_opacity=1,
-                marker_line_width=1,
-                colorscale=colorscale,
-                zmin=lower_bound,
-                zmax=upper_bound,
-            )
-
-        fig = go.Figure(choropleth_map)
-
-        # Update the map
-        fig.update_layout(
-            mapbox_style="carto-positron",
-            mapbox_zoom=5.25,
-            mapbox_center=bounds.get("center"),
-        )
-
-        return fig
 
     def get_bar_or_scatter(
         self, figure_object, data, figure_colors, bar_mode=None, **kwargs
@@ -109,18 +61,18 @@ class FigureFactory:
         if figure_object == "Bar":
             fig.update_layout(barmode=bar_mode)
         elif figure_object == "Scatter":
-            ''' Assigns randomly different markers to each data line in scatter plots'''
+            """ Assigns randomly different markers to each data line in scatter plots"""
             raw_symbols = SymbolValidator().values
             namestems = []
             namevariants = []
             symbols = []
-            for i in range(0,len(raw_symbols),3):
-                name = raw_symbols[i+2]
+            for i in range(0, len(raw_symbols), 3):
+                name = raw_symbols[i + 2]
                 symbols.append(raw_symbols[i])
                 namestems.append(name.replace("-open", "").replace("-dot", ""))
-                namevariants.append(name[len(namestems[-1]):])
-                markers = cycle(list(set(namestems)))   
-            fig.update_traces(mode='lines+markers')
+                namevariants.append(name[len(namestems[-1]) :])
+                markers = cycle(list(set(namestems)))
+            fig.update_traces(mode="lines+markers")
             for d in fig.data:
                 d.marker.symbol = next(markers)
                 d.marker.size = 10
@@ -133,7 +85,7 @@ class FigureFactory:
     #########
 
     def style_figure(self, fig):
-        ''' 1. Calibrates the size of the visualisation; 2. Sets the style of the grids and background'''
+        """ 1. Calibrates the size of the visualisation; 2. Sets the style of the grids and background"""
         fig.update_layout(
             legend=dict(
                 orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1.02
@@ -157,8 +109,8 @@ class FigureFactory:
 
     def get_figure_title(self, title, db, aggs):
         """
-        Extracts and returns the arguments of the titles predefined in the figures' pipeline (figures/pipeline.py) 
-        data is called from db 
+        Extracts and returns the arguments of the titles predefined in the figures' pipeline (figures/pipeline.py)
+        data is called from db
 
         """
         format_aggs = []
@@ -185,9 +137,9 @@ class FigureFactory:
                 max_date = data.reset_index().date.max()
                 parsed = max_date.replace(year=max_date.year - 1).strftime("%B %Y")
 
-            elif agg=="latest_value": 
+            elif agg == "latest_value":
                 data = db.datasets.get("country")
-                value= data.reset_index().iloc[-1,-1].item()
+                value = data.reset_index().iloc[-1, -1].item()
                 parsed = str(round(value, 2))
 
             elif agg == "ratio":
@@ -197,40 +149,30 @@ class FigureFactory:
                 parsed = self.__get_percentage_difference_between_time(
                     data, min_date, max_date
                 )
-            elif agg == "ratio_year":
-                data = db.datasets.get("country")
-                max_date = data.reset_index().date.max()
-                min_date = max_date.replace(year=max_date.year - 1)
-                parsed = self.__get_percentage_difference_between_time(
-                    data, min_date, max_date
-                )
             elif agg == "facility_count_reported":
                 parsed = str(
                     self.__get_positive_reporting(db.datasets.get("reporting_district"))
                 )
-            elif agg == "facility_count": 
-                data= db.datasets.get("reporting_district")
+            elif agg == "facility_count":
+                data = db.datasets.get("reporting_district")
                 data = helper.check_index(data)
                 data = data.droplevel(["id"])
                 df_positive = helper.get_num(data, 3)
                 df_no_positive = helper.get_num(data, 2)
                 df_no_form_report = helper.get_num(data, 1)
-                
+
                 positive = df_positive.iloc[-1].item()
                 no_positive = df_no_positive.iloc[-1].item()
-                
+
                 no_report = df_no_form_report.iloc[-1].item()
-                
-                parsed = str(
-                    positive + no_positive + no_report
-                    
-                )
+
+                parsed = str(positive + no_positive + no_report)
             elif agg == "top_facility":
                 from dataset.transform import bar_district_plot
 
                 data = bar_district_plot(db.datasets).get("district")
                 parsed = data.reset_index().facility_name.iloc[-1]
-                
+
             elif agg == "top_facility_contribution":
                 from dataset.transform import bar_district_plot
 
@@ -240,11 +182,6 @@ class FigureFactory:
                     data.facility_name == facility_name, indicator
                 ].item()
                 parsed = str(round(facility_value / data[indicator].sum() * 100)) + "%"
-
-            elif agg == "reference_date":
-                data = db.datasets.get("country")
-                data_today = data.reset_index().date.max()
-                parsed = (data_today - relativedelta(years=1)).strftime("%B %Y")
 
             elif agg == "reporting_positive":
                 from dataset.transform import scatter_reporting_district_plot
@@ -261,14 +198,14 @@ class FigureFactory:
                     "Percentage of facilities expected to report which reported on their 105-1 form"
                 )
                 parsed = data.iloc[-1].item()
-             
+
             format_aggs.append(parsed)
         return title.format(*format_aggs)
 
     def __get_percentage_description(self, value):
-        """" 
+        """ "
         Returns description of direction of the change in a value (increase/decrease/stable)
-        
+
         """
         absolute_value = abs(value)
         if value >= 0.1:
@@ -312,108 +249,3 @@ class FigureFactory:
         reported_positive = str(data[data.date == max_date][indicator].count())
 
         return reported_positive
-
-    def __get_geojson_from_data(self, data, id="id"):
-        assert id in data.columns, f"GeoDataFrame should contain {id} column"
-        geojson_df = json.loads(data.set_index(id).to_json())
-
-        return geojson_df
-
-    def __get_geo_data(self, gdf, tolerance=None, id="id"):
-        """Defines the json data for mapping from a geopandas dataframe.
-
-        Args:
-            gdf([type]): [description]
-            tolerance(float, optional): Allows for faster loading time of map during callback by "rounding" the borders(higher values=faster loading=less precision on border outline). Defaults to None.
-            geometry(str, optional): [description]. Defaults to 'geometry'.
-            id(str, optional): [description]. Defaults to 'id'.
-        """
-        if tolerance:
-            gdf["geometry"] = gdf["geometry"].simplify(tolerance=tolerance)
-        # Set bounds
-        bounds = gdf.bounds
-        bounds = {
-            "xmin": bounds.minx.min(),
-            "xmax": bounds.maxx.max(),
-            "ymin": bounds.miny.min(),
-            "ymax": bounds.maxy.max(),
-        }
-        bounds["center"] = {
-            "lon": np.mean([bounds.get("xmin"), bounds.get("xmax")]),
-            "lat": np.mean([bounds.get("ymin"), bounds.get("ymax")]),
-        }
-
-        geojson = self.__get_geojson_from_data(gdf, id=id)
-
-        return geojson, bounds
-
-    def get_range(self, data):
-
-        if True:
-
-            q1 = data.quantile(0.25)
-            q3 = data.quantile(0.75)
-            iqr = q3 - q1
-            lower_bound = max(data.min(), (q1 - 1.5 * iqr))
-            upper_bound = min(data.max(), (q3 + 1.5 * iqr))
-
-        else:
-
-            lower_bound = data.min()
-            upper_bound = data.max()
-
-        return (lower_bound, upper_bound)
-
-    def get_custom_colorscale(self, ranges, colors):
-
-        # TODO Find more stable fix, not using name
-        colorlist = next(iter(colors.values()))
-        min_color_nb = 0
-        max_color_nb = -1
-
-        colorlist_lenght = len(colorlist)
-        assert colorlist_lenght in [
-            2,
-            3,
-            5,
-        ], "Color list should include 2,3, or 5 colors"
-
-        lower_bound, upper_bound = ranges
-
-        center_value = 0
-
-        if colorlist_lenght == 2:
-            colorscale = [
-                [0.0, colorlist[min_color_nb]],
-                [1.0, colorlist[max_color_nb]],
-            ]
-
-        else:
-
-            if lower_bound <= center_value <= upper_bound:
-
-                center_norm = (center_value - lower_bound) / (upper_bound - lower_bound)
-
-                if math.isnan(center_norm):
-                    center_norm = 0
-
-                colorscale = [
-                    [0.0, colorlist[min_color_nb]],
-                    [center_norm / 2, colorlist[1]],
-                    [center_norm, colorlist[2]],
-                    [center_norm + (1 - center_norm) / 2, colorlist[3]],
-                    [1.0, colorlist[max_color_nb]],
-                ]
-            else:
-                if center_value <= lower_bound:
-                    min_color_nb = math.floor(colorlist_lenght / 2)
-                else:
-                    max_color_nb = math.floor(colorlist_lenght / 2)
-                colorscale = [
-                    [0.0, colorlist[min_color_nb]],
-                    [1.0, colorlist[max_color_nb]],
-                ]
-
-        colorscale = [x for x in colorscale if x]
-
-        return colorscale

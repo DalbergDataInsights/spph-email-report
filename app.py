@@ -1,24 +1,18 @@
 import calendar
 import json
-
 import os
 import smtplib
 import ssl
-from datetime import date, datetime, timedelta
-import pandas as pd
-
-from six import get_function_closure
-
 from dateutil.relativedelta import relativedelta
-
+from dotenv import find_dotenv, load_dotenv
+import dataset
 import emails
 import extract
+import figures
 from config import get_config
-from dotenv import find_dotenv, load_dotenv
 from emails.model import EmailTemplateParser
 from extract.model import Database
-import dataset
-import figures
+from datetime import datetime, timedelta
 
 load_dotenv(find_dotenv())
 
@@ -42,7 +36,6 @@ def run_extract(config, db, figure_pipeline):
         else: 
             print("The date in config.json is defined incorrectly. Possible: \"now\", \"YYYYMM\"")
             exit()
-    #target_date = datetime.strptime(date, "%Y%m") # gets date from config.json
     print(f"Launching figure generation for {target_date}")
     reference_date = (target_date - timedelta(days=1)).replace(day=1)
 
@@ -64,70 +57,22 @@ def run_extract(config, db, figure_pipeline):
             }
             extract.run(db, controls, figure_pipeline)
 
-
-def run_extract_contry(config, db, figure_pipeline):
-    '''
-    Function to create figures and captions for the whole country
-    '''
-    target_date = datetime.strptime(config.get("date"), "%Y%m") # gets date from config.json
-    print(f"Launching figure generation for {target_date}")
-    reference_date = target_date.replace(year=target_date.year - 1)
-
-    # db.filter_by_policy("Correct outliers - using standard deviation")
-
-    for indicator in config.get("indicators"):
-        # TODO filter by indicator
-        print(f"Running the pipeline of figures for {indicator}")
-        controls = {
-            "date": target_date.strftime("%Y%m"),
-            "indicator": indicator,
-            "target_year": str(target_date.year),
-            "target_month": calendar.month_abbr[target_date.month],
-            "reference_year": str(reference_date.year),
-            "reference_month": calendar.month_abbr[reference_date.month],
-            "trends_map_compare_agg": "Compare month of interest to month of reference",
-        }
-        extract.run(db, controls, figure_pipeline)
-
-                             
-def send_emails(config, engine, email_template, recipients):
+    
+def run_emails(config, engine, email_template, recipients):
     '''
     Function to parse a completed template and send it from a later defined email address to recipients
     '''  
-
     parser = EmailTemplateParser("data/viz", email_template, config)
 
-    for recipient in recipients:
-        print(f"Running email save for {recipient}")
-        emails.compose_email(parser, recipient.get("filters"), fname=f'{config.get("date")}.msg', directory=f'./data/emails/{recipient.get("filters").get("district")}/')
-
     smtp = smtplib.SMTP(host=engine.get("smtp"), port=587)
-    smtp.ehlo()
     smtp.starttls(context=ssl.create_default_context())
     smtp.login(engine.get("username"), engine.get("password"))
 
     for recipient in recipients:
         print(f"Running email send for {recipient}")
-        emails.send(smtp, 
-                    send_from=engine.get("username"), 
-                    send_to=recipient.get("recipients"),
-                    fname=f'./data/emails/{recipient.get("filters").get("district")}/{config.get("date")}.msg',
-                    subject =parser.get_parsed_subject(recipient.get("filters"))
-                    ) 
+        emails.run(engine.get("username"), recipient, parser, smtp)
 
-def save_emails(config, engine, email_template, recipients):
-    parser = EmailTemplateParser("data/viz", email_template, config)
-
-    for recipient in recipients:
-        print(f"Running email save for {recipient}")
-        emails.compose_email(parser, recipient.get("filters"), fname=f'{config.get("date")}.msg', directory=f'./data/emails/{recipient.get("filters").get("district")}/')
-        
-def save_emails_to_pdf(config, engine, email_template, recipients):
-    parser = EmailTemplateParser("data/viz", email_template, config)
-
-    for recipient in recipients:
-        emails.to_pdf(msg_fname=f'./data/emails/{recipient.get("filters").get("district")}/{config.get("date")}.msg',
-                      pdf_fname=f'./data/emails/{recipient.get("filters").get("district")}/{config.get("date")}.pdf')
+    smtp.quit()
 
 def run_next_month(config):
     reporting_date = datetime.strptime(config.get("date"), "%Y%m")
@@ -173,36 +118,19 @@ def run(pipeline):
         "password": os.environ["PASSWORD"],
     }
 
-
     for pipe in pipeline:
 
-        if pipe == "extract": #creates and prints images for districts' emails
-            db = Database(DATABASE_URI) 
+        if pipe == "extract":
+            db = Database(DATABASE_URI)
             pipeline = dataset.pipeline.get()
             db.init_pipeline(pipeline)
             run_extract(config, db, figures.pipeline)
 
-        elif pipe == "extract_country":
-            config = get_config("config_national")
-            db = Database(DATABASE_URI)
-            pipeline = dataset.national_pipeline.get()
-            db.init_pipeline(pipeline)
-            run_extract_contry(config, db, figures.national_pipeline)
-
-        elif pipe == "email_create":
-            save_emails(config, engine, email_template, recipients)
-
-        elif pipe == "email_send":
-            send_emails(config, engine, email_template, recipients)
-
-        elif pipe == "email_to_pdf":
-            save_emails_to_pdf(config, engine, email_template, recipients)
+        elif pipe == "email":
+            run_emails(config, engine, email_template, recipients)
 
         elif pipe == "increment-date":
             run_next_month(config)
 
-
-
 if __name__ == "__main__":
-    run(["email_send"])
-
+    run(["email"])
