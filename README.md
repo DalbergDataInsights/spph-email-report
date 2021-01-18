@@ -41,10 +41,8 @@ if __name__ == "__main__":
 `run([])` in the body of the function allows to choose the operation, which must be performed. The name of operations are given as pipes in `def run(pipeline)`, where:  
   
 1. "extract" - creates and prints the visualisations to the predefined folders;
-2. "email_create" - compiles and saves emails using a predefined set of indicators and areas, but does not include sending;
-3. "email_send" - composes and sends e-mails.  
-4. "email_to_pdf" - converts .msg files (emails) to pdf (requires "email_create" to be run first).  
-5. "increment-date" - upgrades the date to the current month ((nothing changes if it has already been updated)
+2. "email" - compiles and sends emails using a predefined set of indicators and districts; 
+3. "increment-date" - upgrades the date to the current month ((nothing changes if it has already been updated)
 
 NB! Check the date of the report before starting the extraction (see:[How to choose a reporting date](#third))
 To change predefined input, use configuration files in a config folder in the workspace.  
