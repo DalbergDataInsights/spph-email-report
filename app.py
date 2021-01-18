@@ -18,9 +18,9 @@ load_dotenv(find_dotenv())
 
 
 def run_extract(config, db, figure_pipeline):
-    """"
-    Fetches the date from the config. file, sets control variables, initiates run function (extract/__init__.py), which results in the visualisations as output  
-    """ ""
+    """
+    Fetches the date from the config. file, sets control variables, initiates run function (extract/__init__.py), which results in the visualisations as output
+    """
     date = config.get("date")
     if len(date) == 6:
         target_date = datetime.strptime(date, "%Y%m")

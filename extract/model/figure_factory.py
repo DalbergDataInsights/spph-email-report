@@ -28,6 +28,9 @@ class FigureFactory:
     def get_bar_or_scatter(
         self, figure_object, data, figure_colors, bar_mode=None, **kwargs
     ):
+        """
+        Gets data from transform and pipeline and creates figures. Function creates both bar and scatter plots using if-condition
+        """
         fig = go.Figure()
 
         FigType = getattr(go, figure_object)

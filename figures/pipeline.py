@@ -1,6 +1,7 @@
 import dataset
-#import geopandas as gpd
-#for districts (emails)
+
+# import geopandas as gpd
+# for districts (emails)
 from dataset.transform import (
     scatter_district_plot,
     bar_district_plot,
@@ -11,7 +12,7 @@ from dataset.transform import (
 
 pipeline = [
     {
-        "type": "scatter",
+        "type": "scatter",  # Sets pipeline for the figure_1 (indicator's overview scatter at district level)
         "transform": scatter_district_plot,
         "color": {
             2018: "rgb(185, 221, 241)",
@@ -22,7 +23,7 @@ pipeline = [
         "title_args": ["indicator_view", "district", "date", "ratio"],
     },
     {
-        "type": "bar",
+        "type": "bar",  # Sets pipeline for the figure_2 (individual facilities contribution bar)
         "transform": bar_district_plot,
         "color": {"district": "rgb(42, 87, 131)"},
         "args": {"bar_mode": "overlay"},
@@ -36,8 +37,8 @@ pipeline = [
         ],
     },
     {
-        "type": "scatter",
-        "transform": scatter_reporting_district_plot, 
+        "type": "scatter",  # Sets pipeline for the figure_3 (% reporting scatter)
+        "transform": scatter_reporting_district_plot,
         "color": {
             "Percentage of facilities expected to report which reported on their 105-1 form": "rgb(106, 155, 195)",
             "Percentage of reporting facilities that reported a value of one or above for this indicator": "rgb(200, 19, 60)",
@@ -46,14 +47,14 @@ pipeline = [
         "title_args": [
             "district",
             "date",
-            "facility_count", 
-            "facility_count_reported", 
+            "facility_count",
+            "facility_count_reported",
             "reporting_positive",
             "indicator_view",
         ],
     },
     {
-        "type": "scatter",
+        "type": "scatter",  # Sets pipeline for the figure_4 (indicator's overview scatter at country level)
         "transform": scatter_country_plot,
         "color": {
             2018: "rgb(185, 221, 241)",
@@ -65,7 +66,6 @@ pipeline = [
             "date",
             "indicator_view",
             "latest_value",
-            
         ],
-    }
+    },
 ]

@@ -8,6 +8,9 @@ from . import figure, model
 
 
 def run(db, config, pipeline, folder="viz"):
+    """
+    Gets figures and titles, stores visualisations and captions in the respective folders, skipping broken viz
+    """
 
     db.run_pipeline(config)
 
@@ -26,5 +29,7 @@ def run(db, config, pipeline, folder="viz"):
         json.dump(fig_titles, f)
     for i in range(0, len(fig_pipeline)):
         filename = f"{path}/figure_{i+1}.png"
-        if fig_pipeline[i]: # if an exception happens during the image extraction, None is appended to the figure list
+        if fig_pipeline[
+            i
+        ]:  # if an exception happens during the image extraction, None is appended to the figure list
             fig_pipeline[i].write_image(filename)
