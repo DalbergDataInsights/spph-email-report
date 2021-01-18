@@ -19,22 +19,24 @@ load_dotenv(find_dotenv())
 
 def run_extract(config, db, figure_pipeline):
     """"
-    Function to create figures and captions for districts
-    """""
+    Fetches the date from the config. file, sets control variables, initiates run function (extract/__init__.py), which results in the visualisations as output  
+    """ ""
     date = config.get("date")
-    if len(date) == 6: 
+    if len(date) == 6:
         target_date = datetime.strptime(date, "%Y%m")
-    elif len(date) != 6: 
+    elif len(date) != 6:
         if date == "now":
             date = datetime.now() - relativedelta(months=1)
             target_date = date.strftime("%Y%m")
-            with open('config/config.json') as f:
+            with open("config/config.json") as f:
                 data = json.load(f)
                 data["date"] = target_date
-            with open('config/config.json', 'w') as f:
+            with open("config/config.json", "w") as f:
                 json.dump(data, f, indent=2)
-        else: 
-            print("The date in config.json is defined incorrectly. Possible: \"now\", \"YYYYMM\"")
+        else:
+            print(
+                'The date in config.json is defined incorrectly. Possible: "now", "YYYYMM"'
+            )
             exit()
     print(f"Launching figure generation for {target_date}")
     reference_date = (target_date - timedelta(days=1)).replace(day=1)
@@ -57,11 +59,11 @@ def run_extract(config, db, figure_pipeline):
             }
             extract.run(db, controls, figure_pipeline)
 
-    
+
 def run_emails(config, engine, email_template, recipients):
-    '''
-    Function to parse a completed template and send it from a later defined email address to recipients
-    '''  
+    """
+    Receives a complete template from  emails/model.py and send it from the defined email address to the recipients from email_recipients.json
+    """
     parser = EmailTemplateParser("data/viz", email_template, config)
 
     smtp = smtplib.SMTP(host=engine.get("smtp"), port=587)
@@ -74,43 +76,52 @@ def run_emails(config, engine, email_template, recipients):
 
     smtp.quit()
 
+
 def run_next_month(config):
+    """
+    Fetches the date from config and increments one month
+    """
     reporting_date = datetime.strptime(config.get("date"), "%Y%m")
     now = datetime.today().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
 
-    if reporting_date==now: 
+    if reporting_date == now:
         print("The figures are up to date, try later")
-        
-    elif now > reporting_date: 
-        print("Changing date...") 
-        next_date = reporting_date  + relativedelta(months=1)
+
+    elif now > reporting_date:
+        print("Changing date...")
+        next_date = reporting_date + relativedelta(months=1)
         next_date = next_date.strftime("%Y%m")
-        
-        with open('config/config.json') as f:
+
+        with open("config/config.json") as f:
             data = json.load(f)
             data["date"] = next_date
-        with open('config/config.json', 'w') as f:
-            json.dump(data, f, indent=2)   
-    else: 
+        with open("config/config.json", "w") as f:
+            json.dump(data, f, indent=2)
+    else:
         print("Normalizing date...")
         now = datetime.today().strftime("%Y%m")
-        with open('config/config.json') as f:
+        with open("config/config.json") as f:
             data = json.load(f)
             data["date"] = now
-        with open('config/config.json', 'w') as f:
-            json.dump(data, f, indent=2) 
+        with open("config/config.json", "w") as f:
+            json.dump(data, f, indent=2)
+
 
 def run(pipeline):
-    '''
-    Main function, which calls the functions above using the customised configurations
-    '''
+    """
+    Calls the run functions above, adds configurations to the existing run functions from the .env file.
+    Each pipe is for different functions:
+    "extract" - creates and prints the visualisations;
+    "email" - composes and sends emails;
+    "increment-date" - increments one month.
+    """
 
-    # Configurations: 
-    DATABASE_URI = os.environ["DATABASE"] # sets the Database 
+    # Configurations:
+    DATABASE_URI = os.environ["DATABASE"]  # sets the Database
     config = get_config("config")
-    email_template = get_config("email_template") #sets the template
-    recipients = get_config("email_recipients") #sets the recipients
-    #sets sender's email incl. credentials 
+    email_template = get_config("email_template")  # sets the template
+    recipients = get_config("email_recipients")  # sets the recipients
+    # sets sender's email incl. credentials
 
     engine = {
         "smtp": os.environ["SMTP"],
@@ -131,6 +142,7 @@ def run(pipeline):
 
         elif pipe == "increment-date":
             run_next_month(config)
+
 
 if __name__ == "__main__":
     run(["email"])
