@@ -1,6 +1,10 @@
 {
     "districts": [
-        "AMURU", "BUHWEJU", "BUSIA", "BUVUMA", "MUKONO", "WAKISO"
+        "AMURU",
+        "BUHWEJU",
+        "BUSIA",
+        "BUVUMA",
+        "MUKONO"
     ],
     "date": "202011",
     "indicators": [
@@ -8,9 +12,9 @@
         "4th ANC Visits",
         "Deliveries in unit",
         "Low weight births",
-        "DPT3 doses to U1", 
+        "DPT3 doses to U1",
         "DPT3 doses to U1 (coverage)",
-        "MR1 doses to U1", 
+        "MR1 doses to U1",
         "MR1 doses to U1 (coverage)",
         "1st doses of vitamin A to U5",
         "1st doses of vitamin A to U5 (coverage)",
@@ -21,7 +25,5 @@
         "ANC initiated on ART",
         "TB cases registered in treatment unit",
         "OPD attendance"
-        
-       
     ]
 }
