@@ -42,7 +42,7 @@ if __name__ == "__main__":
   
 1. "extract" - creates and prints the visualisations to the predefined folders;
 2. "email" - compiles and sends emails using a predefined set of indicators and districts; 
-3. "increment-date" - upgrades the date to the current month ((nothing changes if it has already been updated)
+3. "increment-date" - upgrades the date to the current month (nothing changes if it has already been updated)
 
 NB! Check the date of the report before starting the extraction (see:[How to choose a reporting date](#third))
 To change predefined input, use configuration files in a config folder in the workspace.  
@@ -93,7 +93,7 @@ export PASSWORD=xxxx
 
 Use your account name and password.  
 Note! That if the new account is not outlook account, change the SMTP accordingly.  
-Example: smtp-mail.outlook.com -> smtp.gmail.com for the gmail account.  
+Example: smtp-mail.outlook.com -> smtp.gmail.com for the gmail account or smtp.mail.yahoo.com for yahoo. 
 Note! You may need to allow access to less secure applications in your account settings if emails are distributed from the gmail account.  
 
 ### HOW TO CHOOSE THE DATE <a name="third"></a>
@@ -186,8 +186,7 @@ while adding the picture, replicate the syntax with: `%title.*indicator's name*.
 
 ### HOW TO ALTER CAPTIONS <a name="sixth"></a>
 
-To change the captions, open figures' pipeline -> [figures/pipeline.py](figures/pipeline.py) and make necessary changes in `"titles"`. Note that districts' level pipeline is `pipeline`, the `national_pipeline` is for country-level monthly reports.  
-
+To change the captions, open figures' pipeline -> [figures/pipeline.py](figures/pipeline.py) and make necessary changes in `"titles"`.  
 To add more arguments to the caption, add name of the argument to the `"title_args":`, place it to the `"titles"` as `{}` and define a new argument in extract/model/[figure_factory.py](extract/model/figure_factory.py) in  
 
 ```python
@@ -224,9 +223,8 @@ where the new argument is to define after the if-statement. For more information
 
 ##### CONFIG <a name="config"></a>
 
-The folder contains currently four config files (.json).  
-[config_national.json](config/config_national.json) is the config file, which interacts with the [national pipeline](figures/pipeline.py) and serves for monthly report needs. Output: country-level visualisations.  
-[config.json](config/config.json) contains the essential information for the district-level emails, incl. list of districts, date and list of indicators (for more see [here](#fourth))
+The folder contains currently three config files (.json).  
+ [config.json](config/config.json) contains the essential information for the district-level emails, incl. list of districts, date and list of indicators (for more see [here](#fourth))
 [email_recipients.json](config/email_recipients.json) contains a list of dictionaries, where recipients' email addresses, names and districts are specified. Any changes in this json affect only dispatch of emails, but not visualisations or list of districts (for more, see [here](#second))  
 [email_template.json](config/email_template.json) is the template in html-format. Brings together visualisations, captions and aggs (see [emails](#emails) and [How to alter an email template](#fifth) for more)
 
@@ -340,8 +338,8 @@ where each agg is one of the title_aggs from the figures/pipeline.py (see [figur
 
 ##### FIGURES <a name="figures"></a>
 
-pipeline.py in figures contains pipeline for emails and national pipeline for monthly reports.  
-The pipeline for emails is in the scope of interest. For example,  
+pipeline.py in figures contains pipeline for emails.  
+For example,  
 
 ```python
 {
