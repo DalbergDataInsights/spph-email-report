@@ -6,52 +6,57 @@
         "filters": {
             "district": "AMURU",
             "recipients_name": "Dr Odong Patrick Olwedo",
-            "biostatistician_name": "Walter Tobina,"
+            "biostatistician_name": "Walter Tobina"
         }
     },
     {
-        "recipients": ["valeriya.cherepova@dalberg.com"],
+        "recipients": [
+            "valeriya.cherepova@dalberg.com"
+        ],
         "filters": {
             "district": "MUKONO",
             "recipients_name": "Dr. Tumushabe Elly",
-            "biostatistician_name": "Ivan Mwesigwa,"
-            
+            "biostatistician_name": "Ivan Mwesigwa"
         }
     },
     {
-        "recipients": ["valeriya.cherepova@dalberg.com"],
+        "recipients": [
+            "valeriya.cherepova@dalberg.com"
+        ],
         "filters": {
             "district": "WAKISO",
             "recipients_name": "Dr. Lugoloobi Mathias",
-            "biostatistician_name": "Frank Kakande,"
-            
+            "biostatistician_name": "Frank Kakande"
         }
     },
     {
-        "recipients": ["valeriya.cherepova@dalberg.com"],
+        "recipients": [
+            "valeriya.cherepova@dalberg.com"
+        ],
         "filters": {
             "district": "BUSIA",
             "recipients_name": "Nanyama Benah",
-            "biostatistician_name": "Carolyn Balwanaki,"
-            
+            "biostatistician_name": "Carolyn Balwanaki"
         }
     },
     {
-        "recipients": ["valeriya.cherepova@dalberg.com"],
+        "recipients": [
+            "valeriya.cherepova@dalberg.com"
+        ],
         "filters": {
             "district": "BUVUMA",
             "recipients_name": "Kanyike Baker",
-            "biostatistician_name": "Biostatistician of Buvuma "
-            
+            "biostatistician_name": "Biostatistician of Buvuma"
         }
     },
     {
-        "recipients": ["valeriya.cherepova@dalberg.com"],
+        "recipients": [
+            "valeriya.cherepova@dalberg.com"
+        ],
         "filters": {
             "district": "BUHWEJU",
             "recipients_name": "Dr. Oyik Bruno",
             "biostatistician_name": "Biostatistician of Buhweju"
-            
         }
     }
 ]
