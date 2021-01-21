@@ -67,8 +67,8 @@ class FigureFactory:
             """ Assigns randomly different markers to each data line in scatter plots"""
             raw_symbols = SymbolValidator().values
             namestems = []
-            namevariants = []
             symbols = []
+            namevariants = []
             for i in range(0, len(raw_symbols), 3):
                 name = raw_symbols[i + 2]
                 symbols.append(raw_symbols[i])

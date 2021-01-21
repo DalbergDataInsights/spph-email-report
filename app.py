@@ -13,6 +13,12 @@ from config import get_config
 from emails.model import EmailTemplateParser
 from extract.model import Database
 from datetime import datetime, timedelta
+import os
+
+# The change of directory (chdir) below is necessary for cron job (scheduler)
+cwd = os.getcwd()
+script_dir = os.path.dirname(os.path.realpath(__file__))
+os.chdir(script_dir)
 
 load_dotenv(find_dotenv())
 
@@ -145,4 +151,4 @@ def run(pipeline):
 
 
 if __name__ == "__main__":
-    run(["email"])
+    run(["extract", "email", "increment-date"])
