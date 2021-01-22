@@ -429,6 +429,6 @@ PATH=/Library/Frameworks/Python.framework/Versions/3.9/bin:/Library/Frameworks/P
 30 17 27 1-12 * /Library/Frameworks/Python.framework/Versions/3.9/bin/python3/ /Users/Valeriya/Desktop/Dalberg/spph-email-report/app.py >> /Users/Valeriya/Desktop/Dalberg/spph-email-report/cron.txt 2>&1
 ```
 
-Once the cron job has been configured, press `esc` to exit editor mode. Then type `:wq` to save the cron job configured. The crontab will run your script at a specific time.  
+Once the cron job has been configured, press `esc` to exit editor mode. Then type `:wq` to save the cron job configured. The crontab will run your script at the specified time.  
 Remember! Sometimes it may be necessary to give crontab permission to run in the background. See if an error appears in `cron.txt`.  
 You can also check existing cron jobs by typing `crontab -e` and pressing Enter.
