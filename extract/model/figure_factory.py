@@ -1,10 +1,8 @@
 from datetime import timedelta
 from itertools import cycle
 
-import numpy as np
 import plotly.graph_objects as go
 from dataset import helper
-from dateutil.relativedelta import relativedelta
 from plotly.validators.scatter.marker import SymbolValidator
 
 

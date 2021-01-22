@@ -3,7 +3,6 @@ import json
 import os
 from email.message import EmailMessage
 from email.utils import make_msgid
-from io import BytesIO
 
 import pandas as pd
 from dateutil.relativedelta import relativedelta
@@ -14,6 +13,7 @@ class EmailTemplateParser:
     Fetches elements of an email together and inserts into the template to create the full email
 
     """
+
     def __init__(self, data_folder, email_template, config):
         self.folder = data_folder
         self.template = email_template
@@ -27,7 +27,6 @@ class EmailTemplateParser:
         """
         message = EmailMessage()
         parsed_message = []
-        payloads = []
         for item in self.template.get("body"):
             msg = self.parse_item(item, filters)
             if msg:
@@ -96,13 +95,17 @@ class EmailTemplateParser:
         year = date[:4]
         month = date[-2:]
         month = calendar.month_name[int(month)]
-        #Current date is below:
+        # Current date is below:
         date = f"{month} {year}"
-        #Date of the data extraction, relativedelta(day=31) assigns the last day of the month:
+        # Date of the data extraction, relativedelta(day=31) assigns the last day of the month:
         extraction_date = pd.to_datetime(date) + relativedelta(day=31)
-        extraction_date=extraction_date.strftime("%d %B, %Y")
-        #Due to presence of multiple values to replace in one line or string, the chained .replace() is required
-        item = item.replace("%district%", filters.get("district")).replace("%date%", date).replace("%extraction_date%", extraction_date)
+        extraction_date = extraction_date.strftime("%d %B, %Y")
+        # Due to presence of multiple values to replace in one line or string, the chained .replace() is required
+        item = (
+            item.replace("%district%", filters.get("district"))
+            .replace("%date%", date)
+            .replace("%extraction_date%", extraction_date)
+        )
 
         return item
 
@@ -111,12 +114,14 @@ class EmailTemplateParser:
         Replaces %following_reporting_date% and %future_report_date% with the date of the next report and the date of the next email dissemination respectively.
         """
         date = self.config.get("date")
-        following_date = pd.to_datetime(date, format='%Y%m')
+        following_date = pd.to_datetime(date, format="%Y%m")
         following_date = following_date + relativedelta(months=1)
-        future_report_month= following_date + relativedelta(months=2)
-        following_date=following_date.strftime("%B %Y")
-        future_report_month=future_report_month.strftime("%B %Y")
-        item=item.replace("%following_reporting_date%", following_date).replace("%future_report_date%", future_report_month)
+        future_report_month = following_date + relativedelta(months=2)
+        following_date = following_date.strftime("%B %Y")
+        future_report_month = future_report_month.strftime("%B %Y")
+        item = item.replace("%following_reporting_date%", following_date).replace(
+            "%future_report_date%", future_report_month
+        )
 
         return item
 
@@ -186,8 +191,10 @@ class EmailTemplateParser:
         Searches %recipients_name% keyword in the template and replaces it with the recipient's name defined in email_recipients.json for each district.
 
         """
-        #chained replace is necessary because the names are in one line in the email template
-        item = item.replace("%recipients_name%", filters.get("recipients_name")).replace("%biostatistician_name%", filters.get("biostatistician_name"))
+        # chained replace is necessary because the names are in one line in the email template
+        item = item.replace(
+            "%recipients_name%", filters.get("recipients_name")
+        ).replace("%biostatistician_name%", filters.get("biostatistician_name"))
         return item
 
 
@@ -203,5 +210,3 @@ class Email:
 
     def send(self):
         self.smtp.sendmail(self.send_from, self.send_to, self.message.as_string())
-
-

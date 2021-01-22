@@ -1,10 +1,7 @@
 import json
 import os
 
-import numpy as np
-import pandas as pd
-
-from . import figure, model
+from . import figure
 
 
 def run(db, config, pipeline, folder="viz"):

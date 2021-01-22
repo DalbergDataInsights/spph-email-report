@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import calendar
-from datetime import datetime, timedelta
+from datetime import datetime
 
 
 def get_ratio(df, indicator, agg_level):

@@ -1,14 +1,13 @@
 from . import helper
 import pandas as pd
-import numpy as np
 
 
 def scatter_district_plot(df):
-    '''
-    Gets data from pipeline for the figure_1 and transforms to the visualisation-friendly format: splits data by year and month. 
-    Returns dictionary.   
+    """
+    Gets data from pipeline for the figure_1 and transforms to the visualisation-friendly format: splits data by year and month.
+    Returns dictionary.
 
-    '''
+    """
 
     df_district = df.get("district")
 
@@ -17,21 +16,23 @@ def scatter_district_plot(df):
     df_district = helper.get_year_and_month_cols(df_district)
 
     df_district = helper.get_sub_dfs(df_district, "year", [2018, 2019, 2020], "month")
-    
+
     return df_district
 
 
 def scatter_reporting_district_plot(data):
-    '''
-    Gets data from pipeline for the figure_3. Filters out the facilities that are not supposed to deliver any report, collects values for the last 12 month from the last reporting date. 
-    Returns dictionary.  
+    """
+    Gets data from pipeline for the figure_3. Filters out the facilities that are not supposed to deliver any report, collects values for the last 12 month from the last reporting date.
+    Returns dictionary.
 
-    '''
-    
+    """
+
     data = data.get("reporting_district")
-    reporting_date=data.date.max()
-    data = data[(data.date <= reporting_date) & 
-        (data.date >= reporting_date - pd.DateOffset(months=12))]   
+    reporting_date = data.date.max()
+    data = data[
+        (data.date <= reporting_date)
+        & (data.date >= reporting_date - pd.DateOffset(months=12))
+    ]
     # Set index
     data = helper.check_index(data)
     # Remove unnecessary index values
@@ -43,30 +44,33 @@ def scatter_reporting_district_plot(data):
     # Count number of no_form_report
     df_no_form_report = helper.get_num(data, 1)
 
-    reported = round((
+    reported = round(
         (
-            (df_positive + df_no_positive)
-            / (df_positive + df_no_positive + df_no_form_report)
-        )
-        * 100), 1)    
-    reported= reported.sort_index()
-    reported_positive = round((
-        (df_positive / (df_positive + df_no_positive)) * 100), 1)
-    reported_positive= reported_positive.sort_index()
+            (
+                (df_positive + df_no_positive)
+                / (df_positive + df_no_positive + df_no_form_report)
+            )
+            * 100
+        ),
+        1,
+    )
+    reported = reported.sort_index()
+    reported_positive = round(((df_positive / (df_positive + df_no_positive)) * 100), 1)
+    reported_positive = reported_positive.sort_index()
 
     data = {
         "Percentage of facilities expected to report which reported on their 105-1 form": reported,
-        "Percentage of reporting facilities that reported a value of one or above for this indicator": reported_positive
+        "Percentage of reporting facilities that reported a value of one or above for this indicator": reported_positive,
     }
     return data
 
 
 def bar_district_plot(data):
-    '''
-    Gets data from pipeline for the figure_2. Fetches the facilities with top-12 contribution, merges the rest under "Others". 
-    Returns dictionary.  
+    """
+    Gets data from pipeline for the figure_2. Fetches the facilities with top-12 contribution, merges the rest under "Others".
+    Returns dictionary.
 
-    '''
+    """
     data_in = data.get("district_dated")
     val_col = data_in.columns[-1]
     data_in = data_in.reset_index()
@@ -83,13 +87,12 @@ def bar_district_plot(data):
     return {"district": data_in}
 
 
-
 def scatter_country_plot(df):
-    '''
-    Gets data from pipeline for the figure_4 and separates the data by year and month. 
-    Returns dictionary.   
+    """
+    Gets data from pipeline for the figure_4 and separates the data by year and month.
+    Returns dictionary.
 
-    '''
+    """
 
     df_country = df.get("country")
 
@@ -100,5 +103,3 @@ def scatter_country_plot(df):
     df_country = helper.get_sub_dfs(df_country, "year", [2018, 2019, 2020], "month")
 
     return df_country
-
-

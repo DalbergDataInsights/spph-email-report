@@ -1,5 +1,4 @@
 from datetime import datetime
-import pandas as pd
 
 
 def by_dates(df, target_year, target_month, reference_year, reference_month):

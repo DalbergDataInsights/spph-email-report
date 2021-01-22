@@ -13,7 +13,6 @@ from config import get_config
 from emails.model import EmailTemplateParser
 from extract.model import Database
 from datetime import datetime, timedelta
-import os
 
 # The change of directory (chdir) below is necessary for cron job (scheduler)
 cwd = os.getcwd()
