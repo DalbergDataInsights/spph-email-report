@@ -395,7 +395,7 @@ The configuration can be loosely divided into two parts:
 1. Setting the time and date;  
 2. Setting the paths to the python and the script to be executed.  
 
-On the next line, start by setting the time, which looks like this :  
+A job is specified in the following format: 
 
 ```
 * * * * *  command to execute
@@ -407,7 +407,7 @@ On the next line, start by setting the time, which looks like this :
 └─────────────────────── min (0 - 59)
 ```
 
-So setting up the Cron to run on the 27th of each month at 5:30pm would look like this: `30 17 27 1-12 *`. If you still have trouble setting up the schedule, use [crontab guru](https://crontab.guru).  
+The stars define the time for the crontab. So setting up the Cron to run on the 27th of each month at 5:30pm would look like this: `30 17 27 1-12 *`. If you still have trouble setting up the schedule, use [crontab guru](https://crontab.guru).  
 The next step is to add python and script paths. I will give an example of absolute paths because they have been chosen as the best ones to use when creating a cron job.   
 First, let's find our way to Python. In the terminal (also in the editor) type `which python3` if you have more than one python installed on your computer, or just `which python` if only python is installed. Command `where is python3` to find the relative path.  The command `which python3` gives you the path as the result. Copy it and paste it into the crontab with a time lapse between the time and path settings. For me it looks like this:  
 
