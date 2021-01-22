@@ -421,7 +421,7 @@ The second step is the path to your script. Locate your script and copy the full
 30 17 27 1-12 * /Library/Frameworks/Python.framework/Versions/3.9/bin/python3/ /Users/Valeriya/Desktop/Dalberg/spph-email-report/app.py
 ```
 
-Additionally, to see the progress (or errors) of the crontab, let's make a text file that reflects the work done. So, let's add a path and file name (e.g. `cron.txt`), separated by a space. In this way, the cron job will take the form of:  
+Additionally, to see the progress (or errors) of the crontab, let's make a text file that reflects the work done. So, let's add a path and file name (e.g. `cron.txt`), separated by a space:  
 
 ```
 >> /Users/Valeriya/Desktop/Dalberg/spph-email-report/cron.txt 2>&1
