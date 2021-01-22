@@ -369,7 +369,7 @@ echo $PATH
 ```
 
 which will give the path to the environment you are working in. This is important because cron will run from the root directory where no modules are stored. Thus, the scheduler may throw an error when the path is not specified.    
-Next, before you start setting up a cron job, I would suggest changing the shell to bash if it is not already set up. To do this type in the terminal  
+Next, before you start setting up a cron job, I would suggest changing the shell to bash if it is not already set up. To do this, type in the terminal  
 
 ```
 chsh -s /bin/bash
@@ -384,7 +384,13 @@ crontab -e
 
 and press Enter.  
 A refreshed Cron window will appear.  
-Then press `i` on the keyboard to allow insertion. On the very first line, type `PATH=` and paste the path obtained from `echo $PATH`. On the next line we can start by configuring the scheduler.  
+Then press `i` on the keyboard to allow insertion. On the very first line, type `PATH=` and paste the path obtained from `echo $PATH`. For me it looks like:  
+
+ ```
+PATH=/Library/Frameworks/Python.framework/Versions/3.9/bin:/Library/Frameworks/Python.framework/Versions/3.8/bin:/opt/anaconda3/bin:/opt/anaconda3/condabin:/Library/Frameworks/Python.framework/Versions/3.7/bin:/Library/Frameworks/Python.framework/Versions/3.6/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin
+```
+
+On the next line we can start by configuring the scheduler.  
 The configuration can be loosely divided into two parts:  
 1. Setting the time and date;  
 2. Setting the paths to the python and the script to be executed.  
