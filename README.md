@@ -27,6 +27,7 @@ The content of the instruction file is structured as follows:
     2. [Adding captions](#fifthpointtwo)
 7. [How to alter captions](#sixth)  
 8. [Dictionary for developers](#seventh)
+9. [Setting up the scheduler](#ninth)
 
 ### HOW TO RUN THE PROGRAM <a name="first"></a>
 
@@ -356,4 +357,78 @@ For example,
 ```
 
 from the pipeline defines the first figure (scatter plot with the indicator's overview) and its captions in `"title"`, while the  `"title_args"` accommodate all the adaptable parts of the captions. Titles can be change manually here, the relevant arguments take place of {} in the `"title"` and must be defined in order of appearance in `"title_args"` with the predefined names (see more in [extract](#extract)).  
-  
+
+### Setting up the scheduler <a name="ninth"></a>
+
+Additionally, to make email distribution fully automatic, a scheduler can be added to create and send emails on a given day of the month without any human control  
+For the scheduler, it is useful to use a time-based task scheduler *cron*. Cron is best for scheduling repetitive tasks, especially since it is set up in a terminal rather than in a python script that requires running.  
+To set up Cron, you need to make some preparations, namely to find a path to the environment. In the terminal in your project editor, simply type  
+
+```
+echo $PATH 
+```
+
+which will give the path to the environment you are working in. This is important because cron will run from the root directory where no modules are stored. Thus, the scheduler may throw an error when the path is not specified.    
+Next, before you start setting up a cron job, I would suggest changing the shell to bash if it is not already set up. To do this type in the terminal  
+
+```
+chsh -s /bin/bash
+```
+
+You will then receive a message that the shell has been changed.  
+Now let's move on to setting up the Cron job. Enter the terminal type  
+
+```
+crontab -e
+```
+
+and press Enter.  
+A refreshed Cron window will appear.  
+Then press `i` on the keyboard to allow insertion. On the very first line, type `PATH=` and paste the path obtained from `echo $PATH`. On the next line we can start by configuring the scheduler.  
+The configuration can be loosely divided into two parts:  
+1. Setting the time and date;  
+2. Setting the paths to the python and the script to be executed.  
+
+On the next line, start by setting the time, which looks like this :  
+
+```
+* * * * *  command to execute
+│ │ │ │ │
+│ │ │ │ └─── day of week (0 - 6) (0 to 6 are Sunday to Saturday, or use names; 7 is Sunday, the same as 0)
+│ │ │ └──────── month (1 - 12)
+│ │ └───────────── day of month (1 - 31)
+│ └────────────────── hour (0 - 23)
+└─────────────────────── min (0 - 59)
+```
+
+So setting up the Cron to run on the 27th of each month at 5:30pm would look like this: `30 17 27 1-12 *`. If you still have trouble setting up the schedule, use [crontab guru](https://crontab.guru).  
+The next step is to add python and script paths. I will give an example of absolute paths because they have been chosen as the best ones to use when creating a cron job.   
+First, let's find our way to Python. In the terminal (also in the editor) type `which python3` if you have more than one python installed on your computer, or just `which python` if only python is installed. Command `where is python3` to find the relative path.  The command `which python3` gives you the path as the result. Copy it and paste it into the crontab with a time lapse between the time and path settings. For me it looks like this:  
+
+```
+30 17 27 1-12 * /Library/Frameworks/Python.framework/Versions/3.9/bin/python3/
+```
+
+The second step is the path to your script. Locate your script and copy the full path to it using right-click. On MacOS you can simply drag and drop the file onto the terminal and it will show up as an absolute path. In this way the cron job will take the form:  
+
+```
+30 17 27 1-12 * /Library/Frameworks/Python.framework/Versions/3.9/bin/python3/ /Users/Valeriya/Desktop/Dalberg/spph-email-report/app.py
+```
+
+Additionally, to see the progress (or errors) of the crontab, let's make a text file that reflects the work done. So, let's add a path and file name (e.g. `cron.txt`), separated by a space. In this way, the cron job will take the form of:  
+
+```
+>> /Users/Valeriya/Desktop/Dalberg/spph-email-report/cron.txt 2>&1
+```
+
+`2>&1` is for cancelling the email report on the cron job done.  
+This way the full cron job takes for me the following form:  
+
+```
+PATH=/Library/Frameworks/Python.framework/Versions/3.9/bin:/Library/Frameworks/Python.framework/Versions/3.8/bin:/opt/anaconda3/bin:/opt/anaconda3/condabin:/Library/Frameworks/Python.framework/Versions/3.7/bin:/Library/Frameworks/Python.framework/Versions/3.6/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/TeX/texbin
+30 17 27 1-12 * /Library/Frameworks/Python.framework/Versions/3.9/bin/python3/ /Users/Valeriya/Desktop/Dalberg/spph-email-report/app.py >> /Users/Valeriya/Desktop/Dalberg/spph-email-report/cron.txt 2>&1
+```
+
+Once the cron job has been configured, press `:esc` to exit editor mode. Then press `:wq` to save the cron job configured. The crontab will run your script at a specific time.  
+Remember! Sometimes it may be necessary to give crontab permission to run in the background. See if an error appears in `cron.txt'.  
+You can also check existing cron jobs by typing `crontab -e` and pressing Enter.
