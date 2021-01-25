@@ -98,8 +98,8 @@ class EmailTemplateParser:
         # Current date is below:
         date = f"{month} {year}"
         # Date of the data extraction, relativedelta(day=31) assigns the last day of the month:
-        extraction_date = pd.to_datetime(date) + relativedelta(day=31)
-        extraction_date = extraction_date.strftime("%d %B, %Y")
+        extraction_date = pd.to_datetime(date) + relativedelta(month=1, day=25)
+        extraction_date = extraction_date.strftime("%B %d, %Y")
         # Due to presence of multiple values to replace in one line or string, the chained .replace() is required
         item = (
             item.replace("%district%", filters.get("district"))

@@ -25,6 +25,8 @@
     "ANC tested HIV positive",
     "ANC initiated on ART",
     "TB cases registered in treatment unit",
-    "OPD attendance"
+    "OPD attendance",
+    "Malaria cases",
+    "Malaria tests"
   ]
 }
