@@ -13,6 +13,8 @@
         "DPT3 doses to U1 (coverage)",
         "MR1 doses to U1 (coverage)",
         "OPD attendance", 
-        "TB cases registered in treatment unit (per 100 000)"
+        "TB cases registered in treatment unit (per 100 000)",
+        "Malaria cases",
+        "Malaria tests"
     ]
 }
