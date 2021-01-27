@@ -1,7 +1,4 @@
-from datetime import datetime
-from os import rename
 from sqlalchemy import create_engine
-import sqlalchemy
 from sqlalchemy.orm import sessionmaker
 from .table import FetchDate, Config
 import pandas as pd
