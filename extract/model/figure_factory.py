@@ -61,7 +61,7 @@ class FigureFactory:
             fig.update_layout(barmode=bar_mode)
         elif figure_object == "Scatter":
             """ Assigns different symbols to each data line in scatter plots"""
-            raw_symbols = [1, 2, 18]
+            raw_symbols = [1, 2, 18, 0]
             markers = cycle(raw_symbols)
             fig.update_traces(mode="lines+markers")
             for d in fig.data:
