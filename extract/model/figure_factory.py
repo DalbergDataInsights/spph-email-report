@@ -3,7 +3,6 @@ from itertools import cycle
 
 import plotly.graph_objects as go
 from dataset import helper
-from plotly.validators.scatter.marker import SymbolValidator
 
 
 class FigureFactory:
