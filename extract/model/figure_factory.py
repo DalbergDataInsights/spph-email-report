@@ -48,7 +48,6 @@ class FigureFactory:
             if bar_mode == "overlay":
                 fig.update_traces(
                     textposition="outside",
-                    # customdata =
                     texttemplate="%{x}",
                     orientation="h",
                     y=df.index,
@@ -62,17 +61,9 @@ class FigureFactory:
         if figure_object == "Bar":
             fig.update_layout(barmode=bar_mode)
         elif figure_object == "Scatter":
-            """ Assigns randomly different markers to each data line in scatter plots"""
-            raw_symbols = SymbolValidator().values
-            namestems = []
-            symbols = []
-            namevariants = []
-            for i in range(0, len(raw_symbols), 3):
-                name = raw_symbols[i + 2]
-                symbols.append(raw_symbols[i])
-                namestems.append(name.replace("-open", "").replace("-dot", ""))
-                namevariants.append(name[len(namestems[-1]) :])
-                markers = cycle(list(set(namestems)))
+            """ Assigns different symbols to each data line in scatter plots"""
+            raw_symbols = [1, 2, 18]
+            markers = cycle(raw_symbols)
             fig.update_traces(mode="lines+markers")
             for d in fig.data:
                 d.marker.symbol = next(markers)
