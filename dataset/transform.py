@@ -15,7 +15,9 @@ def scatter_district_plot(df):
 
     df_district = helper.get_year_and_month_cols(df_district)
 
-    df_district = helper.get_sub_dfs(df_district, "year", [2018, 2019, 2020], "month")
+    df_district = helper.get_sub_dfs(
+        df_district, "year", [2018, 2019, 2020, 2021], "month"
+    )
 
     return df_district
 
