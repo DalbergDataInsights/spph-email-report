@@ -13,9 +13,9 @@ def get():
 
 def scatter_district_data(db, *, indicator, district, **kwargs):
     """
-    Prepares data for the indicator overview scatter plot at the district level (figure_1).
-    Fetches data from database for requested indicators and district(s).
-    Returns dataframe with date, id (district name) and value (as indicator name) columns.
+    Prepare data for the indicator overview scatter plot at the district level (figure_1).
+    Fetch data from database for requested indicators and district(s).
+    Return dataframe with date, id (district name) and value (as indicator name) columns.
     Index column is numerical.
     """
 
@@ -44,9 +44,9 @@ def bar_district_dated_data(
     **kwargs,
 ):
     """
-    Prepares data for the bar chart with individual facilities contribution (figure_2).
-    Fetches data from database for requested indicators and district(s), retrives facilities names.
-    Returns dataframe with date, id (district name), facility name and value (as indicator name) columns.
+    Prepare data for the bar chart with individual facilities contribution (figure_2).
+    Fetch data from database for requested indicators and district(s), retrives facilities names.
+    Return dataframe with date, id (district name), facility name and value (as indicator name) columns.
     Date column serves as index.
     """
 
@@ -69,9 +69,9 @@ def bar_district_dated_data(
 
 def scatter_reporting_district_data(db, *, indicator, district, **kwargs):
     """
-    Prepares data for the scatter plot with reporting rates (figure_2).
-    Fetches data from database for requested indicators and district(s), retrives facilities names.
-    Returns dataframe with id (district name), facility name, date and value (as indicator name) columns.
+    Prepare data for the scatter plot with reporting rates (figure_2).
+    Fetch data from database for requested indicators and district(s), retrives facilities names.
+    Return dataframe with id (district name), facility name, date and value (as indicator name) columns.
     Index column is numerical.
     """
 
@@ -88,9 +88,9 @@ def scatter_reporting_district_data(db, *, indicator, district, **kwargs):
 
 def scatter_country_data(db, *, indicator, **kwargs):
     """
-    Prepares data for the indicator overview scatter plot at the country level (figure_4).
-    Fetches data from database for requested indicators and district(s), retrives facilities names.
-    Returns dataframe with date and value (as indicator name) columns.
+    Prepare data for the indicator overview scatter plot at the country level (figure_4).
+    Fetch data from database for requested indicators and district(s), retrives facilities names.
+    Return dataframe with date and value (as indicator name) columns.
     Date serves as an index column.
     """
 

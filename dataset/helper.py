@@ -6,7 +6,7 @@ from datetime import datetime
 
 def get_ratio(df, indicator, agg_level):
     """
-    Aggregates the ratio properly using weights
+    Aggregate the ratio properly using weights
 
     """
 
@@ -79,7 +79,7 @@ def get_sub_dfs(df, select_index, values, new_index):
 
 def get_num(df, value=3):
     """
-    Gets a dataframe of the count of the specified value for each column; expects index formatting including date and id
+    Get a dataframe of the count of the specified value for each column; expects index formatting including date and id
     """
     df_count_all = []
     for date in list((df.index.get_level_values("date")).unique()):

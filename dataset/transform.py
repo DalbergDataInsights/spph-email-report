@@ -4,7 +4,7 @@ import pandas as pd
 
 def scatter_district_plot(df):
     """
-    Gets data from pipeline for the figure_1 and transforms to the visualisation-friendly format: splits data by year and month.
+    Get data from pipeline for the figure_1 and transforms to the visualisation-friendly format: splits data by year and month.
     Returns dictionary.
 
     """
@@ -24,7 +24,7 @@ def scatter_district_plot(df):
 
 def scatter_reporting_district_plot(data):
     """
-    Gets data from pipeline for the figure_3. Filters out the facilities that are not supposed to deliver any report, collects values for the last 12 month from the last reporting date.
+    Get data from pipeline for the figure_3. Filters out the facilities that are not supposed to deliver any report, collects values for the last 12 month from the last reporting date.
     Returns dictionary.
 
     """
@@ -69,7 +69,7 @@ def scatter_reporting_district_plot(data):
 
 def bar_district_plot(data):
     """
-    Gets data from pipeline for the figure_2. Fetches the facilities with top-12 contribution, merges the rest under "Others".
+    Get data from pipeline for the figure_2. Fetches the facilities with top-12 contribution, merges the rest under "Others".
     Returns dictionary.
 
     """
@@ -91,7 +91,7 @@ def bar_district_plot(data):
 
 def scatter_country_plot(df):
     """
-    Gets data from pipeline for the figure_4 and separates the data by year and month.
+    Get data from pipeline for the figure_4 and separates the data by year and month.
     Returns dictionary.
 
     """

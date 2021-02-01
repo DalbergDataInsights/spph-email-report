@@ -89,7 +89,7 @@ class EmailTemplateParser:
 
     def __parse_date(self, item, filters):
         """
-        Finds all mentions of %date% in the template and replaces with the date from config.json
+        Find all mentions of %date% in the template and replaces with the date from config.json
         """
 
         date = self.config.get("date")
@@ -112,7 +112,7 @@ class EmailTemplateParser:
 
     def __parse_following_date(self, item, filters):
         """
-        Replaces %following_reporting_date% and %future_report_date% with the date of the next report and the date of the next email dissemination respectively.
+        Replace %following_reporting_date% and %future_report_date% with the date of the next report and the date of the next email dissemination respectively.
         """
 
         date = self.config.get("date")
@@ -129,8 +129,8 @@ class EmailTemplateParser:
 
     def __parse_image(self, item, filters, mime_type=True):
         """
-        Gets already existing pictures from data/viz and inserts into emails. Parses by %image as a keyword in the template.
-        The name of the vizualization is of the predifined form in the template (%image.INDICATOR'S NAME.figure_1%).
+        Get already existing pictures from data/viz and inserts into emails. Fetch %image as a keyword in the template.
+        The name of the vizualization is of the predefined form in the template (%image.INDICATOR'S NAME.figure_1%).
         In case of deviating formatting, the figure won't be attached and the error message pops up.
         """
 
@@ -157,7 +157,7 @@ class EmailTemplateParser:
 
     def __parse_image_title(self, item, filters):
         """
-        Gets titles from titles.json in data/viz and inserts into emails as captions. %title% as a keyword in the template.
+        Get titles from titles.json in data/viz and inserts into emails as captions. Fetch %title% as a keyword in the template.
         The name of the visualization is of the predefined form in the template (%title.INDICATOR'S NAME.figure_1%).
         In case of deviating formatting, the figure won't be attached and the error message pops up.
         """
@@ -181,7 +181,7 @@ class EmailTemplateParser:
 
     def __parse_district(self, item, filters):
         """
-        Searches %district% keyword in the template and replaces it with the district defined in email_recipients.json
+        Search %district% keyword in the template and replaces it with the district defined in email_recipients.json
         """
 
         item = item.replace("%district%", filters.get("district"))
@@ -189,7 +189,7 @@ class EmailTemplateParser:
 
     def __parse_recipients_name(self, item, filters):
         """
-        Searches %recipients_name% keyword in the template and replaces it with the recipient's name defined in email_recipients.json for each district.
+        Search %recipients_name% keyword in the template and replaces it with the recipient's name defined in email_recipients.json for each district.
         """
 
         # chained replace is necessary because the names are in one line in the email template

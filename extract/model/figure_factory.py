@@ -26,7 +26,7 @@ class FigureFactory:
         self, figure_object, data, figure_colors, bar_mode=None, **kwargs
     ):
         """
-        Gets data from transform and pipeline and creates figures. Function creates both bar and scatter plots using if-condition
+        Get data from transform and pipeline and creates figures. Function creates both bar and scatter plots using if-condition
         """
         fig = go.Figure()
 
@@ -60,8 +60,8 @@ class FigureFactory:
         if figure_object == "Bar":
             fig.update_layout(barmode=bar_mode)
         elif figure_object == "Scatter":
-            """ Assigns different symbols to each data line in scatter plots"""
-            raw_symbols = [1, 2, 18, 0]
+            """ Assign different symbols to each data line in scatter plots"""
+            raw_symbols = [1, 2, 0, 18, 5, 4, 15]
             markers = cycle(raw_symbols)
             fig.update_traces(mode="lines+markers")
             for d in fig.data:
@@ -76,7 +76,7 @@ class FigureFactory:
     #########
 
     def style_figure(self, fig):
-        """ 1. Calibrates the size of the visualisation; 2. Sets the style of the grids and background"""
+        """ Calibrate the size of the visualization. Set the style of the grids and background"""
         fig.update_layout(
             legend=dict(
                 orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1.02
@@ -100,7 +100,7 @@ class FigureFactory:
 
     def get_figure_title(self, title, db, aggs):
         """
-        Extracts and returns the arguments of the titles predefined in the figures' pipeline (figures/pipeline.py)
+        Extract and return the arguments of the titles predefined in the figures' pipeline (figures/pipeline.py)
         data is called from db
 
         """
@@ -195,7 +195,7 @@ class FigureFactory:
 
     def __get_percentage_description(self, value):
         """ "
-        Returns description of direction of the change in a value (increase/decrease/stable)
+        Return description of direction of the change in a value (increase/decrease/stable)
 
         """
         absolute_value = abs(value)
@@ -210,7 +210,7 @@ class FigureFactory:
 
     def __get_percentage_difference_between_time(self, data, min_date, max_date):
         """
-        Parses the value for a given date and returns the string with the percentage and its description
+        Acquire the value for a given date and returns the string with the percentage and its description
         """
         indicator = data.columns[-1]
         data = data.reset_index()
@@ -231,7 +231,7 @@ class FigureFactory:
 
     def __get_positive_reporting(self, data):
         """
-        Returns the number of facilities reported positive from the set of facilities expected to report for reporting bar chart (more info in dataset/transform.py )
+        Return the number of facilities reported positive from the set of facilities expected to report for reporting bar chart (more info in dataset/transform.py )
         """
 
         indicator = data.columns[-1]
