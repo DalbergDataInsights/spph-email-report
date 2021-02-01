@@ -69,20 +69,23 @@ class EmailTemplateParser:
         Find items by keywords in the template and replaces them with the parsed objects
 
         """
-        # TODO try to change elif to if and see if that works if multiple tags are in the same item
         if "%date%" in item:
             item = self.__parse_date(item, filters)
-        elif "%image" in item:
+        if "%image" in item:
             item = self.__parse_image(item, filters)
-        elif "%district%" in item:
+        if "%district%" in item:
             item = self.__parse_district(item, filters)
-        elif "%title" in item:
+        if "%title" in item:
             item = self.__parse_image_title(item, filters)
-        elif "%recipients_name%" in item:
+        if "%recipients_name%" in item:
             item = self.__parse_recipients_name(item, filters)
-        elif "%following_reporting_date%" in item:
-            # it parses also the date of the next report's
+        if "%extraction_date%" in item:
+            item = self.__parse_extraction_date(item, filters)
+        if "%following_reporting_date%" in item:
+            # it parses also the date of the next report
             item = self.__parse_following_date(item, filters)
+        if "%future_report_date%" in item:
+            item = self.__parse_future_report_date(item, filters)
         else:
             item = item
         return item
@@ -96,17 +99,21 @@ class EmailTemplateParser:
         year = date[:4]
         month = date[-2:]
         month = calendar.month_name[int(month)]
-        # Current date is below:
         date = f"{month} {year}"
-        # Date of the data extraction, relativedelta(day=31) assigns the last day of the month:
-        extraction_date = pd.to_datetime(date) + relativedelta(month=1, day=25)
-        extraction_date = extraction_date.strftime("%B %d, %Y")
-        # Due to presence of multiple values to replace in one line or string, the chained .replace() is required
-        item = (  # FIXME
-            item.replace("%district%", filters.get("district"))
-            .replace("%date%", date)
-            .replace("%extraction_date%", extraction_date)
+        item = item.replace("%date%", date)
+
+        return item
+
+    def __parse_extraction_date(self, item, filters):
+        """
+        Replace %extraction_date%" with the date of the data extraction.
+        """
+        date = self.config.get("date")
+        extraction_date = pd.to_datetime(date, format="%Y%m") + relativedelta(
+            month=1, day=25
         )
+        extraction_date = extraction_date.strftime("%B %d, %Y")
+        item = item.replace("%extraction_date%", extraction_date)
 
         return item
 
@@ -116,14 +123,18 @@ class EmailTemplateParser:
         """
 
         date = self.config.get("date")
-        following_date = pd.to_datetime(date, format="%Y%m")
-        following_date = following_date + relativedelta(months=1)
-        future_report_month = following_date + relativedelta(months=2)
+        date = pd.to_datetime(date, format="%Y%m")
+        following_date = date + relativedelta(months=1)
         following_date = following_date.strftime("%B %Y")
+        item = item.replace("%following_reporting_date%", following_date)
+        return item
+
+    def __parse_future_report_date(self, item, filters):
+        date = self.config.get("date")
+        date = pd.to_datetime(date, format="%Y%m")
+        future_report_month = date + relativedelta(months=2)
         future_report_month = future_report_month.strftime("%B %Y")
-        item = item.replace("%following_reporting_date%", following_date).replace(
-            "%future_report_date%", future_report_month
-        )
+        item = item.replace("%future_report_date%", future_report_month)
 
         return item
 

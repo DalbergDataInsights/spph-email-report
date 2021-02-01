@@ -1,4 +1,3 @@
-# import geopandas as gpd
 # for districts (emails)
 from dataset.transform import (
     scatter_district_plot,
