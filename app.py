@@ -136,16 +136,16 @@ def run(pipeline):
 
     for pipe in pipeline:
 
-        if pipe == "extract":
+        if pipe == "extract":  # creates and saves visualisations and titles
             db = Database(DATABASE_URI)
             pipeline = dataset.pipeline.get()
             db.init_pipeline(pipeline)
             run_extract(config, db, figures.pipeline)
 
-        elif pipe == "email":
+        elif pipe == "email":  # composes and send emails
             run_emails(config, engine, email_template, recipients)
 
-        elif pipe == "increment-date":
+        elif pipe == "increment-date":  # adds month to the "date" in config.json
             run_next_month(config)
 
 
