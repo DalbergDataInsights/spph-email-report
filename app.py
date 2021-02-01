@@ -27,31 +27,28 @@ def run_extract(config, db, figure_pipeline):
     Fetches the date from the config. file, sets control variables, initiates run function (extract/__init__.py), which results in the visualisations as output
     """
     date = config.get("date")
-    if len(date) == 6:
+    try:
         target_date = datetime.strptime(date, "%Y%m")
-    elif len(date) != 6:
-        if date == "now":
-            date = datetime.now() - relativedelta(months=1)
-            target_date = date.strftime("%Y%m")
-            with open("config/config.json") as f:
-                data = json.load(f)
-                data["date"] = target_date
-            with open("config/config.json", "w") as f:
-                json.dump(data, f, indent=2)
-        else:
-            print(
-                'The date in config.json is defined incorrectly. Possible: "now", "YYYYMM"'
-            )
-            exit()
+    except ValueError as e:
+        print(e)
+        print("Cannot parse time, setting to the previous month")
+
+        date = datetime.now() - relativedelta(months=1)
+        target_date = date.strftime("%Y%m")
+        with open("config/config.json", "r") as f:
+            data = json.load(f)
+        data["date"] = target_date
+        print("Updating date in configuration file")
+        with open("config/config.json", "w") as f:
+            json.dump(data, f, indent=2)
+
     print(f"Launching figure generation for {target_date}")
     reference_date = (target_date - timedelta(days=1)).replace(day=1)
 
     # for each district
     for district in config.get("districts"):
-        # TODO filter by district
         print(f"Running the pipeline of figures for {district}")
         for indicator in config.get("indicators"):
-            # TODO filter by indicator
             print(f"Running the pipeline of figures for {indicator}")
             controls = {
                 "date": target_date.strftime("%Y%m"),
@@ -86,30 +83,13 @@ def run_next_month(config):
     """
     Fetches the date from config and increments one month
     """
+    print("Changing date...")
     reporting_date = datetime.strptime(config.get("date"), "%Y%m")
-    now = datetime.today().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-
-    if reporting_date == now:
-        print("The figures are up to date, try later")
-
-    elif now > reporting_date:
-        print("Changing date...")
-        next_date = reporting_date + relativedelta(months=1)
-        next_date = next_date.strftime("%Y%m")
-
-        with open("config/config.json") as f:
-            data = json.load(f)
-            data["date"] = next_date
-        with open("config/config.json", "w") as f:
-            json.dump(data, f, indent=2)
-    else:
-        print("Normalizing date...")
-        now = datetime.today().strftime("%Y%m")
-        with open("config/config.json") as f:
-            data = json.load(f)
-            data["date"] = now
-        with open("config/config.json", "w") as f:
-            json.dump(data, f, indent=2)
+    next_date = reporting_date + relativedelta(months=1)
+    next_date = next_date.strftime("%Y%m")
+    config["date"] = next_date
+    with open("config/config.json", "w") as f:
+        json.dump(config, f, indent=2)
 
 
 def run(pipeline):

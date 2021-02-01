@@ -38,8 +38,6 @@ class Database(metaclass=SingletonMeta):
 
     fetch_data_query = """SELECT * FROM {}"""
 
-    # TODO have thislinked to DEFAULT
-
     active_repo = "out"
 
     data_types = {
@@ -168,7 +166,7 @@ class Database(metaclass=SingletonMeta):
 
         is_ratio = function == "ratio"
 
-        if is_ratio == False:
+        if not is_ratio:
             try:
                 df = df[list(self.index_columns) + [indicator]]
             except Exception as e:
@@ -222,8 +220,6 @@ class Database(metaclass=SingletonMeta):
         return {
             x.get(rename_from): x.get(rename_to) for x in self.__indicator_serialized
         }
-
-    # TODO : Understand the need for if statement below
 
     def get_indicator_view(
         self, indicator, rename_from="indicator", rename_to="view", indicator_group=None

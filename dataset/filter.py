@@ -6,8 +6,6 @@ def by_dates(df, target_year, target_month, reference_year, reference_month):
     max_date = None
     reverse = False
 
-    # TODO See if I can just have this return only the two dates, not everything in between
-
     df = df.sort_values(["date"])
 
     target_date = datetime.strptime(f"{target_month} 1 {target_year}", "%b %d %Y")

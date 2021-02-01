@@ -10,7 +10,7 @@ from dateutil.relativedelta import relativedelta
 
 class EmailTemplateParser:
     """
-    Fetches elements of an email together and inserts into the template to create the full email
+    Fetch elements of an email together and inserts into the template to create the full email
 
     """
 
@@ -22,7 +22,7 @@ class EmailTemplateParser:
 
     def get_parsed_message(self, filters):
         """
-        Gets body from the email_template and inserts items (changing elements) in it.
+        Get body from the email_template and inserts items (changing elements) in it.
 
         """
         message = EmailMessage()
@@ -31,6 +31,7 @@ class EmailTemplateParser:
             msg = self.parse_item(item, filters)
             if msg:
                 parsed_message.append(msg)
+        # add css meta to the html body
         message.add_alternative(
             '<html><body style="{}">{}<body><html>'.format(
                 self.template.get("meta"), "".join(parsed_message)
@@ -43,8 +44,7 @@ class EmailTemplateParser:
 
     def set_payload(self, message):
         """
-        Defines payload to append images
-
+        Define payload to append images
         """
         for cid, fname in self.payload.items():
             with open(fname, "rb") as f:
@@ -56,7 +56,7 @@ class EmailTemplateParser:
 
     def get_parsed_subject(self, filters):
         """
-        The function appends subject from email_template to the email
+        Append subject from email_template to the email
         """
         return self.parse_item(self.template.get("subject"), filters)
 
@@ -66,9 +66,10 @@ class EmailTemplateParser:
 
     def parse_item(self, item, filters):
         """
-        Finds items by keywords in the template and replaces them with the parsed objects
+        Find items by keywords in the template and replaces them with the parsed objects
 
         """
+        # TODO try to change elif to if and see if that works if multiple tags are in the same item
         if "%date%" in item:
             item = self.__parse_date(item, filters)
         elif "%image" in item:
@@ -89,8 +90,8 @@ class EmailTemplateParser:
     def __parse_date(self, item, filters):
         """
         Finds all mentions of %date% in the template and replaces with the date from config.json
-
         """
+
         date = self.config.get("date")
         year = date[:4]
         month = date[-2:]
@@ -101,7 +102,7 @@ class EmailTemplateParser:
         extraction_date = pd.to_datetime(date) + relativedelta(month=1, day=25)
         extraction_date = extraction_date.strftime("%B %d, %Y")
         # Due to presence of multiple values to replace in one line or string, the chained .replace() is required
-        item = (
+        item = (  # FIXME
             item.replace("%district%", filters.get("district"))
             .replace("%date%", date)
             .replace("%extraction_date%", extraction_date)
@@ -113,6 +114,7 @@ class EmailTemplateParser:
         """
         Replaces %following_reporting_date% and %future_report_date% with the date of the next report and the date of the next email dissemination respectively.
         """
+
         date = self.config.get("date")
         following_date = pd.to_datetime(date, format="%Y%m")
         following_date = following_date + relativedelta(months=1)
@@ -130,8 +132,8 @@ class EmailTemplateParser:
         Gets already existing pictures from data/viz and inserts into emails. Parses by %image as a keyword in the template.
         The name of the vizualization is of the predifined form in the template (%image.INDICATOR'S NAME.figure_1%).
         In case of deviating formatting, the figure won't be attached and the error message pops up.
-
         """
+
         try:
             _, indicator, image_file_name = item.split("%")[1].split(".")
         except ValueError as e:
@@ -155,10 +157,9 @@ class EmailTemplateParser:
 
     def __parse_image_title(self, item, filters):
         """
-        Gets titles from titles.json in data/viz and inserts into emails as captions. Parses by %title as a keyword in the template.
-        The name of the vizualization is of the predifined form in the template (%title.INDICATOR'S NAME.figure_1%).
+        Gets titles from titles.json in data/viz and inserts into emails as captions. %title% as a keyword in the template.
+        The name of the visualization is of the predefined form in the template (%title.INDICATOR'S NAME.figure_1%).
         In case of deviating formatting, the figure won't be attached and the error message pops up.
-
         """
 
         try:
@@ -181,18 +182,18 @@ class EmailTemplateParser:
     def __parse_district(self, item, filters):
         """
         Searches %district% keyword in the template and replaces it with the district defined in email_recipients.json
-
         """
+
         item = item.replace("%district%", filters.get("district"))
         return item
 
     def __parse_recipients_name(self, item, filters):
         """
         Searches %recipients_name% keyword in the template and replaces it with the recipient's name defined in email_recipients.json for each district.
-
         """
+
         # chained replace is necessary because the names are in one line in the email template
-        item = item.replace(
+        item = item.replace(  # FIXME
             "%recipients_name%", filters.get("recipients_name")
         ).replace("%biostatistician_name%", filters.get("biostatistician_name"))
         return item

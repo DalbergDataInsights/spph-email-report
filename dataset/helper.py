@@ -9,8 +9,6 @@ def get_ratio(df, indicator, agg_level):
     Aggregates the ratio properly using weights
 
     """
-    # TODO Link to the index_columns defined in the database object
-    # TODO find a way to delete the hardcoded name mapping step
 
     index = ["date", "id", "facility_name"]
 

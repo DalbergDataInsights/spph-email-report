@@ -199,6 +199,7 @@ class FigureFactory:
 
         """
         absolute_value = abs(value)
+        description = ""
         if value >= 0.1:
             description = f"increased by {absolute_value}%"
         elif absolute_value < 0.1:

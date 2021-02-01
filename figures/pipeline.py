@@ -59,6 +59,7 @@ pipeline = [
             2018: "rgb(185, 221, 241)",
             2019: "rgb(106, 155, 195)",
             2020: "rgb(200, 19, 60)",
+            2021: "rgb(255, 131, 0)",
         },
         "title": """Across the country, in {} the {} is amounted to <b>{}</b> """,
         "title_args": [

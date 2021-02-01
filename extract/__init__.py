@@ -6,14 +6,14 @@ from . import figure
 
 def run(db, config, pipeline, folder="viz"):
     """
-    Gets figures and titles, stores visualisations and captions in the respective folders, skipping broken viz
+    Gets figures and titles, stores visualizations and captions in the respective folders, skipping broken viz
     """
 
     db.run_pipeline(config)
 
     fig_pipeline, fig_titles = figure.get(db, pipeline)
 
-    # 4. Save figures
+    # Save figures
 
     path = f"data/{folder}/{config.get('district', 'national')}/{config.get('date')}/{config.get('indicator')}"
     if not os.path.exists(path):

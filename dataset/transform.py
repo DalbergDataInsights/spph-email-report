@@ -102,6 +102,8 @@ def scatter_country_plot(df):
 
     df_country = helper.get_year_and_month_cols(df_country)
 
-    df_country = helper.get_sub_dfs(df_country, "year", [2018, 2019, 2020], "month")
+    df_country = helper.get_sub_dfs(
+        df_country, "year", [2018, 2019, 2020, 2021], "month"
+    )
 
     return df_country
