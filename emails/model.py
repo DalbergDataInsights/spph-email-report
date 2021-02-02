@@ -82,7 +82,6 @@ class EmailTemplateParser:
         if "%extraction_date%" in item:
             item = self.__parse_extraction_date(item, filters)
         if "%following_reporting_date%" in item:
-            # it parses also the date of the next report
             item = self.__parse_following_date(item, filters)
         if "%future_report_date%" in item:
             item = self.__parse_future_report_date(item, filters)
@@ -110,9 +109,7 @@ class EmailTemplateParser:
         """
         date = self.config.get("date")
         extraction_date = pd.to_datetime(date, format="%Y%m")
-        print(extraction_date)
         extraction_date = extraction_date + relativedelta(months=1, day=25)
-        print(extraction_date)
         extraction_date = extraction_date.strftime("%B %d, %Y")
         item = item.replace("%extraction_date%", extraction_date)
 
