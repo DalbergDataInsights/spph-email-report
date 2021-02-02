@@ -109,9 +109,10 @@ class EmailTemplateParser:
         Replace %extraction_date%" with the date of the data extraction.
         """
         date = self.config.get("date")
-        extraction_date = pd.to_datetime(date, format="%Y%m") + relativedelta(
-            month=1, day=25
-        )
+        extraction_date = pd.to_datetime(date, format="%Y%m")
+        print(extraction_date)
+        extraction_date = extraction_date + relativedelta(months=1, day=25)
+        print(extraction_date)
         extraction_date = extraction_date.strftime("%B %d, %Y")
         item = item.replace("%extraction_date%", extraction_date)
 
