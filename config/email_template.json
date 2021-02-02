@@ -1,11 +1,11 @@
 {
-    "subject": "%district% district - 14 CEHS indicators in %date%",
+    "subject": "%district% district - %number_of_indicators% CEHS indicators in %date%",
     "meta": "text-align: center; font-family:calibri; font-size:16px;font-weight:normal;font-style:normal;",
     "body": [
         "<h1 style=\"font-size:20px;\">This email provides you Data Insights on Essential Health Services in %district%</h1>",
         "<br>",
         "<p align=\"left\"> Dear %recipients_name%,<br>Dear %biostatistician_name%,</p>",
-        "<p align=\"left\"> We are contacting you now with the monthly analytical report that aims to show you what is happening in your district regarding the continuity of essential health services in %date%. In this report, we focus on 14 indicators. Once you have thoroughly analysed this report, please fill in this <a href=\"https://www.surveymonkey.com/r/KSW5LTK\">survey</a> to share your feedback. We greatly appreciate your time and effort to support this initiative, as they are of high importance to Uganda’s health response capabilities.<br>This analytical report is offered to you by the Sub-national Precision Public Health initiative from the Division of Health Information of the Ugandan Ministry of Health. <br><br> Methodological considerations are at the bottom of the report</p>",
+        "<p align=\"left\"> We are contacting you now with the monthly analytical report that aims to show you what is happening in your district regarding the continuity of essential health services in %date%. In this report, we focus on %number_of_indicators% indicators. Once you have thoroughly analysed this report, please fill in this <a href=\"https://www.surveymonkey.com/r/KSW5LTK\">survey</a> to share your feedback. We greatly appreciate your time and effort to support this initiative, as they are of high importance to Uganda’s health response capabilities.<br>This analytical report is offered to you by the Sub-national Precision Public Health initiative from the Division of Health Information of the Ugandan Ministry of Health. <br><br> Methodological considerations are at the bottom of the report</p>",
         "<h3 style=\"color:rgb(42, 87, 131)\"><b>1. Trends until %date% </b></h3>",
         "<h3 style=\"color:rgb(200, 19, 60); \"><b> 1.1. MNCH </b></h3>",
         "<h4 style=\"color:orange;font-size:18px;\" ><b>1.1.1. Total number of women attending their first ANC visit in %district% </b></h4>",

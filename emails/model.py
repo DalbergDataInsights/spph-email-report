@@ -85,6 +85,8 @@ class EmailTemplateParser:
             item = self.__parse_following_date(item, filters)
         if "%future_report_date%" in item:
             item = self.__parse_future_report_date(item, filters)
+        if "%number_of_indicators%" in item:
+            item = self.__parse_number(item, filters)
         else:
             item = item
         return item
@@ -133,6 +135,13 @@ class EmailTemplateParser:
         future_report_month = date + relativedelta(months=2)
         future_report_month = future_report_month.strftime("%B %Y")
         item = item.replace("%future_report_date%", future_report_month)
+
+        return item
+
+    def __parse_number(self, item, filters):
+        indicators_in_use = self.config.get("indicators")
+        number = str(len(indicators_in_use))
+        item = item.replace("%number_of_indicators%", number)
 
         return item
 
