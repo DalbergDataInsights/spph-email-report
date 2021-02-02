@@ -24,7 +24,7 @@ load_dotenv(find_dotenv())
 
 def run_extract(config, db, figure_pipeline):
     """
-    Fetches the date from the config. file, sets control variables, initiates run function (extract/__init__.py), which results in the visualisations as output
+    Fetch the date from the config. file, sets control variables, initiates run function (extract/__init__.py), which results in the visualisations as output
     """
     date = config.get("date")
     try:
@@ -64,7 +64,7 @@ def run_extract(config, db, figure_pipeline):
 
 def run_emails(config, engine, email_template, recipients):
     """
-    Receives a complete template from  emails/model.py and send it from the defined email address to the recipients from email_recipients.json
+    Receive a complete template from  emails/model.py and send it from the defined email address to the recipients from email_recipients.json
     """
     parser = EmailTemplateParser("data/viz", email_template, config)
 
@@ -81,7 +81,7 @@ def run_emails(config, engine, email_template, recipients):
 
 def run_next_month(config):
     """
-    Fetches the date from config and increments one month
+    Fetch the date from config and increments one month
     """
     print("Changing date...")
     reporting_date = datetime.strptime(config.get("date"), "%Y%m")
@@ -94,19 +94,19 @@ def run_next_month(config):
 
 def run(pipeline):
     """
-    Calls the run functions above, adds configurations to the existing run functions from the .env file.
+    Call the run functions above, add configurations to the existing run functions from the .env file.
     Each pipe is for different functions:
-    "extract" - creates and prints the visualisations;
+    "extract" - creates and prints the visualizations;
     "email" - composes and sends emails;
     "increment-date" - increments one month.
     """
 
     # Configurations:
-    DATABASE_URI = os.environ["DATABASE"]  # sets the Database
+    DATABASE_URI = os.environ["DATABASE"]  # set the Database
     config = get_config("config")
-    email_template = get_config("email_template")  # sets the template
-    recipients = get_config("email_recipients")  # sets the recipients
-    # sets sender's email incl. credentials
+    email_template = get_config("email_template")  # set the template
+    recipients = get_config("email_recipients")  # set the recipients
+    # set sender's email incl. credentials
 
     engine = {
         "smtp": os.environ["SMTP"],
@@ -116,16 +116,16 @@ def run(pipeline):
 
     for pipe in pipeline:
 
-        if pipe == "extract":  # creates and saves visualisations and titles
+        if pipe == "extract":  # creates and saves visualizations and titles
             db = Database(DATABASE_URI)
             pipeline = dataset.pipeline.get()
             db.init_pipeline(pipeline)
             run_extract(config, db, figures.pipeline)
 
-        elif pipe == "email":  # composes and send emails
+        elif pipe == "email":  # compose and send emails
             run_emails(config, engine, email_template, recipients)
 
-        elif pipe == "increment-date":  # adds month to the "date" in config.json
+        elif pipe == "increment-date":  # add month to the "date" in config.json
             run_next_month(config)
 
 
