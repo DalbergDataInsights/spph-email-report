@@ -13,6 +13,10 @@ Consequently, it is impossible to successfully execute the second part until the
 The output of the first part of the program is a json file and four visualizations for each indicator. The first three visualizations are: a scatter plot with an overview of the indicator at county level, a bar chart with facilities contribution and a reporting scatter plot. The fourth visualization is an overview scatter for an indicator, but at country level. The json file `titles.json`  contains figure titles, which are implemented in emails as figure captions.
 Output of the second part of the program is emails.
 
+This is illustrated in the following component diagram:
+![Component diagram](z.diagrams/Component_diagram.jpeg  
+A more detailed code diagram is [here](#seventh).
+
 The content of the instruction file is structured as follows:
 
 ## CONTENT
@@ -28,7 +32,6 @@ The content of the instruction file is structured as follows:
 7. [How to alter captions](#sixth)
 8. [Dictionary for developers](#seventh)
 9. [Setting up the scheduler](#ninth)
-10. [Adding a year to the overview graph](#tenth)
 
 ### HOW TO RUN THE PROGRAM <a name="first"/>
 
@@ -49,7 +52,6 @@ if __name__ == "__main__":
 NB! Check the date of the report before starting the extraction (see:[How to choose a reporting date](#third))
 To change predefined input, use configuration files in a config folder in the workspace.
 
-*This section is under modification, so changes will be implemented shortly.*
 
 ### HOW TO CHANGE RECIPIENTS <a name="second"/>
 
@@ -213,6 +215,10 @@ where the new argument is to define after the if-statement. For more information
 
 ### DICTIONARY FOR DEVELOPERS <a name="seventh"/>
 
+#### Overview
+
+On a comparatively high-level, the code has the following structure:
+![Code diagram](z.diagrams/Code diagram.jpeg)
 #### Table of content of the program
 
 * [config](#config) - configuration files (.json)
@@ -440,60 +446,3 @@ PATH=/Library/Frameworks/Python.framework/Versions/3.9/bin:/Library/Frameworks/P
 Once the cron job has been configured, press `esc` to exit editor mode. Then type `:wq` to save the cron job configured. The crontab will run your script at the specified time.
 Remember! Sometimes it may be necessary to give crontab permission to run in the background. See if an error appears in `cron.txt`.
 You can also check existing cron jobs by typing `crontab -e` and pressing Enter.
-
-### Adding a year to the overview graph <a name="tenth"/>
-
-The figure_1, automatically printed with the command "extract", offers an overview of the indicator for several years. As soon as the new year starts, it is necessary to tell the program to fetch the data for the new year and importantly include in to the graph.
-So, if you want to add a new year's information, go over to [transform.py](#dataset/transform.py) and go to the `df_scatter_district_plot`:
-
-```python
-def scatter_district_plot(df):
-
-    df_district = df.get("district")
-
-    df_district = df_district[df_district[df_district.columns[-1]] > 0]
-
-    df_district = helper.get_year_and_month_cols(df_district)
-
-    df_district = helper.get_sub_dfs(
-        df_district, "year", [2018, 2019, 2020], "month"
-    )
-
-    return df_district
-```
-
-Add a year, let's say, 2021:
-
-```python
-def scatter_district_plot(df):
-
-    df_district = df.get("district")
-
-    df_district = df_district[df_district[df_district.columns[-1]] > 0]
-
-    df_district = helper.get_year_and_month_cols(df_district)
-
-    df_district = helper.get_sub_dfs(
-        df_district, "year", [2018, 2019, 2020, 2021], "month"
-    )
-
-    return df_district
-```
-
-And now add a year (2021) in the [pipeline](#figures/pipeline.py) to the first scatter dictionary, by adding it to the "color" dictionary with the color of your choice (see on colors [here](#https://www.w3schools.com/colors/colors_picker.asp)):
-
- ```python
-pipeline = [
-    {
-        "type": "scatter",  # Sets pipeline for the figure_1 (indicator's overview scatter at district level)
-        "transform": scatter_district_plot,
-        "color": {
-            2018: "rgb(185, 221, 241)",
-            2019: "rgb(106, 155, 195)",
-            2020: "rgb(200, 19, 60)",
-            2021: "rgb(255, 131, 0)",
-        },
-        "title": "The total {} in {} in {} <b>{}</b> from the month before",
-        "title_args": ["indicator_view", "district", "date", "ratio"],
-    }
-```
