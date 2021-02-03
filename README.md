@@ -14,7 +14,7 @@ The output of the first part of the program is a json file and four visualizatio
 Output of the second part of the program is emails.
 
 This is illustrated in the following component diagram:
-![Component diagram](z.diagrams/Component_diagram.jpeg?raw=true)  
+![Component diagram](z.diagrams/Component_diagram.jpeg?raw=true)
 A more detailed code diagram is [here](#seventh).
 
 The content of the instruction file is structured as follows:
@@ -218,7 +218,7 @@ where the new argument is to define after the if-statement. For more information
 #### Overview
 
 On a comparatively high-level, the code has the following structure:
-![Code diagram](z.diagrams/Code diagram.jpeg?raw=true)
+![Component diagram](z.diagrams/Code_diagram.jpeg?raw=true)
 #### Table of content of the program
 
 * [config](#config) - configuration files (.json)
@@ -248,7 +248,7 @@ The folder [pdf] contains pdf-files converted from .msg files. For details see [
 The folder "dataset" contains helper, pipeline and transform.
 [Helper](dataset/helper.py) contains sorting by district and date functions.
 [pipeline.py](dataset/pipeline.py) contains functions, which fetch and clean raw data from the database for each type of visualisation.
-[transform](dataset/transform.py) contains functions, which structure the clean data in a form, suitable for visualisation. Here the data can be rearranged in case of unreadable representation or checked for errors if they are visible in a visualisation.
+[transform](dataset/transform.py) contains functions, which structure the clean data in a form, suitable for visualization. Here the data can be rearranged in case of unreadable representation or checked for errors if they are visible in a visualization.
 Note! Errors in visualizations can origin from [figure factory](extract/model/figure_factory.py).
 
 ##### EMAILS <a name="emails"/>
