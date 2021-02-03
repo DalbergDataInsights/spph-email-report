@@ -1,4 +1,6 @@
 # for districts (emails)
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 from dataset.transform import (
     scatter_district_plot,
     bar_district_plot,
@@ -6,16 +8,18 @@ from dataset.transform import (
     scatter_country_plot,
 )
 
+year_current = datetime.now() - relativedelta(
+    months=1
+)  # we must take the monthly lag into account, otherwise a problem for December data might occur at the end of January (it's the next year already) if we use datetime.now().year directly.
 
 pipeline = [
     {
-        "type": "scatter",  # Sets pipeline for the figure_1 (indicator's overview scatter at district level)
+        "type": "scatter",  # Set pipeline for the figure_1 (indicator's overview scatter at district level)
         "transform": scatter_district_plot,
         "color": {
-            2018: "rgb(185, 221, 241)",
-            2019: "rgb(106, 155, 195)",
-            2020: "rgb(200, 19, 60)",
-            2021: "rgb(255, 131, 0)",
+            year_current.year - 2: "rgb(185, 221, 241)",
+            year_current.year - 1: "rgb(106, 155, 195)",
+            year_current.year: "rgb(200, 19, 60)",
         },
         "title": "The total {} in {} in {} <b>{}</b> from the month before",
         "title_args": ["indicator_view", "district", "date", "ratio"],
@@ -55,10 +59,9 @@ pipeline = [
         "type": "scatter",  # Sets pipeline for the figure_4 (indicator's overview scatter at country level)
         "transform": scatter_country_plot,
         "color": {
-            2018: "rgb(185, 221, 241)",
-            2019: "rgb(106, 155, 195)",
-            2020: "rgb(200, 19, 60)",
-            2021: "rgb(255, 131, 0)",
+            year_current.year - 2: "rgb(185, 221, 241)",
+            year_current.year - 1: "rgb(106, 155, 195)",
+            year_current.year: "rgb(200, 19, 60)",
         },
         "title": """Across the country, in {} the {} is amounted to <b>{}</b> """,
         "title_args": [
