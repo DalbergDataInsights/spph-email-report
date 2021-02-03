@@ -15,7 +15,9 @@ def scatter_district_plot(df):
 
     df_district = helper.get_year_and_month_cols(df_district)
     years_to_include = df_district.reset_index()
-    years_to_include = years_to_include.year.unique().tolist()[
+    years_to_include = years_to_include.year.unique().tolist()
+    years_to_include.sort()
+    years_to_include = years_to_include[
         -3:
     ]  # return last three values (years) as a list
 
